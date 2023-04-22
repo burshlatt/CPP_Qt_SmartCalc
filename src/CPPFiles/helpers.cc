@@ -32,25 +32,46 @@ void s21::calculator::InsertNumOutput(size_t *index) {
   }
 }
 
-void s21::calculator::PushFunctions(size_t *index) {
-  if (str_[*index] == '^') {
-    stack_.push("^");
+void s21::calculator::PushFunctions(size_t *index, const int variant) {
+  if (variant == 1) {
+    if (str_[*index] == '^') {
+      stack_.push("^");
+    } else {
+      char buffer[255] = {'\0'};
+      for (size_t i = 0; str_[*index] != '('; i++) {
+        buffer[i] = str_[(*index)++];
+      }
+      if (std::string(buffer).size()) {
+        stack_.push(std::string(buffer));
+      }
+      stack_.push("(");
+    }
   } else {
-    char buffer[255] = {'\0'};
-    for (size_t i = 0; str_[*index] != '('; i++) {
-      buffer[i] = str_[(*index)++];
+    switch (str_[*index]) {
+      case '+':
+        stack_.push("+");
+        break;
+      case '-':
+        stack_.push("-");
+        break;
+      case '*':
+        stack_.push("*");
+        break;
+      case '/':
+        stack_.push("/");
+        break;
+      case 'm':
+        stack_.push("mod");
+        *index += 2;
+        break;
     }
-    if (std::string(buffer).size()) {
-      stack_.push(std::string(buffer));
-    }
-    stack_.push("(");
   }
 }
 
 void s21::calculator::test() {
   for (size_t i = 0; i < str_.size(); i++) {
     InsertNumOutput(&i);
-    switch (get_str()[i]) {
+    switch (str_[i]) {
       case 'c':
       case 's':
       case 't':
@@ -58,46 +79,31 @@ void s21::calculator::test() {
       case 'l':
       case '^':
       case '(':
-        PushFunctions(&i);
+        PushFunctions(&i, 1);
         break;
       case 'm':
-        do_pop(stack, output, &index, 1);
-        stack_.push('m');
-        break;
       case '*':
-        do_pop(stack, output, &index, 5);
-        stack_.push('*');
-        break;
       case '/':
-        do_pop(stack, output, &index, 5);
-        stack_.push('/');
-        break;
       case '+':
-        do_pop(stack, output, &index, 1);
-        stack_.push('+');
-        break;
       case '-':
-        if (str[i - 1] != '(') {
-          do_pop(stack, output, &index, 1);
-          stack_.push('-');
-        }
+        PopFunctions(&index, 5);
+        PushFunctions(&i, 2);
         break;
       case ')':
-        *error_flag = do_pop(stack, output, &index, 3);
+        PopFunctions(&index, 3);
         if (*error_flag == 0) {
           stack_.pop();
-          do_pop(stack, output, &index, 4);
+          PopFunctions(&index, 4);
         }
         break;
       case 'x':
         is_graph_ = true;
         break;
       case '\0':
-        do_pop(stack, output, &index, 2);
+        PopFunctions(&index, 2);
         break;
     }
   }
-  // print();
 }
 
 int main () {
@@ -105,11 +111,6 @@ int main () {
   std::string string_math_ = "cos(56)-sin(87)+tan(66)*atan(-(-99+33))+3^2-(5-3)";
   test_1.set_str(string_math_);
   test_1.test();
+  // test_1.print();
   return 0;
 }
-
-// string s21::calculator::to_string(const double &num) {
-//     std::ostringstream buffer_;
-//     buffer_ << num;
-//     return buffer_.str();
-// }

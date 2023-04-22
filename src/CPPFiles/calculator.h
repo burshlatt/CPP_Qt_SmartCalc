@@ -22,9 +22,11 @@ namespace s21 {
       void set_str(const std::string other) noexcept;
       void set_output(const std::string other) noexcept;
 
-      double Notation();
-      void PushFunctions(size_t *index);
+      void Notation();
+      void Calculations();
+      void PopFunctions(size_t *index);
       void InsertNumOutput(size_t *index);
+      void PushFunctions(size_t *index, const int variant);
 
       void print();
       void test();
@@ -32,6 +34,7 @@ namespace s21 {
     private:
       std::string str_;
       std::string output_;
+      double result_ = 0.0;
       double x_value_ = 0.0;
       bool is_graph_ = false;
       bool is_error_ = false;
