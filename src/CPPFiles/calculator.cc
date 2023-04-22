@@ -1,4 +1,4 @@
-#include "s21_calculator.h"
+#include "calculator.h"
 
 // double polish_notation(char *str, int is_graph, double xValue, int *error_flag) {
 //   struct Stack *stack = create_stack(SIZE);
@@ -201,23 +201,9 @@
 // }
 
 double s21::calculator::Notation() {
-  // int index = 0;
-  // double result = 0.0;
-  // int count_of_left_bracket = 0;
-  // int count_of_right_bracket = 0;
-  // char output[255] = {'\0'};
-  // for (int i = 0; str[i] != '\0'; i++) {
-  //   if (str[i] == '(') {
-  //     count_of_left_bracket++;
-  //   }
-  //   if (str[i] == ')') {
-  //     count_of_right_bracket++;
-  //   }
-  // }
-  for (int i = 0; i < str_.size(); i++) {
-    SetOutput(&i, &index);
-    if (*error_flag == 0) {
-      switch (str[i]) {
+  for (size_t i = 0; i < str_.size(); i++) {
+    InsertNumOutput(&i);
+    switch (str_[i]) {
       case '^':
       case 'c':
       case 's':
@@ -225,7 +211,7 @@ double s21::calculator::Notation() {
       case 'a':
       case 'l':
       case '(':
-        push_func(stack, str, &i);
+        PushFunctions(&i);
         break;
       case 'm':
         do_pop(stack, output, &index, 1);
@@ -256,17 +242,14 @@ double s21::calculator::Notation() {
           do_pop(stack, output, &index, 4);
         }
         break;
+      case 'x':
+        is_graph_ = true;
+        break;
       case '\0':
         do_pop(stack, output, &index, 2);
         break;
-      }
     }
   }
-  if (count_of_left_bracket != count_of_right_bracket) {
-    *error_flag = 1;
-  }
-  if (!(*error_flag)) {
-    result = arithmetic_calculations(output, is_graph, xValue, error_flag);
-  }
-  return !(*error_flag) ? result : 0;
+  result = arithmetic_calculations(output, is_graph, xValue, error_flag);
+  return result;
 }
