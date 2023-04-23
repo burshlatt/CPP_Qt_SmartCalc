@@ -18,9 +18,7 @@ namespace s21 {
       calculator() {}
 
       std::string get_str() const noexcept;
-      std::string get_output() const noexcept;
       void set_str(const std::string other) noexcept;
-      void set_output(const std::string other) noexcept;
 
       void Notation();
       void Calculations();
@@ -33,13 +31,14 @@ namespace s21 {
 
     private:
       std::string str_;
-      std::string output_;
+      // std::string output_;
       double result_ = 0.0;
       double x_value_ = 0.0;
       bool is_graph_ = false;
       bool is_error_ = false;
       std::stack<double> buffer_;
       std::stack<std::string> stack_;
+      std::stack<std::string> output_;
   };
 }
 
