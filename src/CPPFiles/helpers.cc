@@ -2,11 +2,17 @@
 
 void s21::calculator::print() {
   cout << endl;
-  cout << "Размер стека: " << output_.size() << endl;
+  cout << "Размер стека: " << stack_.size() << endl;
   cout << "Стек: ";
-  while (output_.size()) {
-    cout << output_.top() << " ";
-    output_.pop();
+  cout << stack_.top() << " ";
+  // while (!stack_.empty()) {
+  //   cout << stack_.top() << " ";
+  //   stack_.pop();
+  // }
+  cout << "\nРазмер выходной строки: " << output_.size() << endl;
+  cout << "Выходная строка: ";
+  for (size_t i = 0; i < output_.size(); i++) {
+    cout << output_[i] << " ";
   }
   cout << endl << endl;
 }
@@ -20,12 +26,42 @@ void s21::calculator::set_str(const std::string other) noexcept {
 }
 
 void s21::calculator::InsertNumOutput(size_t *index) {
-  char char_str_[255] = {'\0'};
-  for (auto i = 0; isdigit(str_[*index]); i++) {
-    char_str_[i] = str_[(*index)++];
+  if (isdigit(str_[*index])) {
+    char char_str_[255] = {'\0'};
+    for (auto i = 0; isdigit(str_[*index]); i++) {
+      char_str_[i] = str_[(*index)++];
+    }
+    output_.push_back(std::string(char_str_));
   }
-  if (*char_str_) {
-    output_.push(std::string(char_str_));
+}
+
+void s21::calculator::PushLogic(size_t *index, const std::string other) {
+  if (other == "mod") {
+    while (stack_.top() == "*" || stack_.top() == "/" || stack_.top() == "mod") {
+      output_.push_back(stack_.top());
+      stack_.pop();
+    }
+    index += 2;
+  } else if (other == "*") {
+    while (stack_.top() == "mod" || stack_.top() == "/" || stack_.top() == "*") {
+      output_.push_back(stack_.top());
+      stack_.pop();
+    }
+  } else if (other == "/") {
+    while (stack_.top() == "mod" || stack_.top() == "*" || stack_.top() == "/") {
+      output_.push_back(stack_.top());
+      stack_.pop();
+    }
+  } else if (other == "+") {
+    while (stack_.top() == "mod" || stack_.top() == "*" || stack_.top() == "/" || stack_.top() == "-" || stack_.top() == "+") {
+      output_.push_back(stack_.top());
+      stack_.pop();
+    }
+  } else if (other == "-") {
+    while (stack_.top() == "mod" || stack_.top() == "*" || stack_.top() == "/" || stack_.top() == "+" || stack_.top() == "-") {
+      output_.push_back(stack_.top());
+      stack_.pop();
+    }
   }
 }
 
@@ -46,22 +82,26 @@ void s21::calculator::PushFunctions(size_t *index, const int variant) {
   } else if (variant == 2) {
     switch (str_[*index]) {
       case 'm':
+        PushLogic(index, "mod");
         stack_.push("mod");
-        *index += 2;
         break;
       case '*':
+        PushLogic(index, "*");
         stack_.push("*");
         break;
       case '/':
+        PushLogic(index, "/");
         stack_.push("/");
         break;
       case '+':
+        PushLogic(index, "+");
         stack_.push("+");
         break;
       case '-':
         if (str_[*index - 1] == '(') {
-          output_.push("--");
+          output_.push_back("--");
         } else {
+          PushLogic(index, "-");
           stack_.push("-");
         }
         break;
@@ -69,87 +109,37 @@ void s21::calculator::PushFunctions(size_t *index, const int variant) {
   }
 }
 
-// void set_space(char *output, int *index) {
-//   if (output[*index - 1] != ' ') {
-//     output[*index] = ' ';
-//     *index += 1;
-//   }
-// }
-
-// void set_in_output(struct Stack *stack, char *output, int *index) {
-//   output[*index] = pop(stack);
-//   *index += 1;
-// }
-
-// void logic_actions(struct Stack *stack, char *output, int *index) {
-//   set_space(output, index);
-//   set_in_output(stack, output, index);
-//   set_space(output, index);
-// }
-
-// int do_pop(struct Stack *stack, char *output, int *index, int variant) {
-//   int error_status = 0;
-//   if (variant == 1) {
-//     while (!is_empty(stack) && peek(stack) != '(' && peek(stack) != '\0') {
-//       logic_actions(stack, output, index);
-//     }
-//   } else if (variant == 2) {
-//     while (!is_empty(stack)) {
-//       logic_actions(stack, output, index);
-//     }
-//   } else if (variant == 3) {
-//     while (peek(stack) != '(' && peek(stack) != '\0') {
-//       if (is_empty(stack)) {
-//         error_status = 1;
-//         break;
-//       }
-//       logic_actions(stack, output, index);
-//     }
-//   } else if (variant == 4) {
-//     while (is_func(stack)) {
-//       logic_actions(stack, output, index);
-//     }
-//   } else if (variant == 5) {
-//     while (!is_empty(stack) && peek(stack) != '-' && peek(stack) != '+' &&
-//            peek(stack) != '(' && peek(stack) != '\0') {
-//       logic_actions(stack, output, index);
-//     }
-//   }
-//   return error_status;
-// }
-
-void s21::calculator::PopFunctions(size_t *index, const int variant) {
+void s21::calculator::PopFunctions(const int variant) {
   if (variant == 1) {
-    *index += 1;
-  } else if (variant == 2) {
     while (stack_.top() != "(" && !stack_.empty()) {
-      output_.push(stack_.top());
+      output_.push_back(stack_.top());
       stack_.pop();
     }
     if (stack_.empty()) {
       is_error_ = true;
     } else {
       stack_.pop();
-      bool is_func_ = true;
-      std::string buffer[9] = {"cos", "sin", "tan", "acos", "asin", "atan", "ln", "log", "^"};
-      while (is_func_) {
-        is_func_ = false;
-        for (size_t i = 0; i < buffer->size(); i++) {
-          if (stack_.top() == buffer[i]) {
-            is_func_ = true;
-          }
-        }
-        if (is_func_) {
-          output_.push(stack_.top());
+      for (size_t i = 0; i < functions_.size(); i++) {
+        if (stack_.top() == functions_[i]) {
+          output_.push_back(stack_.top());
           stack_.pop();
         }
+      }
+    }
+  } else if (variant == 2) {
+    if (stack_.top() == "(" || stack_.top() == ")") {
+      is_error_ = true;
+    } else {
+      while (!stack_.empty()) {
+        output_.push_back(stack_.top());
+        stack_.pop();
       }
     }
   }
 }
 
 void s21::calculator::test() {
-  for (size_t i = 0; i < str_.size(); i++) {
+  for (size_t i = 0; i < str_.size() && !is_error_; i++) {
     InsertNumOutput(&i);
     switch (str_[i]) {
       case 'c':
@@ -166,21 +156,16 @@ void s21::calculator::test() {
       case '/':
       case '+':
       case '-':
-        // PopFunctions(&i, 5);
         PushFunctions(&i, 2);
         break;
       case ')':
-        PopFunctions(&i, 2);
-        // if (*error_flag == 0) {
-        //   stack_.pop();
-        //   PopFunctions(&index, 4);
-        // }
+        PopFunctions(1);
         break;
       case 'x':
         is_graph_ = true;
         break;
       case '\0':
-        // PopFunctions(&index, 2);
+        PopFunctions(2);
         break;
     }
   }
@@ -188,7 +173,7 @@ void s21::calculator::test() {
 
 int main () {
   s21::calculator test_1;
-  std::string string_math_ = "cos(56)-sin(87)+tan(66)*atan(-(-99+33))+3^2-(5-33)";
+  std::string string_math_ = "cos(56)*sin(87)/tan(66)+acos(22)-asin(55)*(atan(99)/log(77)+ln(66))^(2+3)+4mod2";
   test_1.set_str(string_math_);
   test_1.test();
   test_1.print();

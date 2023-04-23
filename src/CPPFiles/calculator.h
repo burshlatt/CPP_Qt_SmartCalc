@@ -4,6 +4,7 @@
 #include <cmath>
 // #include <ctime>
 #include <stack>
+#include <array>
 #include <vector>
 #include <string>
 #include <iostream>
@@ -23,8 +24,9 @@ namespace s21 {
       void Notation();
       void Calculations();
       void InsertNumOutput(size_t *index);
-      void PopFunctions(size_t *index, const int variant);
+      void PopFunctions(const int variant);
       void PushFunctions(size_t *index, const int variant);
+      void PushLogic(size_t *index, const std::string other);
 
       void print();
       void test();
@@ -36,9 +38,10 @@ namespace s21 {
       double x_value_ = 0.0;
       bool is_graph_ = false;
       bool is_error_ = false;
-      std::stack<double> buffer_;
+      // std::stack<double> buffer_;
       std::stack<std::string> stack_;
-      std::stack<std::string> output_;
+      std::vector<std::string> output_;
+      std::array<std::string, 9> functions_ = {"cos", "sin", "tan", "acos", "asin", "atan", "ln", "log", "^"};
   };
 }
 
