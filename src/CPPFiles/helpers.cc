@@ -118,6 +118,36 @@ void s21::calculator::PushFunctions(size_t *index, const int variant) {
 //   return error_status;
 // }
 
+void s21::calculator::PopFunctions(size_t *index, const int variant) {
+  if (variant == 1) {
+    *index += 1;
+  } else if (variant == 2) {
+    while (stack_.top() != "(" && !stack_.empty()) {
+      output_.push(stack_.top());
+      stack_.pop();
+    }
+    if (stack_.empty()) {
+      is_error_ = true;
+    } else {
+      stack_.pop();
+      bool is_func_ = true;
+      std::string buffer[9] = {"cos", "sin", "tan", "acos", "asin", "atan", "ln", "log", "^"};
+      while (is_func_) {
+        is_func_ = false;
+        for (size_t i = 0; i < buffer->size(); i++) {
+          if (stack_.top() == buffer[i]) {
+            is_func_ = true;
+          }
+        }
+        if (is_func_) {
+          output_.push(stack_.top());
+          stack_.pop();
+        }
+      }
+    }
+  }
+}
+
 void s21::calculator::test() {
   for (size_t i = 0; i < str_.size(); i++) {
     InsertNumOutput(&i);
@@ -136,11 +166,11 @@ void s21::calculator::test() {
       case '/':
       case '+':
       case '-':
-        // PopFunctions(&index, 5);
+        // PopFunctions(&i, 5);
         PushFunctions(&i, 2);
         break;
       case ')':
-        // PopFunctions(&index, 3);
+        PopFunctions(&i, 2);
         // if (*error_flag == 0) {
         //   stack_.pop();
         //   PopFunctions(&index, 4);

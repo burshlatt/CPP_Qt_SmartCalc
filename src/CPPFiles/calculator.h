@@ -22,8 +22,8 @@ namespace s21 {
 
       void Notation();
       void Calculations();
-      void PopFunctions(size_t *index);
       void InsertNumOutput(size_t *index);
+      void PopFunctions(size_t *index, const int variant);
       void PushFunctions(size_t *index, const int variant);
 
       void print();
