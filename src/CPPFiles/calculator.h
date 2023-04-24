@@ -25,20 +25,21 @@ namespace s21 {
       void Calculations();
       void InsertNumOutput(size_t *index);
       void PopFunctions(const int variant);
+      void PushLogic(const std::string other);
+      bool IsNegative(const std::string other);
+      bool CustomIsDigit(const std::string other);
       void PushFunctions(size_t *index, const int variant);
-      void PushLogic(size_t *index, const std::string other);
 
       void print();
-      void test();
 
     private:
       std::string str_;
       // std::string output_;
-      double result_ = 0.0;
+      // double result_ = 0.0;
       double x_value_ = 0.0;
       bool is_graph_ = false;
       bool is_error_ = false;
-      // std::stack<double> buffer_;
+      std::stack<double> num_buffer_;
       std::stack<std::string> stack_;
       std::vector<std::string> output_;
       std::array<std::string, 9> functions_ = {"cos", "sin", "tan", "acos", "asin", "atan", "ln", "log", "^"};
