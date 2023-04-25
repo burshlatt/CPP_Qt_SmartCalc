@@ -1,5 +1,13 @@
 #include "calculator.h"
 
+s21::calculator::~calculator() {
+  str_ = "";
+  result_ = 0.0;
+  x_value_ = 0.0;
+  is_graph_ = false;
+  is_error_ = false;
+}
+
 double s21::calculator::get_res() const noexcept {
   return result_;
 }

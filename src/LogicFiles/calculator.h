@@ -15,6 +15,7 @@ namespace s21 {
   class calculator {
     public:
       calculator() {}
+      ~calculator();
       
       double get_res() const noexcept;
 
