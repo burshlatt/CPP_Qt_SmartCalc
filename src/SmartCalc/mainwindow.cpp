@@ -73,98 +73,111 @@ void MainWindow::on_deposCalc_clicked() {
   this->close();
 }
 
-void MainWindow::operators_clicked() {
-  int already = 0;
-  decompose_func();
-  if (string_size != 0 && last_symbol != '(' && last_symbol != '.') {
-    for (int i = 0; i < 6; i++) {
-      if (last_symbol == operators[i]) {
-        already = 1;
-      }
-    }
-    if (already) {
-      if (last_symbol == 'd') {
-        on_delElem_clicked();
-        on_delElem_clicked();
-      }
-      on_delElem_clicked();
-    }
-    if (string_size < 255) {
-      ui->inputOutput->setText(ui->inputOutput->text() + button->text());
-      is_dot = 0;
-    }
+void MainWindow::GetInfo() {
+  button_ = (QPushButton *)sender();
+  str_ = ui->inputOutput->text().toStdString();
+  last_symbol_ = str_.back();
+  size_ = str_.size();
+  if (size_ >= 255) {
+    ui->inputOutput->clear();
+    ui->inputOutput->setText(ui->inputOutput->text() + "ERROR: Too many elements!");
   }
+}
+
+void MainWindow::operators_clicked() {
+    GetInfo();
+    bool is_operator_ = false;
+    if (size_ && last_symbol_ != '(' && last_symbol_ != '.') {
+        for (int i = 0; i < 6; i++) {
+            if (last_symbol_ == operators[i]) {
+                if (last_symbol_ != '-' || str_[str_.size() - 2] != '(') {
+                    is_operator_ = true;
+                }
+            }
+        }
+        if (is_operator_) {
+            if (last_symbol_ == 'd') {
+                on_delElem_clicked();
+                on_delElem_clicked();
+            }
+            on_delElem_clicked();
+        }
+        if (size_ < 255) {
+          ui->inputOutput->setText(ui->inputOutput->text() + button->text());
+          is_dot_ = false;
+        }
+    }
 }
 
 void MainWindow::symbols_clicked() {
-  decompose_func();
-  if (string_size < 255) {
-    if (last_symbol == 'x' || last_symbol == ')' || last_symbol == 'i') {
-      ui->inputOutput->setText(ui->inputOutput->text() + "*");
+    GetInfo();
+    if (size_ < 255) {
+        if (last_symbol_ == 'x' || last_symbol_ == ')' || last_symbol_ == 'i') {
+            ui->inputOutput->setText(ui->inputOutput->text() + "*");
+        }
+        if (button->text() == "Pi" && last_symbol_ != '.') {
+            if (last_symbol_ >= '0' && last_symbol_ <= '9') {
+                ui->inputOutput->setText(ui->inputOutput->text() + "*");
+            }
+            ui->inputOutput->setText(ui->inputOutput->text() + button->text());
+            is_dot_ = 0;
+        } else if (button->text() == 'x' && last_symbol_ != '.') {
+            if (last_symbol_ >= '0' && last_symbol_ <= '9') {
+                ui->inputOutput->setText(ui->inputOutput->text() + "*");
+            }
+            ui->inputOutput->setText(ui->inputOutput->text() + "x");
+            is_dot_ = 0;
+        } else if (button->text() >= '0' && button->text() <= '9') {
+            ui->inputOutput->setText(ui->inputOutput->text() + button->text());
+        }
     }
-    if (button->text() == "Pi" && last_symbol != '.') {
-      if (last_symbol >= '0' && last_symbol <= '9') {
-        ui->inputOutput->setText(ui->inputOutput->text() + "*");
-      }
-      ui->inputOutput->setText(ui->inputOutput->text() + button->text());
-      is_dot = 0;
-    } else if (button->text() == 'x' && last_symbol != '.') {
-      if (last_symbol >= '0' && last_symbol <= '9') {
-        ui->inputOutput->setText(ui->inputOutput->text() + "*");
-      }
-      ui->inputOutput->setText(ui->inputOutput->text() + "x");
-      is_dot = 0;
-    } else if (button->text() >= '0' && button->text() <= '9') {
-      ui->inputOutput->setText(ui->inputOutput->text() + button->text());
-    }
-  }
 }
 
 void MainWindow::func_clicked() {
-  decompose_func();
-  if (string_size < 255 && last_symbol != '.') {
-    if ((last_symbol >= '0' && last_symbol <= '9') || last_symbol == ')' ||
-        last_symbol == 'i') {
+  GetInfo();
+  if (size_ < 255 && last_symbol_ != '.') {
+    if ((last_symbol_ >= '0' && last_symbol_ <= '9') || last_symbol_ == ')' ||
+        last_symbol_ == 'i') {
       ui->inputOutput->setText(ui->inputOutput->text() + "*");
     }
     ui->inputOutput->setText(ui->inputOutput->text() + button->text() + "(");
-    is_dot = 0;
+    is_dot_ = 0;
   }
 }
 
 void MainWindow::brackets_clicked() {
-  int can_do = 1;
-  decompose_func();
-  count_of_left_bracket = 0;
-  count_of_right_bracket = 0;
-  if (last_symbol != '.') {
-    for (int i = 0; i < string_size; i++) {
-      if (input_string[i] == '(') {
-        count_of_left_bracket++;
+  GetInfo();
+  l_brackets_ = 0;
+  r_brackets_ = 0;
+  bool can_do_ = true;
+  if (last_symbol_ != '.') {
+    for (size_t i = 0; i < size_; i++) {
+      if (str_[i] == '(') {
+        l_brackets_++;
       }
-      if (input_string[i] == ')') {
-        count_of_right_bracket++;
+      if (str_[i] == ')') {
+        r_brackets_++;
       }
     }
-    if (string_size < 255) {
+    if (size_ < 255) {
       if (button->text() == '(') {
-        if ((last_symbol >= '0' && last_symbol <= '9') || last_symbol == 'x' ||
-            last_symbol == ')') {
+        if ((last_symbol_ >= '0' && last_symbol_ <= '9') || last_symbol_ == 'x' ||
+            last_symbol_ == ')') {
           ui->inputOutput->setText(ui->inputOutput->text() + "*");
         }
         ui->inputOutput->setText(ui->inputOutput->text() + "(");
-        is_dot = 0;
+        is_dot_ = 0;
       }
       if (button->text() == ')' &&
-          count_of_right_bracket < count_of_left_bracket) {
+          r_brackets_ < l_brackets_) {
         for (int i = 0; i < 6; i++) {
-          if (last_symbol == operators[i]) {
-            can_do = 0;
+          if (last_symbol_ == operators[i]) {
+            can_do_ = false;
           }
         }
         if (can_do) {
           ui->inputOutput->setText(ui->inputOutput->text() + ")");
-          is_dot = 0;
+          is_dot_ = 0;
         }
       }
     }
@@ -172,76 +185,61 @@ void MainWindow::brackets_clicked() {
 }
 
 void MainWindow::on_subFunc_clicked() {
-  decompose_func();
-  if (string_size < 255 && last_symbol != '.') {
-    if (string_size == 0) {
+  GetInfo();
+  if (size_ < 255 && last_symbol_ != '.') {
+    if (size_ == 0) {
       ui->inputOutput->setText(ui->inputOutput->text() + "(");
     } else {
       for (int i = 0; i < 6; i++) {
-        if (last_symbol == operators[i]) {
+        if (last_symbol_ == operators[i]) {
           ui->inputOutput->setText(ui->inputOutput->text() + "(");
           break;
         }
       }
     }
     ui->inputOutput->setText(ui->inputOutput->text() + "-");
-    is_dot = 0;
+    is_dot_ = 0;
   }
 }
 
 void MainWindow::on_dotSym_clicked() {
-  decompose_func();
-  if (string_size < 255 && last_symbol != '.' && !is_dot) {
-    if (last_symbol < '0' || last_symbol > '9') {
-      if (last_symbol == ')') {
+  GetInfo();
+  if (size_ < 255 && last_symbol_ != '.' && !is_dot_) {
+    if (last_symbol_ < '0' || last_symbol_ > '9') {
+      if (last_symbol_ == ')') {
         ui->inputOutput->setText(ui->inputOutput->text() + "*");
       }
       ui->inputOutput->setText(ui->inputOutput->text() + "0");
     }
     ui->inputOutput->setText(ui->inputOutput->text() + ".");
-    is_dot = 1;
-  }
-}
-
-void MainWindow::decompose_func() {
-  button = (QPushButton *)sender();
-  input_string = ui->inputOutput->text().toStdString();
-  last_symbol = input_string[input_string.size() - 1];
-  string_size = ui->inputOutput->text().size();
-  if (string_size == 0) {
-    ui->inputOutput->clear();
-  }
-  if (string_size >= 255) {
-    ui->inputOutput->clear();
-    ui->inputOutput->setText(ui->inputOutput->text() +
-                             "ERROR: Too many elements!");
+    is_dot_ = 1;
   }
 }
 
 void MainWindow::on_delElem_clicked() {
-  decompose_func();
-  if (last_symbol == '.') {
-    is_dot = 0;
+  GetInfo();
+  if (last_symbol_ == '.') {
+    is_dot_ = 0;
   }
-  if (string_size == 0) {
+  if (size_ == 0) {
     ui->inputOutput->clear();
   } else {
     QString text = ui->inputOutput->text();
     text.chop(1);
     ui->inputOutput->setText(text);
   }
-  decompose_func();
-  for (int i = input_string.size() - 1;
-       input_string[i] >= '0' && input_string[i] <= '9'; i--) {
-    if (input_string[i - 1] == '.') {
-      is_dot = 1;
+  GetInfo();
+  for (int i = str_.size() - 1;
+       str_[i] >= '0' && str_[i] <= '9'; i--) {
+    if (str_[i - 1] == '.') {
+      is_dot_ = 1;
     }
   }
 }
 
 void MainWindow::on_delAll_clicked() {
-  is_x = 0;
-  is_dot = 0;
+  is_x_ = false;
+  is_dot_ = false;
   ui->inputOutput->clear();
 }
 

@@ -15,6 +15,8 @@ SOURCES += \
     ../CFiles/s21_calculator.c \
     ../CFiles/s21_credit_calculator.c \
     ../CFiles/s21_deposit_calculator.c \
+    ../CPPFiles/calculator.cc \
+    ../LogicFiles/calculator.cc \
     creditwindow.cpp \
     depositwindow.cpp \
     main.cpp \
@@ -23,6 +25,8 @@ SOURCES += \
 
 HEADERS += \
     ../CFiles/s21_calculator.h \
+    ../CPPFiles/calculator.h \
+    ../LogicFiles/calculator.h \
     creditwindow.h \
     depositwindow.h \
     mainwindow.h \

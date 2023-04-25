@@ -18,7 +18,7 @@
 #include "depositwindow.h"
 
 extern "C" {
-#include "../CFiles/s21_calculator.h"
+#include "../LogicFiles/calculator.h"
 }
 
 QT_BEGIN_NAMESPACE
@@ -35,9 +35,9 @@ public:
   ~MainWindow();
 
 private slots:
+  void GetInfo();
   void check_fields();
   void func_clicked();
-  void decompose_func();
   void symbols_clicked();
   void brackets_clicked();
   void operators_clicked();
@@ -56,18 +56,17 @@ private:
   CreditWindow *secondWindow;
   DepositWindow *thirdWindow;
 
-  int is_x = 0;
-  int is_dot = 0;
-  int string_size = 0;
-  int error_status = 0;
-  int graph_is_open = 0;
-  int count_of_left_bracket = 0;
-  int count_of_right_bracket = 0;
+  std::string str_;
+  QPushButton *button_;
 
-  char last_symbol = '\0';
+  bool is_dot_ = false;
+  bool graph_open_ = false;
+
+  size_t size_ = 0;
+  int l_brackets_ = 0;
+  int r_brackets_ = 0;
+
+  char last_symbol_ = str_.back();
   char operators[6] = {'-', '+', '*', '/', '^', 'd'};
-
-  QPushButton *button;
-  std::string input_string;
 };
 #endif // MAINWINDOW_H
