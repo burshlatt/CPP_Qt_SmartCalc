@@ -298,6 +298,7 @@ void MainWindow::on_resultFunc_clicked() {
     }
     if (can_do_) {
         calc.set_str(str_ + "=");
+        calc.set_graph();
         if (!IsGraph()) {
             calc.Notation();
             if (!calc.get_error()) {
@@ -356,16 +357,16 @@ void MainWindow::print_graph() {
     double xEnd = ui->xEnd->text().toDouble() + 0.01;
     is_error_ = false;
     QVector<double> xCord, yCord;
-    int j = 1;
-    for (auto X = xBegin; X <= xEnd; X += 0.01) {
-        std::cout << X << ". " << calc.get_str() << std::endl;
-//        calc.set_x(X);
-//        calc.Notation();
-//        is_error_ = calc.get_error();
+    for (double X = xBegin; X <= xEnd && !is_error_; X += 0.01) {
+        calc.set_x(X);
+        calc.Notation();
+        is_error_ = calc.get_error();
         xCord.push_back(X);
         yCord.push_back(calc.get_res());
     }
-    ui->functionGraph->addGraph();
-    ui->functionGraph->graph(0)->addData(xCord, yCord);
-    ui->functionGraph->replot();
+    if (!is_error_) {
+        ui->functionGraph->addGraph();
+        ui->functionGraph->graph(0)->addData(xCord, yCord);
+        ui->functionGraph->replot();
+    }
 }
