@@ -1,13 +1,5 @@
 #include "calculator.h"
 
-// s21::calculator::~calculator() {
-//   str_ = "";
-//   result_ = 0.0;
-//   x_value_ = 0.0;
-//   is_graph_ = false;
-//   is_error_ = false;
-// }
-
 double s21::calculator::get_res() const noexcept {
   return result_;
 }
@@ -54,14 +46,16 @@ void s21::calculator::GetNums(double &x, double &y) noexcept {
 }
 
 void s21::calculator::InsertNumOutput(size_t &index) noexcept {
-  if (isdigit(str_[index]) || str_[index] == 'x') {
+  if (isdigit(str_[index]) || str_[index] == 'x' || str_[index] == 'P') {
     bool is_negative_ = false;
     if (str_[index - 1] == '-' && str_[index - 2] == '(') {
       is_negative_ = true;
     }
     char char_str_[255] = {'\0'};
-    for (auto i = 0; isdigit(str_[index]) || str_[index] == '.' || str_[index] == 'x'; i++) {
-      char_str_[i] = str_[index++];
+    int i = 0;
+    while (isdigit(str_[index]) || str_[index] == '.' || str_[index] == 'x' 
+    || str_[index] == 'P' || str_[index] == 'i') {
+      char_str_[i++] = str_[index++];
     }
     if (is_negative_) {
       output_.push_back(std::string(char_str_) + "-");
@@ -136,7 +130,7 @@ void s21::calculator::PopFunctions(const int variant) noexcept {
       is_error_ = true;
     } else {
       stack_.pop();
-      for (size_t i = 0; i < functions_.size() && !stack_.empty(); i++) {
+      for (size_t i = 0; i < array_size_ && !stack_.empty(); i++) {
         if (stack_.top() == functions_[i]) {
           output_.push_back(stack_.top());
           stack_.pop();
@@ -153,6 +147,26 @@ void s21::calculator::PopFunctions(const int variant) noexcept {
       }
     }
   }
+}
+
+bool s21::calculator::ConvertNums(size_t i) noexcept {
+  bool status = false;
+  double num_ = 0.0;
+  if (CustomIsDigit(output_[i]) || output_[i] == "x" || output_[i] == "Pi") {
+    if (output_[i] == "x" && is_graph_) {
+      num_ = x_value_;
+    } else if (output_[i] == "Pi") {
+      num_ = M_PI;
+    } else {
+      num_ = atof(output_[i].c_str());
+    }
+    if (IsNegative(output_[i])) {
+      num_ = -num_;
+    }
+    num_buffer_.push(num_);
+    status = true;
+  }
+  return status;
 }
 
 void s21::calculator::Notation() noexcept {
@@ -237,19 +251,8 @@ void s21::calculator::DoCalculations(const std::string other, const int variant)
 }
 
 void s21::calculator::Calculations() noexcept {
-  double num_ = 0.0;
   for (size_t i = 0; i < output_.size(); i++) {
-    if (CustomIsDigit(output_[i]) || output_[i] == "x") {
-      if (output_[i] == "x" && is_graph_) {
-        num_ = x_value_;
-      } else {
-        num_ = atof(output_[i].c_str());
-      }
-      if (IsNegative(output_[i])) {
-        num_ = -num_;
-      }
-      num_buffer_.push(num_);
-    } else {
+    if (!ConvertNums(i)) {
       switch (output_[i].front()) {
         case '+':
           DoCalculations("+", 2);
@@ -308,16 +311,30 @@ void s21::calculator::Calculations() noexcept {
     }
   }
   result_ = num_buffer_.top();
+  ClearContainers();
 }
 
-int main () {
-  s21::calculator test_;
-  test_.set_str("x^2=");
-  test_.set_graph();
-  for (double x = -200; x < 200.01; x += 0.01) {
-    std::cout << x << std::endl;
-    test_.set_x(x);
-    test_.Notation();
+void s21::calculator::ClearContainers() noexcept {
+  while (!stack_.empty()) {
+    stack_.pop();
   }
-  return 0;
+  while (!num_buffer_.empty()) {
+    num_buffer_.pop();
+  }
+  while (!output_.empty()) {
+    output_.pop_back();
+  }
 }
+
+// int main () {
+//   s21::calculator test_;
+//   test_.set_str("Pi+sin(3)*2=");
+//   test_.set_graph();
+//   test_.Notation();
+//   for (double x = -200; x < 200.01; x += 0.01) {
+//     test_.set_x(x);
+//     test_.Notation();
+//     std::cout << test_.get_res() << std::endl;
+//   }
+//   return 0;
+// }

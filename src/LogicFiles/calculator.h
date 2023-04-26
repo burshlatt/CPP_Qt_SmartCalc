@@ -3,7 +3,6 @@
 
 #include <cmath>
 #include <stack>
-#include <array>
 #include <vector>
 #include <string>
 #include <iostream>
@@ -23,7 +22,9 @@ namespace s21 {
 
       void Notation() noexcept;
       void Calculations() noexcept;
+      void ClearContainers() noexcept;
       void GetNums(double &x) noexcept;
+      bool ConvertNums(size_t i) noexcept;
       void GetNums(double &x, double &y) noexcept;
       void InsertNumOutput(size_t &index) noexcept;
       void PopFunctions(const int variant) noexcept;
@@ -42,7 +43,8 @@ namespace s21 {
       std::stack<double> num_buffer_;
       std::stack<std::string> stack_;
       std::vector<std::string> output_;
-      std::array<std::string, 11> functions_ = {"cos", "sin", "tan", "acos", "asin", "atan", "ln", "log", "sqrt", "abs", "^"};
+      const size_t array_size_ = 11;
+      std::string functions_[11]{"cos", "sin", "tan", "acos", "asin", "atan", "ln", "log", "sqrt", "abs", "^"};
   };
 }
 
