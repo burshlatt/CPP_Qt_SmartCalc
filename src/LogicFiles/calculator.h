@@ -8,19 +8,17 @@
 #include <string>
 #include <iostream>
 
-using std::cout;
-using std::endl;
-
 namespace s21 {
   class calculator {
     public:
       calculator() {}
-      ~calculator();
+      ~calculator() {};
       
       double get_res() const noexcept;
+      bool get_error() const noexcept;
 
+      void set_graph() noexcept;
       void set_x(double num) noexcept;
-      void set_graph(bool status) noexcept;
       void set_str(const std::string other) noexcept;
 
       void Notation() noexcept;

@@ -1,23 +1,32 @@
 #include "calculator.h"
 
-s21::calculator::~calculator() {
-  str_ = "";
-  result_ = 0.0;
-  x_value_ = 0.0;
-  is_graph_ = false;
-  is_error_ = false;
-}
+// s21::calculator::~calculator() {
+//   str_ = "";
+//   result_ = 0.0;
+//   x_value_ = 0.0;
+//   is_graph_ = false;
+//   is_error_ = false;
+// }
 
 double s21::calculator::get_res() const noexcept {
   return result_;
+}
+
+bool s21::calculator::get_error() const noexcept {
+  return is_error_;
 }
 
 void s21::calculator::set_x(double num) noexcept {
   x_value_ = num;
 }
 
-void s21::calculator::set_graph(bool status) noexcept {
-  is_graph_ = status;
+void s21::calculator::set_graph() noexcept {
+  is_graph_ = false;
+  for (size_t i = 0; i < str_.size() && !is_graph_; i++) {
+    if (str_[i] == 'x') {
+      is_graph_ = true;
+    }
+  }
 }
 
 void s21::calculator::set_str(const std::string other) noexcept {
@@ -303,11 +312,12 @@ void s21::calculator::Calculations() noexcept {
 
 int main () {
   s21::calculator test_;
-  test_.set_graph(true);
-  test_.set_x(2);
-  test_.set_str("-abs(-(-sin(3)+cos(4)))*sqrt(9)mod2*2*x=");
-  // test_.set_str("cos(56.33)*sin(87)+(-(-3+5))/tan(66)+cos(22)-sin(55)*(tan(99)/log(77)+ln(66))^(2+3)/sqrt(9)*abs(-99)=");
-  test_.Notation();
-  cout << "\nРезультат: " << test_.get_res() << endl << endl;
+  test_.set_str("x^2=");
+  test_.set_graph();
+  for (double x = -200; x < 200.01; x += 0.01) {
+    std::cout << x << std::endl;
+    test_.set_x(x);
+    test_.Notation();
+  }
   return 0;
 }

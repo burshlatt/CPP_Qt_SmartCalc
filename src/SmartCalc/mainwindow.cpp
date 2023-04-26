@@ -5,11 +5,11 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  secondWindow = new CreditWindow();
-  connect(secondWindow, &CreditWindow::firstWindow, this, &MainWindow::show);
+//  secondWindow = new CreditWindow();
+//  connect(secondWindow, &CreditWindow::firstWindow, this, &MainWindow::show);
 
-  thirdWindow = new DepositWindow();
-  connect(thirdWindow, &DepositWindow::firstWindow, this, &MainWindow::show);
+//  thirdWindow = new DepositWindow();
+//  connect(thirdWindow, &DepositWindow::firstWindow, this, &MainWindow::show);
 
   this->setFixedSize(480, 380);
 
@@ -63,15 +63,15 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() { delete ui; }
 
-void MainWindow::on_credCalc_clicked() {
-  secondWindow->show();
-  this->close();
-}
+//void MainWindow::on_credCalc_clicked() {
+//  secondWindow->show();
+//  this->close();
+//}
 
-void MainWindow::on_deposCalc_clicked() {
-  thirdWindow->show();
-  this->close();
-}
+//void MainWindow::on_deposCalc_clicked() {
+//  thirdWindow->show();
+//  this->close();
+//}
 
 void MainWindow::GetInfo() {
   button_ = (QPushButton *)sender();
@@ -103,7 +103,7 @@ void MainWindow::operators_clicked() {
             on_delElem_clicked();
         }
         if (size_ < 255) {
-          ui->inputOutput->setText(ui->inputOutput->text() + button->text());
+          ui->inputOutput->setText(ui->inputOutput->text() + button_->text());
           is_dot_ = false;
         }
     }
@@ -115,20 +115,20 @@ void MainWindow::symbols_clicked() {
         if (last_symbol_ == 'x' || last_symbol_ == ')' || last_symbol_ == 'i') {
             ui->inputOutput->setText(ui->inputOutput->text() + "*");
         }
-        if (button->text() == "Pi" && last_symbol_ != '.') {
+        if (button_->text() == "Pi" && last_symbol_ != '.') {
             if (last_symbol_ >= '0' && last_symbol_ <= '9') {
                 ui->inputOutput->setText(ui->inputOutput->text() + "*");
             }
-            ui->inputOutput->setText(ui->inputOutput->text() + button->text());
+            ui->inputOutput->setText(ui->inputOutput->text() + button_->text());
             is_dot_ = 0;
-        } else if (button->text() == 'x' && last_symbol_ != '.') {
+        } else if (button_->text() == 'x' && last_symbol_ != '.') {
             if (last_symbol_ >= '0' && last_symbol_ <= '9') {
                 ui->inputOutput->setText(ui->inputOutput->text() + "*");
             }
             ui->inputOutput->setText(ui->inputOutput->text() + "x");
             is_dot_ = 0;
-        } else if (button->text() >= '0' && button->text() <= '9') {
-            ui->inputOutput->setText(ui->inputOutput->text() + button->text());
+        } else if (button_->text() >= '0' && button_->text() <= '9') {
+            ui->inputOutput->setText(ui->inputOutput->text() + button_->text());
         }
     }
 }
@@ -136,11 +136,10 @@ void MainWindow::symbols_clicked() {
 void MainWindow::func_clicked() {
   GetInfo();
   if (size_ < 255 && last_symbol_ != '.') {
-    if ((last_symbol_ >= '0' && last_symbol_ <= '9') || last_symbol_ == ')' ||
-        last_symbol_ == 'i') {
+    if ((last_symbol_ >= '0' && last_symbol_ <= '9') || last_symbol_ == ')' || last_symbol_ == 'i') {
       ui->inputOutput->setText(ui->inputOutput->text() + "*");
     }
-    ui->inputOutput->setText(ui->inputOutput->text() + button->text() + "(");
+    ui->inputOutput->setText(ui->inputOutput->text() + button_->text() + "(");
     is_dot_ = 0;
   }
 }
@@ -160,7 +159,7 @@ void MainWindow::brackets_clicked() {
       }
     }
     if (size_ < 255) {
-      if (button->text() == '(') {
+      if (button_->text() == '(') {
         if ((last_symbol_ >= '0' && last_symbol_ <= '9') || last_symbol_ == 'x' ||
             last_symbol_ == ')') {
           ui->inputOutput->setText(ui->inputOutput->text() + "*");
@@ -168,14 +167,14 @@ void MainWindow::brackets_clicked() {
         ui->inputOutput->setText(ui->inputOutput->text() + "(");
         is_dot_ = 0;
       }
-      if (button->text() == ')' &&
+      if (button_->text() == ')' &&
           r_brackets_ < l_brackets_) {
         for (int i = 0; i < 6; i++) {
           if (last_symbol_ == operators[i]) {
             can_do_ = false;
           }
         }
-        if (can_do) {
+        if (can_do_) {
           ui->inputOutput->setText(ui->inputOutput->text() + ")");
           is_dot_ = 0;
         }
@@ -238,7 +237,6 @@ void MainWindow::on_delElem_clicked() {
 }
 
 void MainWindow::on_delAll_clicked() {
-  is_x_ = false;
   is_dot_ = false;
   ui->inputOutput->clear();
 }
@@ -279,100 +277,95 @@ void MainWindow::check_fields() {
   }
 }
 
+bool MainWindow::IsGraph() {
+    bool status = false;
+    for (size_t i = 0; i < str_.size(); i++) {
+        if (str_[i] == 'x') {
+            status = true;
+        }
+    }
+    return status;
+}
+
 void MainWindow::on_resultFunc_clicked() {
-  error_status = 0;
-  check_fields();
-  int can_do = 1;
-  double xValue = ui->xValue->text().toDouble();
-  std::string final_string = ui->inputOutput->text().toStdString();
-  char *chars_array = &final_string[0];
-  double result = polish_notation(chars_array, is_x, xValue, &error_status);
-  for (int i = 0; i < 6; i++) {
-    if (final_string[final_string.size() - 1] == operators[i]) {
-      can_do = 0;
+    check_fields();
+    bool can_do_ = true;
+    str_ = ui->inputOutput->text().toStdString();
+    for (int i = 0; i < 6; i++) {
+        if (str_.back() == operators[i]) {
+            can_do_ = false;
+        }
     }
-  }
-  for (int i = 0; final_string[i] != '\0'; i++) {
-    if (final_string[i] == 'x') {
-      is_x = 1;
+    if (can_do_) {
+        calc.set_str(str_ + "=");
+        if (!IsGraph()) {
+            calc.Notation();
+            if (!calc.get_error()) {
+                double result_ = calc.get_res();
+                ui->inputOutput->clear();
+                if (std::fabs(result_ - (int)result_) < std::numeric_limits<double>::epsilon()) {
+                    ui->inputOutput->setText(ui->inputOutput->text() + QString::number(result_, 'f', 0));
+                } else {
+                    ui->inputOutput->setText(ui->inputOutput->text() + QString::number(result_, 'f', 7));
+                }
+            }
+        } else {
+            if (!graph_open_) {
+                int xPos = this->geometry().x();
+                int yPos = this->geometry().y();
+                this->setFixedSize(960, 380);
+                ui->showGraph->setText("<");
+                setGeometry(xPos, yPos, width() + 480, height());
+                graph_open_ = true;
+            }
+            print_graph();
+        }
     }
-  }
-  if (!can_do) {
-    ui->inputOutput->setText(ui->inputOutput->text() + "1");
-  } else if (error_status) {
-    ui->inputOutput->setText(ui->inputOutput->text() + "2");
-  }
-  if (!error_status && can_do && chars_array[0] != '-') {
-    if (is_x) {
-      if (!graph_is_open) {
-        int xPos = this->geometry().x();
-        int yPos = this->geometry().y();
-        this->setFixedSize(960, 380);
-        ui->showGraph->setText("<");
-        setGeometry(xPos, yPos, width() + 480, height());
-        graph_is_open = 1;
-      }
-      print_graph(chars_array);
-      is_x = 0;
-    } else {
-      ui->inputOutput->clear();
-      if (fabs(result - (int)result) < 0.00000001) {
-        ui->inputOutput->setText(ui->inputOutput->text() +
-                                 QString::number(result, 'f', 0));
-      } else {
-        ui->inputOutput->setText(ui->inputOutput->text() +
-                                 QString::number(result, 'f', 7));
-      }
+    if (calc.get_error()) {
+        ui->inputOutput->clear();
+        ui->inputOutput->setText(ui->inputOutput->text() + "ERROR: Incorrect data!");
     }
-  } else if (error_status == 2 && can_do) {
-    ui->inputOutput->clear();
-    ui->inputOutput->setText(ui->inputOutput->text() +
-                             "ERROR: Division by zero!");
-  } else {
-    ui->inputOutput->clear();
-    ui->inputOutput->setText(ui->inputOutput->text() +
-                             "ERROR: Incorrect data!");
-  }
 }
 
 void MainWindow::on_showGraph_clicked() {
   int xPos = this->geometry().x();
   int yPos = this->geometry().y();
-  if (!graph_is_open) {
+  if (!graph_open_) {
     this->setFixedSize(960, 380);
     ui->showGraph->setText("<");
     setGeometry(xPos, yPos, width() + 480, height());
-    graph_is_open = 1;
+    graph_open_ = true;
   } else {
     this->setFixedSize(480, 380);
     ui->showGraph->setText(">");
     setGeometry(xPos, yPos, width() - 480, height());
-    graph_is_open = 0;
+    graph_open_ = false;
   }
 }
 
-void MainWindow::print_graph(char *chars_array) {
-  check_fields();
-  ui->functionGraph->clearGraphs();
-  int xMin = ui->xMinCord->text().toInt();
-  int xMax = ui->xMaxCord->text().toInt();
-  int yMin = ui->yMinCord->text().toInt();
-  int yMax = ui->yMaxCord->text().toInt();
-  ui->functionGraph->xAxis->setRange(xMin, xMax);
-  ui->functionGraph->yAxis->setRange(yMin, yMax);
-  double h = 0.01;
-  double xBegin = ui->xStart->text().toDouble();
-  double xEnd = ui->xEnd->text().toDouble() + h;
-  double X = xBegin;
-  error_status = 0;
-  QVector<double> xCord, yCord;
-  while (X <= xEnd) {
-    double result = polish_notation(chars_array, is_x, X, &error_status);
-    xCord.push_back(X);
-    yCord.push_back(result);
-    X += h;
-  }
-  ui->functionGraph->addGraph();
-  ui->functionGraph->graph(0)->addData(xCord, yCord);
-  ui->functionGraph->replot();
+void MainWindow::print_graph() {
+    check_fields();
+    ui->functionGraph->clearGraphs();
+    int xMin = ui->xMinCord->text().toInt();
+    int xMax = ui->xMaxCord->text().toInt();
+    int yMin = ui->yMinCord->text().toInt();
+    int yMax = ui->yMaxCord->text().toInt();
+    ui->functionGraph->xAxis->setRange(xMin, xMax);
+    ui->functionGraph->yAxis->setRange(yMin, yMax);
+    double xBegin = ui->xStart->text().toDouble();
+    double xEnd = ui->xEnd->text().toDouble() + 0.01;
+    is_error_ = false;
+    QVector<double> xCord, yCord;
+    int j = 1;
+    for (auto X = xBegin; X <= xEnd; X += 0.01) {
+        std::cout << X << ". " << calc.get_str() << std::endl;
+//        calc.set_x(X);
+//        calc.Notation();
+//        is_error_ = calc.get_error();
+        xCord.push_back(X);
+        yCord.push_back(calc.get_res());
+    }
+    ui->functionGraph->addGraph();
+    ui->functionGraph->graph(0)->addData(xCord, yCord);
+    ui->functionGraph->replot();
 }
