@@ -12,6 +12,10 @@ void s21::calculator::set_x(double num) noexcept {
   x_value_ = num;
 }
 
+void s21::calculator::set_str(const std::string other) noexcept {
+  str_ = other;
+}
+
 void s21::calculator::set_graph() noexcept {
   is_graph_ = false;
   for (size_t i = 0; i < str_.size() && !is_graph_; i++) {
@@ -21,16 +25,8 @@ void s21::calculator::set_graph() noexcept {
   }
 }
 
-void s21::calculator::set_str(const std::string other) noexcept {
-  str_ = other;
-}
-
 bool s21::calculator::CustomIsDigit(const std::string other) const noexcept {
   return (other.front() >= '0' && other.front() <= '9') ? true : false;
-}
-
-bool s21::calculator::IsNegative(const std::string other) const noexcept {
-  return other.back() == '-'  ? true : false;
 }
 
 void s21::calculator::GetNums(double &x) noexcept {
@@ -160,7 +156,7 @@ bool s21::calculator::ConvertNums(size_t i) noexcept {
     } else {
       num_ = atof(output_[i].c_str());
     }
-    if (IsNegative(output_[i])) {
+    if (output_[i].back() == '-') {
       num_ = -num_;
     }
     num_buffer_.push(num_);
@@ -251,66 +247,40 @@ void s21::calculator::DoCalculations(const std::string other, const int variant)
 }
 
 void s21::calculator::Calculations() noexcept {
+  int variant = 0;
   for (size_t i = 0; i < output_.size(); i++) {
+    // std::cout << output_[i] << " ";
     if (!ConvertNums(i)) {
       switch (output_[i].front()) {
-        case '+':
-          DoCalculations("+", 2);
-          break;
         case '-':
-          if (!CustomIsDigit(output_[i - 1])) {
+          if (!CustomIsDigit(output_[i - 1]) && output_[i - 1] != "^" && output_[i - 1] != "mod") {
             DoCalculations("", 4);
           } else {
-            DoCalculations("-", 2);
+            DoCalculations(output_[i], 2);
           }
           break;
+        case '+':
         case '*':
-          DoCalculations("*", 2);
-          break;
         case '/':
-          DoCalculations("/", 2);
-          break;
         case '^':
-          DoCalculations("^", 2);
-          break;
         case 'm':
-          DoCalculations("mod", 2);
+          DoCalculations(output_[i], 2);
           break;
         case 'c':
-          DoCalculations("cos", 3);
-          break;
         case 's':
-          if (output_[i][1] == 'i') {
-            DoCalculations("sin", 3);
-          } else {
-            DoCalculations("sqrt", 1);
-          }
-          break;
         case 't':
-          DoCalculations("tan", 3);
-          break;
         case 'a':
-          if (output_[i][1] == 'b') {
-            DoCalculations("abs", 1);
-          } else if (output_[i][1] == 'c') {
-            DoCalculations("acos", 3);
-          } else if (output_[i][1] == 's') {
-            DoCalculations("asin", 3);
-          } else if (output_[i][1] == 't') {
-            DoCalculations("atan", 3);
-          }
+          variant = (output_[i] == "sqrt" || output_[i] == "abs") ? 1 : 3;
+          DoCalculations(output_[i], variant);
           break;
         case 'l':
-          if (output_[i][1] == 'n') {
-            DoCalculations("ln", 1);
-          } else {
-            DoCalculations("log", 1);
-          }
+          DoCalculations(output_[i], 1);
           break;
       }
     }
   }
   result_ = num_buffer_.top();
+  // std::cout << std::endl << std::endl << num_buffer_.size() << std::endl;
   ClearContainers();
 }
 
@@ -326,15 +296,11 @@ void s21::calculator::ClearContainers() noexcept {
   }
 }
 
-// int main () {
-//   s21::calculator test_;
-//   test_.set_str("Pi+sin(3)*2=");
-//   test_.set_graph();
-//   test_.Notation();
-//   for (double x = -200; x < 200.01; x += 0.01) {
-//     test_.set_x(x);
-//     test_.Notation();
-//     std::cout << test_.get_res() << std::endl;
-//   }
-//   return 0;
-// }
+int main () {
+  s21::calculator test_;
+  test_.set_str("(2*3)-(3*3)=");
+  test_.set_graph();
+  test_.Notation();
+  std::cout << std::endl << "Результат: " << test_.get_res() << std::endl << std::endl;
+  return 0;
+}

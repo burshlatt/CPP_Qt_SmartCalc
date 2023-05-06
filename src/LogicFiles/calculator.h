@@ -29,7 +29,6 @@ namespace s21 {
       void InsertNumOutput(size_t &index) noexcept;
       void PopFunctions(const int variant) noexcept;
       void PushLogic(const std::string other) noexcept;
-      bool IsNegative(const std::string other) const noexcept;
       bool CustomIsDigit(const std::string other) const noexcept;
       void PushFunctions(size_t &index, const int variant) noexcept;
       void DoCalculations(const std::string other, const int variant) noexcept;
@@ -40,10 +39,10 @@ namespace s21 {
       double x_value_ = 0.0;
       bool is_graph_ = false;
       bool is_error_ = false;
+      const size_t array_size_ = 11;
       std::stack<double> num_buffer_;
       std::stack<std::string> stack_;
       std::vector<std::string> output_;
-      const size_t array_size_ = 11;
       std::string functions_[11]{"cos", "sin", "tan", "acos", "asin", "atan", "ln", "log", "sqrt", "abs", "^"};
   };
 }

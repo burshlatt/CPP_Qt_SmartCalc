@@ -1,4 +1,4 @@
-CC = g++
+CC = clang++
 FLAGS = -Wall -Werror -Wextra -std=c++17
 
 main: clean
