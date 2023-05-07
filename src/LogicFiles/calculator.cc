@@ -70,7 +70,8 @@ void s21::calculator::PushLogic(const std::string other) noexcept {
     }
   } else if (other == "+" || other == "-") {
     while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*" 
-    || stack_.top() == "/" || stack_.top() == "+" || stack_.top() == "-" || stack_.top() == "^")) {
+    || stack_.top() == "/" || stack_.top() == "+" || stack_.top() == "-" 
+    || stack_.top() == "^")) {
       output_.push_back(stack_.top());
       stack_.pop();
     }
@@ -253,7 +254,6 @@ void s21::calculator::DoCalculations() noexcept {
 
 void s21::calculator::Calculations() noexcept {
   for (size_t i = 0; i < output_.size(); i++) {
-    std::cout << output_[i] << " "; // ТУТ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if (!ConvertNums(i)) {
       switch (output_[i].front()) {
         case '!':
@@ -300,9 +300,7 @@ void s21::calculator::ClearContainers() noexcept {
 
 int main () {
   s21::calculator test_;
-  test_.set_str("2^2+3=");
-  // test_.set_str("(-(2^2-3))=");
-  // test_.set_str("(-(2*3)-(-3*3)^2)=");
+  test_.set_str("(-(2*3)-(-3*3)^2)=");
   test_.set_graph();
   test_.Notation();
   std::cout << std::endl << std::endl << "Ошибка: " << test_.get_error() << std::endl;
