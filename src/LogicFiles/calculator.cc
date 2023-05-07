@@ -300,7 +300,8 @@ void s21::calculator::ClearContainers() noexcept {
 
 int main () {
   s21::calculator test_;
-  test_.set_str("(-(2*3)-(-3*3)^2)=");
+  test_.set_str("2^2=");
+  // test_.set_str("(-(2*3)-(-3*3)^2)=");
   test_.set_graph();
   test_.Notation();
   std::cout << std::endl << std::endl << test_.get_error() << std::endl;
