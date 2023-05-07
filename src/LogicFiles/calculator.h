@@ -22,19 +22,21 @@ namespace s21 {
 
       void Notation() noexcept;
       void Calculations() noexcept;
+      void PopFunctions() noexcept;
+      void DoCalculations() noexcept;
       void ClearContainers() noexcept;
       void GetNums(double &x) noexcept;
       bool ConvertNums(size_t i) noexcept;
+      void PushFunctions(size_t &index) noexcept;
       void GetNums(double &x, double &y) noexcept;
       void InsertNumOutput(size_t &index) noexcept;
-      void PopFunctions(const int variant) noexcept;
       void PushLogic(const std::string other) noexcept;
       bool CustomIsDigit(const std::string other) const noexcept;
-      void PushFunctions(size_t &index, const int variant) noexcept;
-      void DoCalculations(const std::string other, const int variant) noexcept;
 
     private:
+      int option_ = 0;
       std::string str_;
+      std::string func_;
       double result_ = 0.0;
       double x_value_ = 0.0;
       bool is_graph_ = false;

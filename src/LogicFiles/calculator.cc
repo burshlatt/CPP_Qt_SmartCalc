@@ -78,8 +78,8 @@ void s21::calculator::PushLogic(const std::string other) noexcept {
   stack_.push(other);
 }
 
-void s21::calculator::PushFunctions(size_t &index, const int variant) noexcept {
-  if (variant == 1) {
+void s21::calculator::PushFunctions(size_t &index) noexcept {
+  if (option_ == 1) {
     if (str_[index] == '^') {
       stack_.push("^");
     } else {
@@ -92,7 +92,7 @@ void s21::calculator::PushFunctions(size_t &index, const int variant) noexcept {
       }
       stack_.push("(");
     }
-  } else if (variant == 2) {
+  } else if (option_ == 2) {
     switch (str_[index]) {
       case 'm':
         PushLogic("mod");
@@ -108,7 +108,9 @@ void s21::calculator::PushFunctions(size_t &index, const int variant) noexcept {
         PushLogic("+");
         break;
       case '-':
-        if (str_[index - 1] != '(' || !isdigit(str_[index + 1])) {
+        if (str_[index - 1] == '(' && !isdigit(str_[index + 1])) {
+          PushLogic("!");
+        } else if (str_[index - 1] != '(') {
           PushLogic("-");
         }
         break;
@@ -116,8 +118,8 @@ void s21::calculator::PushFunctions(size_t &index, const int variant) noexcept {
   }
 }
 
-void s21::calculator::PopFunctions(const int variant) noexcept {
-  if (variant == 1) {
+void s21::calculator::PopFunctions() noexcept {
+  if (option_ == 1) {
     while (!stack_.empty() && stack_.top() != "(") {
       output_.push_back(stack_.top());
       stack_.pop();
@@ -133,7 +135,7 @@ void s21::calculator::PopFunctions(const int variant) noexcept {
         }
       }
     }
-  } else if (variant == 2) {
+  } else if (option_ == 2) {
     while (!stack_.empty() && !is_error_) {
       if (stack_.top() == "(") {
         is_error_ = true;
@@ -176,111 +178,111 @@ void s21::calculator::Notation() noexcept {
       case 'l':
       case '^':
       case '(':
-        PushFunctions(i, 1);
+        option_ = 1;
+        PushFunctions(i);
         break;
       case 'm':
       case '*':
       case '/':
       case '+':
       case '-':
-        PushFunctions(i, 2);
+        option_ = 2;
+        PushFunctions(i);
         break;
       case ')':
-        PopFunctions(1);
+        option_ = 1;
+        PopFunctions();
         break;
       case '=':
-        PopFunctions(2);
+        option_ = 2;
+        PopFunctions();
         break;
     }
   }
-  output_.shrink_to_fit();
-  Calculations();
+  is_error_ ? (void)0 : Calculations();
 }
 
-void s21::calculator::DoCalculations(const std::string other, const int variant) noexcept {
+void s21::calculator::DoCalculations() noexcept {
   double x_ = 0.0, y_ = 0.0;
-  if (variant == 1) {
+  if (option_ == 1) {
     GetNums(x_);
-  } else if (variant == 2) {
+  } else if (option_ == 2) {
     GetNums(x_, y_);
-  } else if (variant == 3) {
+  } else if (option_ == 3) {
     GetNums(x_);
     x_ = is_graph_ ? x_ * M_PI / 180 : x_;
-  } else if (variant == 4) {
+  } else if (option_ == 4) {
     double n_num_ = num_buffer_.top();
     num_buffer_.pop();
     num_buffer_.push(-n_num_);
   }
-  if (other == "+") {
+  if (func_ == "+") {
     num_buffer_.push(y_ + x_);
-  } else if (other == "-") {
+  } else if (func_ == "-") {
     num_buffer_.push(y_ - x_);
-  } else if (other == "*") {
+  } else if (func_ == "*") {
     num_buffer_.push(y_ * x_);
-  } else if (other == "/") {
+  } else if (func_ == "/") {
     num_buffer_.push(y_ / x_);
-  } else if (other == "ln") {
+  } else if (func_ == "ln") {
     num_buffer_.push(log(x_));
-  } else if (other == "log") {
+  } else if (func_ == "log") {
     num_buffer_.push(log10(x_));
-  } else if (other == "abs") {
+  } else if (func_ == "abs") {
     num_buffer_.push(fabs(x_));
-  } else if (other == "cos") {
+  } else if (func_ == "cos") {
     num_buffer_.push(cos(x_));
-  } else if (other == "sin") {
+  } else if (func_ == "sin") {
     num_buffer_.push(sin(x_));
-  } else if (other == "tan") {
+  } else if (func_ == "tan") {
     num_buffer_.push(tan(x_));
-  } else if (other == "acos") {
+  } else if (func_ == "acos") {
     num_buffer_.push(acos(x_));
-  } else if (other == "asin") {
+  } else if (func_ == "asin") {
     num_buffer_.push(asin(x_));
-  } else if (other == "atan") {
+  } else if (func_ == "atan") {
     num_buffer_.push(atan(x_));
-  } else if (other == "sqrt") {
+  } else if (func_ == "sqrt") {
     num_buffer_.push(sqrt(x_));
-  } else if (other == "^") {
+  } else if (func_ == "^") {
     num_buffer_.push(pow(y_, x_));
-  } else if (other == "mod") {
+  } else if (func_ == "mod") {
     num_buffer_.push(fmod(y_, x_));
   }
 }
 
 void s21::calculator::Calculations() noexcept {
-  int variant = 0;
   for (size_t i = 0; i < output_.size(); i++) {
-    // std::cout << output_[i] << " ";
+    std::cout << output_[i] << " ";
     if (!ConvertNums(i)) {
       switch (output_[i].front()) {
-        case '-':
-          if (!CustomIsDigit(output_[i - 1]) && output_[i - 1] != "^" && output_[i - 1] != "mod") {
-            DoCalculations("", 4);
-          } else {
-            DoCalculations(output_[i], 2);
-          }
+        case '!':
+          output_[i] = "";
+          option_ = 4;
           break;
         case '+':
+        case '-':
         case '*':
         case '/':
         case '^':
         case 'm':
-          DoCalculations(output_[i], 2);
+          option_ = 2;
           break;
         case 'c':
         case 's':
         case 't':
         case 'a':
-          variant = (output_[i] == "sqrt" || output_[i] == "abs") ? 1 : 3;
-          DoCalculations(output_[i], variant);
+          option_ = (output_[i] == "sqrt" || output_[i] == "abs") ? 1 : 3;
           break;
         case 'l':
-          DoCalculations(output_[i], 1);
+          option_ = 1;
           break;
       }
+      func_ = output_[i];
+      DoCalculations();
     }
   }
   result_ = num_buffer_.top();
-  // std::cout << std::endl << std::endl << num_buffer_.size() << std::endl;
   ClearContainers();
 }
 
@@ -298,9 +300,10 @@ void s21::calculator::ClearContainers() noexcept {
 
 int main () {
   s21::calculator test_;
-  test_.set_str("(2*3)-(3*3)=");
+  test_.set_str("(-(2*3)-(-3*3)^2)=");
   test_.set_graph();
   test_.Notation();
+  std::cout << std::endl << std::endl << test_.get_error() << std::endl;
   std::cout << std::endl << "Результат: " << test_.get_res() << std::endl << std::endl;
   return 0;
 }
