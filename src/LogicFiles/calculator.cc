@@ -29,6 +29,21 @@ bool s21::calculator::CustomIsDigit(const std::string other) const noexcept {
   return (other.front() >= '0' && other.front() <= '9') ? true : false;
 }
 
+void s21::calculator::GetNums() noexcept {
+  if (option_ == 1) {
+    GetNums(x_);
+  } else if (option_ == 2) {
+    GetNums(x_, y_);
+  } else if (option_ == 3) {
+    GetNums(x_);
+    x_ = is_graph_ ? x_ * M_PI / 180 : x_;
+  } else if (option_ == 4) {
+    double n_num_ = num_buffer_.top();
+    num_buffer_.pop();
+    num_buffer_.push(-n_num_);
+  }
+}
+
 void s21::calculator::GetNums(double &x) noexcept {
   x = num_buffer_.top();
   num_buffer_.pop();
@@ -204,19 +219,6 @@ void s21::calculator::Notation() noexcept {
 }
 
 void s21::calculator::DoCalculations() noexcept {
-  double x_ = 0.0, y_ = 0.0;
-  if (option_ == 1) {
-    GetNums(x_);
-  } else if (option_ == 2) {
-    GetNums(x_, y_);
-  } else if (option_ == 3) {
-    GetNums(x_);
-    x_ = is_graph_ ? x_ * M_PI / 180 : x_;
-  } else if (option_ == 4) {
-    double n_num_ = num_buffer_.top();
-    num_buffer_.pop();
-    num_buffer_.push(-n_num_);
-  }
   if (func_ == "+") {
     num_buffer_.push(y_ + x_);
   } else if (func_ == "-") {
@@ -254,6 +256,7 @@ void s21::calculator::DoCalculations() noexcept {
 
 void s21::calculator::Calculations() noexcept {
   for (size_t i = 0; i < output_.size(); i++) {
+    std::cout << output_[i] << " ";
     if (!ConvertNums(i)) {
       switch (output_[i].front()) {
         case '!':
@@ -279,6 +282,7 @@ void s21::calculator::Calculations() noexcept {
           break;
       }
       func_ = output_[i];
+      GetNums();
       DoCalculations();
     }
   }
@@ -287,15 +291,12 @@ void s21::calculator::Calculations() noexcept {
 }
 
 void s21::calculator::ClearContainers() noexcept {
-  while (!stack_.empty()) {
+  while (!stack_.empty())
     stack_.pop();
-  }
-  while (!num_buffer_.empty()) {
+  while (!num_buffer_.empty())
     num_buffer_.pop();
-  }
-  while (!output_.empty()) {
+  while (!output_.empty())
     output_.pop_back();
-  }
 }
 
 int main () {
@@ -303,7 +304,7 @@ int main () {
   test_.set_str("(-(2*3)-(-3*3)^2)=");
   test_.set_graph();
   test_.Notation();
-  std::cout << std::endl << std::endl << "Ошибка: " << test_.get_error() << std::endl;
+  std::cout << std::endl << "Ошибка: " << test_.get_error() << std::endl;
   std::cout << std::endl << "Результат: " << test_.get_res() << std::endl << std::endl;
   return 0;
 }

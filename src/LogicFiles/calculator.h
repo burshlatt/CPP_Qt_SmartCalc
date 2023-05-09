@@ -20,6 +20,7 @@ namespace s21 {
       void set_x(double num) noexcept;
       void set_str(const std::string other) noexcept;
 
+      void GetNums() noexcept;
       void Notation() noexcept;
       void Calculations() noexcept;
       void PopFunctions() noexcept;
@@ -41,6 +42,7 @@ namespace s21 {
       double x_value_ = 0.0;
       bool is_graph_ = false;
       bool is_error_ = false;
+      double x_ = 0.0, y_ = 0.0;
       const size_t array_size_ = 11;
       std::stack<double> num_buffer_;
       std::stack<std::string> stack_;
