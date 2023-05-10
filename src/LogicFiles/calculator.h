@@ -11,17 +11,15 @@ namespace s21 {
   class calculator {
     public:
       calculator() {}
-      ~calculator() {};
+      ~calculator() {}
       
-      double get_res() const noexcept;
-      bool get_error() const noexcept;
+      double get_res() const noexcept { return result_; }
+      bool get_error() const noexcept { return is_error_; }
 
-      void set_graph() noexcept;
-      void set_x(double num) noexcept;
-      void set_str(const std::string other) noexcept;
+      void set_x(const double num) noexcept { x_value_ = num; }
+      void set_graph(const bool opt) noexcept { is_graph_ = opt; }
 
       void GetNums() noexcept;
-      void Notation() noexcept;
       void Calculations() noexcept;
       void PopFunctions() noexcept;
       void DoCalculations() noexcept;
@@ -31,8 +29,9 @@ namespace s21 {
       void PushFunctions(size_t &index) noexcept;
       void GetNums(double &x, double &y) noexcept;
       void InsertNumOutput(size_t &index) noexcept;
-      void PushLogic(const std::string other) noexcept;
-      bool CustomIsDigit(const std::string other) const noexcept;
+      void Notation(const std::string str) noexcept;
+      void PushLogic(const std::string str) noexcept;
+      bool CustomIsDigit(const std::string str) const noexcept { return str.front() >= '0' && str.front() <= '9'; }
 
     private:
       int option_ = 0;

@@ -1,33 +1,13 @@
 #include "calculator.h"
 
-double s21::calculator::get_res() const noexcept {
-  return result_;
-}
-
-bool s21::calculator::get_error() const noexcept {
-  return is_error_;
-}
-
-void s21::calculator::set_x(double num) noexcept {
-  x_value_ = num;
-}
-
-void s21::calculator::set_str(const std::string other) noexcept {
-  str_ = other;
-}
-
-void s21::calculator::set_graph() noexcept {
-  is_graph_ = false;
-  for (size_t i = 0; i < str_.size() && !is_graph_; i++) {
-    if (str_[i] == 'x') {
-      is_graph_ = true;
-    }
-  }
-}
-
-bool s21::calculator::CustomIsDigit(const std::string other) const noexcept {
-  return (other.front() >= '0' && other.front() <= '9') ? true : false;
-}
+// void s21::calculator::set_graph() noexcept {
+//   is_graph_ = false;
+//   for (size_t i = 0; i < str_.size() && !is_graph_; i++) {
+//     if (str_[i] == 'x') {
+//       is_graph_ = true;
+//     }
+//   }
+// }
 
 void s21::calculator::GetNums() noexcept {
   if (option_ == 1) {
@@ -58,40 +38,34 @@ void s21::calculator::GetNums(double &x, double &y) noexcept {
 
 void s21::calculator::InsertNumOutput(size_t &index) noexcept {
   if (isdigit(str_[index]) || str_[index] == 'x' || str_[index] == 'P') {
-    bool is_negative_ = false;
-    if (str_[index - 1] == '-' && str_[index - 2] == '(') {
-      is_negative_ = true;
-    }
-    char char_str_[255] = {'\0'};
     int i = 0;
+    bool is_negative_ = false;
+    char char_str_[255] = {'\0'};
+    if (str_[index - 1] == '-' && str_[index - 2] == '(') is_negative_ = true;
     while (isdigit(str_[index]) || str_[index] == '.' || str_[index] == 'x' 
     || str_[index] == 'P' || str_[index] == 'i') {
       char_str_[i++] = str_[index++];
     }
-    if (is_negative_) {
-      output_.push_back(std::string(char_str_) + "-");
-    } else {
-      output_.push_back(std::string(char_str_));
-    }
+    output_.push_back(is_negative_ ? std::string(char_str_) + "-" : char_str_);
   }
 }
 
-void s21::calculator::PushLogic(const std::string other) noexcept {
-  if (other == "mod" || other == "*" || other == "/") {
-    while (!stack_.empty() && (stack_.top() == "mod" 
-    || stack_.top() == "*" || stack_.top() == "/" || stack_.top() == "^")) {
+void s21::calculator::PushLogic(const std::string str) noexcept {
+  if (str == "mod" || str == "*" || str == "/") {
+    while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*" 
+    || stack_.top() == "/" || stack_.top() == "^" || stack_.top() == "!")) {
       output_.push_back(stack_.top());
       stack_.pop();
     }
-  } else if (other == "+" || other == "-") {
+  } else if (str == "+" || str == "-") {
     while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*" 
     || stack_.top() == "/" || stack_.top() == "+" || stack_.top() == "-" 
-    || stack_.top() == "^")) {
+    || stack_.top() == "^" || stack_.top() == "!")) {
       output_.push_back(stack_.top());
       stack_.pop();
     }
   }
-  stack_.push(other);
+  stack_.push(str);
 }
 
 void s21::calculator::PushFunctions(size_t &index) noexcept {
@@ -100,36 +74,27 @@ void s21::calculator::PushFunctions(size_t &index) noexcept {
       stack_.push("^");
     } else {
       char buffer[255] = {'\0'};
-      for (size_t i = 0; str_[index] != '('; i++) {
+      for (size_t i = 0; str_[index] != '('; i++)
         buffer[i] = str_[index++];
-      }
-      if (std::string(buffer).size()) {
+      if (std::string(buffer).size())
         stack_.push(std::string(buffer));
-      }
       stack_.push("(");
     }
   } else if (option_ == 2) {
-    switch (str_[index]) {
-      case 'm':
-        PushLogic("mod");
-        index += 2;
-        break;
-      case '*':
-        PushLogic("*");
-        break;
-      case '/':
-        PushLogic("/");
-        break;
-      case '+':
-        PushLogic("+");
-        break;
-      case '-':
-        if (str_[index - 1] == '(' && !isdigit(str_[index + 1])) {
-          PushLogic("!");
-        } else if (str_[index - 1] != '(') {
-          PushLogic("-");
-        }
-        break;
+    if (str_[index] == 'm') {
+      PushLogic("mod");
+      index += 2;
+    } else if (str_[index] == '*') {
+      PushLogic("*");
+    } else if (str_[index] == '/') {
+      PushLogic("/");
+    } else if (str_[index] == '+') {
+      PushLogic("+");
+    } else if (str_[index] == '-') {
+      if (str_[index - 1] == '(' && !isdigit(str_[index + 1]))
+        PushLogic("!");
+      else if (str_[index - 1] != '(')
+        PushLogic("-");
     }
   }
 }
@@ -167,23 +132,22 @@ bool s21::calculator::ConvertNums(size_t i) noexcept {
   bool status = false;
   double num_ = 0.0;
   if (CustomIsDigit(output_[i]) || output_[i] == "x" || output_[i] == "Pi") {
-    if (output_[i] == "x" && is_graph_) {
+    if (output_[i] == "x" && is_graph_)
       num_ = x_value_;
-    } else if (output_[i] == "Pi") {
+    else if (output_[i] == "Pi")
       num_ = M_PI;
-    } else {
+    else
       num_ = atof(output_[i].c_str());
-    }
-    if (output_[i].back() == '-') {
+    if (output_[i].back() == '-')
       num_ = -num_;
-    }
     num_buffer_.push(num_);
     status = true;
   }
   return status;
 }
 
-void s21::calculator::Notation() noexcept {
+void s21::calculator::Notation(const std::string str) noexcept {
+  str_ = str;
   for (size_t i = 0; i < str_.size() && !is_error_; i++) {
     InsertNumOutput(i);
     switch (str_[i]) {
@@ -219,39 +183,38 @@ void s21::calculator::Notation() noexcept {
 }
 
 void s21::calculator::DoCalculations() noexcept {
-  if (func_ == "+") {
+  if (func_ == "+")
     num_buffer_.push(y_ + x_);
-  } else if (func_ == "-") {
+  else if (func_ == "-")
     num_buffer_.push(y_ - x_);
-  } else if (func_ == "*") {
+  else if (func_ == "*")
     num_buffer_.push(y_ * x_);
-  } else if (func_ == "/") {
+  else if (func_ == "/")
     num_buffer_.push(y_ / x_);
-  } else if (func_ == "ln") {
+  else if (func_ == "ln")
     num_buffer_.push(log(x_));
-  } else if (func_ == "log") {
-    num_buffer_.push(log10(x_));
-  } else if (func_ == "abs") {
-    num_buffer_.push(fabs(x_));
-  } else if (func_ == "cos") {
+  else if (func_ == "cos")
     num_buffer_.push(cos(x_));
-  } else if (func_ == "sin") {
+  else if (func_ == "sin")
     num_buffer_.push(sin(x_));
-  } else if (func_ == "tan") {
+  else if (func_ == "tan")
     num_buffer_.push(tan(x_));
-  } else if (func_ == "acos") {
+  else if (func_ == "abs")
+    num_buffer_.push(fabs(x_));
+  else if (func_ == "acos")
     num_buffer_.push(acos(x_));
-  } else if (func_ == "asin") {
+  else if (func_ == "asin")
     num_buffer_.push(asin(x_));
-  } else if (func_ == "atan") {
+  else if (func_ == "atan")
     num_buffer_.push(atan(x_));
-  } else if (func_ == "sqrt") {
+  else if (func_ == "sqrt")
     num_buffer_.push(sqrt(x_));
-  } else if (func_ == "^") {
+  else if (func_ == "log")
+    num_buffer_.push(log10(x_));
+  else if (func_ == "^")
     num_buffer_.push(pow(y_, x_));
-  } else if (func_ == "mod") {
+  else if (func_ == "mod")
     num_buffer_.push(fmod(y_, x_));
-  }
 }
 
 void s21::calculator::Calculations() noexcept {
@@ -259,10 +222,6 @@ void s21::calculator::Calculations() noexcept {
     std::cout << output_[i] << " ";
     if (!ConvertNums(i)) {
       switch (output_[i].front()) {
-        case '!':
-          output_[i] = "";
-          option_ = 4;
-          break;
         case '+':
         case '-':
         case '*':
@@ -275,10 +234,14 @@ void s21::calculator::Calculations() noexcept {
         case 's':
         case 't':
         case 'a':
-          option_ = (output_[i] == "sqrt" || output_[i] == "abs") ? 1 : 3;
+          option_ = output_[i] == "sqrt" || output_[i] == "abs" ? 1 : 3;
           break;
         case 'l':
           option_ = 1;
+          break;
+        case '!':
+          output_[i] = "";
+          option_ = 4;
           break;
       }
       func_ = output_[i];
@@ -291,20 +254,17 @@ void s21::calculator::Calculations() noexcept {
 }
 
 void s21::calculator::ClearContainers() noexcept {
-  while (!stack_.empty())
-    stack_.pop();
-  while (!num_buffer_.empty())
-    num_buffer_.pop();
-  while (!output_.empty())
-    output_.pop_back();
+  while (!stack_.empty()) stack_.pop();
+  while (!output_.empty()) output_.pop_back();
+  while (!num_buffer_.empty()) num_buffer_.pop();
 }
 
 int main () {
+  std::cout << std::endl;
   s21::calculator test_;
-  test_.set_str("(-(2*3)-(-3*3)^2)=");
-  test_.set_graph();
-  test_.Notation();
-  std::cout << std::endl << "Ошибка: " << test_.get_error() << std::endl;
+  test_.set_graph(false);
+  test_.Notation("(-((2*3)-(-3*3)^2))=");
+  std::cout << std::endl << std::endl << "Ошибка: " << test_.get_error() << std::endl;
   std::cout << std::endl << "Результат: " << test_.get_res() << std::endl << std::endl;
   return 0;
 }
