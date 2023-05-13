@@ -1,13 +1,16 @@
 #include "calculator.h"
 
-// void s21::calculator::set_graph() noexcept {
-//   is_graph_ = false;
-//   for (size_t i = 0; i < str_.size() && !is_graph_; i++) {
-//     if (str_[i] == 'x') {
-//       is_graph_ = true;
-//     }
-//   }
-// }
+void s21::calculator::GetNums(double &x) noexcept {
+  x = num_buffer_.top();
+  num_buffer_.pop();
+}
+
+void s21::calculator::GetNums(double &x, double &y) noexcept {
+  x = num_buffer_.top();
+  num_buffer_.pop();
+  y = num_buffer_.top();
+  num_buffer_.pop();
+}
 
 void s21::calculator::GetNums() noexcept {
   if (option_ == 1) {
@@ -24,29 +27,18 @@ void s21::calculator::GetNums() noexcept {
   }
 }
 
-void s21::calculator::GetNums(double &x) noexcept {
-  x = num_buffer_.top();
-  num_buffer_.pop();
-}
-
-void s21::calculator::GetNums(double &x, double &y) noexcept {
-  x = num_buffer_.top();
-  num_buffer_.pop();
-  y = num_buffer_.top();
-  num_buffer_.pop();
-}
-
 void s21::calculator::InsertNumOutput(size_t &index) noexcept {
   if (isdigit(str_[index]) || str_[index] == 'x' || str_[index] == 'P') {
     int i = 0;
     bool is_negative_ = false;
     char char_str_[255] = {'\0'};
+    if (str_[index] == 'x') is_graph_ = true;
     if (str_[index - 1] == '-' && str_[index - 2] == '(') is_negative_ = true;
     while (isdigit(str_[index]) || str_[index] == '.' || str_[index] == 'x' 
     || str_[index] == 'P' || str_[index] == 'i') {
       char_str_[i++] = str_[index++];
     }
-    output_.push_back(is_negative_ ? std::string(char_str_) + "-" : char_str_);
+    output_.push_back(is_negative_ ? std::string(char_str_) + "-" : std::string(char_str_));
   }
 }
 
@@ -132,7 +124,7 @@ bool s21::calculator::ConvertNums(size_t i) noexcept {
   bool status = false;
   double num_ = 0.0;
   if (CustomIsDigit(output_[i]) || output_[i] == "x" || output_[i] == "Pi") {
-    if (output_[i] == "x" && is_graph_)
+    if (output_[i] == "x")
       num_ = x_value_;
     else if (output_[i] == "Pi")
       num_ = M_PI;
@@ -148,6 +140,7 @@ bool s21::calculator::ConvertNums(size_t i) noexcept {
 
 void s21::calculator::Notation(const std::string str) noexcept {
   str_ = str;
+  is_graph_ = false;
   for (size_t i = 0; i < str_.size() && !is_error_; i++) {
     InsertNumOutput(i);
     switch (str_[i]) {
@@ -219,7 +212,7 @@ void s21::calculator::DoCalculations() noexcept {
 
 void s21::calculator::Calculations() noexcept {
   for (size_t i = 0; i < output_.size(); i++) {
-    std::cout << output_[i] << " ";
+    // std::cout << output_[i] << " ";
     if (!ConvertNums(i)) {
       switch (output_[i].front()) {
         case '+':
@@ -262,8 +255,14 @@ void s21::calculator::ClearContainers() noexcept {
 int main () {
   std::cout << std::endl;
   s21::calculator test_;
-  test_.set_graph(false);
-  test_.Notation("(-((2*3)-(-3*3)^2))=");
+  for (double X = 1; X <= 200.01 && !test_.get_error(); X += 0.01) {
+      test_.set_x(X);
+      test_.Notation("(-(sqrt(cos(x))*cos(200*x)+sqrt(abs(x))-Pi/4*(4-x^2)^0.01))=");
+      std::cout << "Результат: " << test_.get_res() << std::endl;
+      // break;
+  }
+  // test_.set_x(20);
+  test_.Notation("(-(sqrt(cos(x))*cos(200*x)+sqrt(abs(x))-Pi/4*(4-x^2)^0.01))=");
   std::cout << std::endl << std::endl << "Ошибка: " << test_.get_error() << std::endl;
   std::cout << std::endl << "Результат: " << test_.get_res() << std::endl << std::endl;
   return 0;

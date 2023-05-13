@@ -15,9 +15,7 @@ namespace s21 {
       
       double get_res() const noexcept { return result_; }
       bool get_error() const noexcept { return is_error_; }
-
       void set_x(const double num) noexcept { x_value_ = num; }
-      void set_graph(const bool opt) noexcept { is_graph_ = opt; }
 
       void GetNums() noexcept;
       void Calculations() noexcept;

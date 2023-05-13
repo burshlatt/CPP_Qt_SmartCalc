@@ -297,10 +297,8 @@ void MainWindow::on_resultFunc_clicked() {
         }
     }
     if (can_do_) {
-        calc.set_str(str_ + "=");
-        calc.set_graph();
         if (!IsGraph()) {
-            calc.Notation();
+            calc.Notation(str_ + "=");
             if (!calc.get_error()) {
                 double result_ = calc.get_res();
                 ui->inputOutput->clear();
@@ -319,6 +317,7 @@ void MainWindow::on_resultFunc_clicked() {
                 setGeometry(xPos, yPos, width() + 480, height());
                 graph_open_ = true;
             }
+            calc.set_graph(true);
             print_graph();
         }
     }
@@ -359,7 +358,7 @@ void MainWindow::print_graph() {
     QVector<double> xCord, yCord;
     for (double X = xBegin; X <= xEnd && !is_error_; X += 0.01) {
         calc.set_x(X);
-        calc.Notation();
+        calc.Notation(str_ + "=");
         is_error_ = calc.get_error();
         xCord.push_back(X);
         yCord.push_back(calc.get_res());
