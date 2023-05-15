@@ -287,6 +287,22 @@ bool MainWindow::IsGraph() {
     return status;
 }
 
+void MainWindow::on_showGraph_clicked() {
+  int xPos = this->geometry().x();
+  int yPos = this->geometry().y();
+  if (!graph_open_) {
+    this->setFixedSize(960, 380);
+    ui->showGraph->setText("<");
+    setGeometry(xPos, yPos, width() + 480, height());
+    graph_open_ = true;
+  } else {
+    this->setFixedSize(480, 380);
+    ui->showGraph->setText(">");
+    setGeometry(xPos, yPos, width() - 480, height());
+    graph_open_ = false;
+  }
+}
+
 void MainWindow::on_resultFunc_clicked() {
     check_fields();
     bool can_do_ = true;
@@ -296,10 +312,13 @@ void MainWindow::on_resultFunc_clicked() {
             can_do_ = false;
         }
     }
+    calc.set_str(str_ + "=");
+    calc.Notation();
+    output = calc.get_output();
     if (can_do_) {
         if (!IsGraph()) {
-            calc.Notation(str_ + "=");
             if (!calc.get_error()) {
+                calc.Calculations(output);
                 double result_ = calc.get_res();
                 ui->inputOutput->clear();
                 if (std::fabs(result_ - (int)result_) < std::numeric_limits<double>::epsilon()) {
@@ -317,7 +336,6 @@ void MainWindow::on_resultFunc_clicked() {
                 setGeometry(xPos, yPos, width() + 480, height());
                 graph_open_ = true;
             }
-            calc.set_graph(true);
             print_graph();
         }
     }
@@ -325,22 +343,6 @@ void MainWindow::on_resultFunc_clicked() {
         ui->inputOutput->clear();
         ui->inputOutput->setText(ui->inputOutput->text() + "ERROR: Incorrect data!");
     }
-}
-
-void MainWindow::on_showGraph_clicked() {
-  int xPos = this->geometry().x();
-  int yPos = this->geometry().y();
-  if (!graph_open_) {
-    this->setFixedSize(960, 380);
-    ui->showGraph->setText("<");
-    setGeometry(xPos, yPos, width() + 480, height());
-    graph_open_ = true;
-  } else {
-    this->setFixedSize(480, 380);
-    ui->showGraph->setText(">");
-    setGeometry(xPos, yPos, width() - 480, height());
-    graph_open_ = false;
-  }
 }
 
 void MainWindow::print_graph() {
@@ -354,18 +356,14 @@ void MainWindow::print_graph() {
     ui->functionGraph->yAxis->setRange(yMin, yMax);
     double xBegin = ui->xStart->text().toDouble();
     double xEnd = ui->xEnd->text().toDouble() + 0.01;
-    is_error_ = false;
     QVector<double> xCord, yCord;
-    for (double X = xBegin; X <= xEnd && !is_error_; X += 0.01) {
+    for (double X = xBegin; X <= xEnd; X += 0.01) {
         calc.set_x(X);
-        calc.Notation(str_ + "=");
-        is_error_ = calc.get_error();
+        calc.Calculations(output);
         xCord.push_back(X);
         yCord.push_back(calc.get_res());
     }
-    if (!is_error_) {
-        ui->functionGraph->addGraph();
-        ui->functionGraph->graph(0)->addData(xCord, yCord);
-        ui->functionGraph->replot();
-    }
+    ui->functionGraph->addGraph();
+    ui->functionGraph->graph(0)->addData(xCord, yCord);
+    ui->functionGraph->replot();
 }

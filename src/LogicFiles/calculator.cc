@@ -138,8 +138,7 @@ bool s21::calculator::ConvertNums(size_t i) noexcept {
   return status;
 }
 
-void s21::calculator::Notation(const std::string str) noexcept {
-  str_ = str;
+void s21::calculator::Notation() noexcept {
   is_graph_ = false;
   for (size_t i = 0; i < str_.size() && !is_error_; i++) {
     InsertNumOutput(i);
@@ -172,7 +171,6 @@ void s21::calculator::Notation(const std::string str) noexcept {
         break;
     }
   }
-  is_error_ ? (void)0 : Calculations();
 }
 
 void s21::calculator::DoCalculations() noexcept {
@@ -210,9 +208,15 @@ void s21::calculator::DoCalculations() noexcept {
     num_buffer_.push(fmod(y_, x_));
 }
 
+void s21::calculator::Calculations(const std::vector<std::string> output) noexcept {
+  if (!is_error_) {
+    output_ = output;
+    Calculations();
+  }
+}
+
 void s21::calculator::Calculations() noexcept {
   for (size_t i = 0; i < output_.size(); i++) {
-    // std::cout << output_[i] << " ";
     if (!ConvertNums(i)) {
       switch (output_[i].front()) {
         case '+':
@@ -250,20 +254,4 @@ void s21::calculator::ClearContainers() noexcept {
   while (!stack_.empty()) stack_.pop();
   while (!output_.empty()) output_.pop_back();
   while (!num_buffer_.empty()) num_buffer_.pop();
-}
-
-int main () {
-  std::cout << std::endl;
-  s21::calculator test_;
-  for (double X = 1; X <= 200.01 && !test_.get_error(); X += 0.01) {
-      test_.set_x(X);
-      test_.Notation("(-(sqrt(cos(x))*cos(200*x)+sqrt(abs(x))-Pi/4*(4-x^2)^0.01))=");
-      std::cout << "Результат: " << test_.get_res() << std::endl;
-      // break;
-  }
-  // test_.set_x(20);
-  test_.Notation("(-(sqrt(cos(x))*cos(200*x)+sqrt(abs(x))-Pi/4*(4-x^2)^0.01))=");
-  std::cout << std::endl << std::endl << "Ошибка: " << test_.get_error() << std::endl;
-  std::cout << std::endl << "Результат: " << test_.get_res() << std::endl << std::endl;
-  return 0;
 }

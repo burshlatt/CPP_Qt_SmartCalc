@@ -54,9 +54,9 @@ private:
 
         std::string str_;
         QPushButton *button_;
+        std::vector<std::string> output;
 
         bool is_dot_ = false;
-        bool is_error_ = false;
         bool graph_open_ = false;
 
         size_t size_ = 0;

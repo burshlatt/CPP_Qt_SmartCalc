@@ -11,13 +11,16 @@ namespace s21 {
   class calculator {
     public:
       calculator() {}
-      ~calculator() {}
+      // ~calculator() {}
       
       double get_res() const noexcept { return result_; }
       bool get_error() const noexcept { return is_error_; }
       void set_x(const double num) noexcept { x_value_ = num; }
+      void set_str(const std::string str) noexcept { str_ = str; }
+      std::vector<std::string> get_output() noexcept { return output_; }
 
       void GetNums() noexcept;
+      void Notation() noexcept;
       void Calculations() noexcept;
       void PopFunctions() noexcept;
       void DoCalculations() noexcept;
@@ -27,8 +30,8 @@ namespace s21 {
       void PushFunctions(size_t &index) noexcept;
       void GetNums(double &x, double &y) noexcept;
       void InsertNumOutput(size_t &index) noexcept;
-      void Notation(const std::string str) noexcept;
       void PushLogic(const std::string str) noexcept;
+      void Calculations(const std::vector<std::string> output) noexcept;
       bool CustomIsDigit(const std::string str) const noexcept { return str.front() >= '0' && str.front() <= '9'; }
 
     private:
