@@ -5,8 +5,8 @@ view::view(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::view) {
   ui->setupUi(this);
 
-//  secondWindow = new CreditWindow();
-//  connect(secondWindow, &CreditWindow::firstWindow, this, &view::show);
+  secondWindow = new CreditWindow();
+  connect(secondWindow, &CreditWindow::firstWindow, this, &view::show);
 
 //  thirdWindow = new DepositWindow();
 //  connect(thirdWindow, &DepositWindow::firstWindow, this, &view::show);
@@ -29,7 +29,6 @@ view::view(QWidget *parent)
   connect(ui->asinFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
   connect(ui->atanFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
   connect(ui->sqrtFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
-
   connect(ui->xSym, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
   connect(ui->num_0, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
   connect(ui->num_1, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
@@ -42,23 +41,21 @@ view::view(QWidget *parent)
   connect(ui->num_8, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
   connect(ui->num_9, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
   connect(ui->num_pi, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
-
   connect(ui->addFunc, SIGNAL(clicked()), this, SLOT(operators_clicked()));
   connect(ui->mulFunc, SIGNAL(clicked()), this, SLOT(operators_clicked()));
   connect(ui->divFunc, SIGNAL(clicked()), this, SLOT(operators_clicked()));
   connect(ui->powFunc, SIGNAL(clicked()), this, SLOT(operators_clicked()));
   connect(ui->modFunc, SIGNAL(clicked()), this, SLOT(operators_clicked()));
-
   connect(ui->leftBracket, SIGNAL(clicked()), this, SLOT(brackets_clicked()));
   connect(ui->rightBracket, SIGNAL(clicked()), this, SLOT(brackets_clicked()));
 }
 
 view::~view() { delete ui; }
 
-//void view::on_credCalc_clicked() {
-//  secondWindow->show();
-//  this->close();
-//}
+void view::on_credCalc_clicked() {
+  secondWindow->show();
+  this->close();
+}
 
 //void view::on_deposCalc_clicked() {
 //  thirdWindow->show();

@@ -1,18 +1,9 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include <QApplication>
-#include <QDialog>
-#include <QLineEdit>
 #include <QMainWindow>
-#include <QPushButton>
-#include <QScreen>
-#include <QVector>
-#include <QtMath>
-
-//#include "creditwindow.h"
+#include "creditwindow.h"
 //#include "depositwindow.h"
-
 #include "../controller/controller.h"
 
 QT_BEGIN_NAMESPACE
@@ -40,7 +31,7 @@ class view : public QMainWindow {
         void on_delAll_clicked();
         void on_subFunc_clicked();
         void on_delElem_clicked();
-//        void on_credCalc_clicked();
+        void on_credCalc_clicked();
 //        void on_deposCalc_clicked();
         void on_showGraph_clicked();
         void on_resultFunc_clicked();
@@ -48,7 +39,7 @@ class view : public QMainWindow {
 private:
         Ui::view *ui;
         s21::controller calc_;
-//        CreditWindow *secondWindow;
+        CreditWindow *secondWindow;
 //        DepositWindow *thirdWindow;
 
         std::string str_;
