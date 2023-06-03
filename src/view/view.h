@@ -29,7 +29,6 @@ class view : public QMainWindow {
         ~view();
 
     private slots:
-        bool IsGraph();
         void GetInfo();
         void print_graph();
         void check_fields();
@@ -57,6 +56,7 @@ private:
         std::vector<std::string> output;
 
         bool is_dot_ = false;
+        bool is_result_ = false;
         bool graph_open_ = false;
 
         size_t size_ = 0;

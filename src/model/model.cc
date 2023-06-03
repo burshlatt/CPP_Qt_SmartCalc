@@ -32,7 +32,6 @@ void s21::model::InsertNumOutput(size_t &index) noexcept {
     int i = 0;
     bool is_negative_ = false;
     char char_str_[255] = {'\0'};
-    if (str_[index] == 'x') is_graph_ = true;
     if (str_[index - 1] == '-' && str_[index - 2] == '(') is_negative_ = true;
     while (isdigit(str_[index]) || str_[index] == '.' || str_[index] == 'x' 
     || str_[index] == 'P' || str_[index] == 'i') {
@@ -140,7 +139,6 @@ bool s21::model::ConvertNums(size_t i) noexcept {
 
 void s21::model::Notation(const std::string str) noexcept {
   str_ = str;
-  is_graph_ = false;
   for (size_t i = 0; i < str_.size() && !is_error_; i++) {
     InsertNumOutput(i);
     switch (str_[i]) {

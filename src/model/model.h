@@ -11,11 +11,13 @@ namespace s21 {
   class model {
     public:
       model() {}
-      // ~model() {}
+      ~model() {}
       
       double get_res() const noexcept { return result_; }
       bool get_error() const noexcept { return is_error_; }
+      std::string get_str() const noexcept { return str_; }
       void set_x(const double num) noexcept { x_value_ = num; }
+      void set_graph(const bool graph) noexcept { is_graph_ = graph; }
 
       void GetNums() noexcept;
       void ClearOutput() noexcept;

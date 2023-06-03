@@ -9,10 +9,15 @@ namespace s21 {
             controller() {};
             ~controller() {};
             
-            double Calculator(const std::string str) noexcept;
-            void GraphStart(const std::string str) noexcept;
-            double Graph(const double x) noexcept;
+            bool IsError() noexcept;
+            bool IsGraph(const std::string str) noexcept;
+            bool IsCorrect(const std::string str) noexcept;
+
             void GraphEnd() noexcept;
+            void GraphStart(const std::string str) noexcept;
+
+            double Graph(const double x) noexcept;
+            double Calculator(const std::string str) noexcept;
 
         private:
             s21::model model_;

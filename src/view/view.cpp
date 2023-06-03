@@ -19,14 +19,6 @@ view::view(QWidget *parent)
   int y = (screenGeometry.height() - 380) / 2;
   move(x, y);
 
-  ui->xValue->setPlaceholderText("Значение X");
-  ui->xMaxCord->setPlaceholderText("X макс.");
-  ui->xMinCord->setPlaceholderText("X мин.");
-  ui->yMaxCord->setPlaceholderText("Y макс.");
-  ui->yMinCord->setPlaceholderText("Y мин.");
-  ui->xStart->setPlaceholderText("X начало");
-  ui->xEnd->setPlaceholderText("X конец");
-
   connect(ui->lnFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
   connect(ui->logFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
   connect(ui->absFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
@@ -74,6 +66,10 @@ view::~view() { delete ui; }
 //}
 
 void view::GetInfo() {
+  if (is_result_) {
+    ui->inputOutput->clear();
+    is_result_ = false;
+  }
   button_ = (QPushButton *)sender();
   str_ = ui->inputOutput->text().toStdString();
   last_symbol_ = str_.back();
@@ -120,13 +116,13 @@ void view::symbols_clicked() {
                 ui->inputOutput->setText(ui->inputOutput->text() + "*");
             }
             ui->inputOutput->setText(ui->inputOutput->text() + button_->text());
-            is_dot_ = 0;
+            is_dot_ = false;
         } else if (button_->text() == 'x' && last_symbol_ != '.') {
             if (last_symbol_ >= '0' && last_symbol_ <= '9') {
                 ui->inputOutput->setText(ui->inputOutput->text() + "*");
             }
             ui->inputOutput->setText(ui->inputOutput->text() + "x");
-            is_dot_ = 0;
+            is_dot_ = false;
         } else if (button_->text() >= '0' && button_->text() <= '9') {
             ui->inputOutput->setText(ui->inputOutput->text() + button_->text());
         }
@@ -140,7 +136,7 @@ void view::func_clicked() {
       ui->inputOutput->setText(ui->inputOutput->text() + "*");
     }
     ui->inputOutput->setText(ui->inputOutput->text() + button_->text() + "(");
-    is_dot_ = 0;
+    is_dot_ = false;
   }
 }
 
@@ -165,7 +161,7 @@ void view::brackets_clicked() {
           ui->inputOutput->setText(ui->inputOutput->text() + "*");
         }
         ui->inputOutput->setText(ui->inputOutput->text() + "(");
-        is_dot_ = 0;
+        is_dot_ = false;
       }
       if (button_->text() == ')' &&
           r_brackets_ < l_brackets_) {
@@ -176,7 +172,7 @@ void view::brackets_clicked() {
         }
         if (can_do_) {
           ui->inputOutput->setText(ui->inputOutput->text() + ")");
-          is_dot_ = 0;
+          is_dot_ = false;
         }
       }
     }
@@ -197,7 +193,7 @@ void view::on_subFunc_clicked() {
       }
     }
     ui->inputOutput->setText(ui->inputOutput->text() + "-");
-    is_dot_ = 0;
+    is_dot_ = false;
   }
 }
 
@@ -211,14 +207,14 @@ void view::on_dotSym_clicked() {
       ui->inputOutput->setText(ui->inputOutput->text() + "0");
     }
     ui->inputOutput->setText(ui->inputOutput->text() + ".");
-    is_dot_ = 1;
+    is_dot_ = true;
   }
 }
 
 void view::on_delElem_clicked() {
   GetInfo();
   if (last_symbol_ == '.') {
-    is_dot_ = 0;
+    is_dot_ = false;
   }
   if (size_ == 0) {
     ui->inputOutput->clear();
@@ -231,7 +227,7 @@ void view::on_delElem_clicked() {
   for (int i = str_.size() - 1;
        str_[i] >= '0' && str_[i] <= '9'; i--) {
     if (str_[i - 1] == '.') {
-      is_dot_ = 1;
+      is_dot_ = true;
     }
   }
 }
@@ -277,16 +273,6 @@ void view::check_fields() {
   }
 }
 
-bool view::IsGraph() {
-    bool status = false;
-    for (size_t i = 0; i < str_.size(); i++) {
-        if (str_[i] == 'x') {
-            status = true;
-        }
-    }
-    return status;
-}
-
 void view::on_showGraph_clicked() {
   int xPos = this->geometry().x();
   int yPos = this->geometry().y();
@@ -305,28 +291,22 @@ void view::on_showGraph_clicked() {
 
 void view::on_resultFunc_clicked() {
     check_fields();
-    bool can_do_ = true;
     str_ = ui->inputOutput->text().toStdString();
-    for (int i = 0; i < 6; i++) {
-        if (str_.back() == operators[i]) {
-            can_do_ = false;
-        }
-    }
-//    calc.set_str(str_ + "=");
-//    calc.Notation();
-//    output = calc.get_output();
-    if (can_do_) {
-        if (!IsGraph()) {
-//            if (!calc.get_error()) {
-//                calc.Calculations(output);
-//                double result_ = calc.get_res();
-//                ui->inputOutput->clear();
-//                if (std::fabs(result_ - (int)result_) < std::numeric_limits<double>::epsilon()) {
-//                    ui->inputOutput->setText(ui->inputOutput->text() + QString::number(result_, 'f', 0));
-//                } else {
-//                    ui->inputOutput->setText(ui->inputOutput->text() + QString::number(result_, 'f', 7));
-//                }
-//            }
+    if (calc_.IsCorrect(str_) && str_.size()) {
+        if (!calc_.IsGraph(str_)) {
+            double result_ = calc_.Calculator(str_ + "=");
+            if (!calc_.IsError()) {
+                ui->inputOutput->clear();
+                if (std::fabs(result_ - (int)result_) < std::numeric_limits<double>::epsilon()) {
+                    ui->inputOutput->setText(ui->inputOutput->text() + QString::number(result_, 'f', 0));
+                } else {
+                    ui->inputOutput->setText(ui->inputOutput->text() + QString::number(result_, 'f', 7));
+                }
+            } else {
+                ui->inputOutput->clear();
+                ui->inputOutput->setText(ui->inputOutput->text() + "ERROR: Incorrect data!");
+            }
+            is_result_ = true;
         } else {
             if (!graph_open_) {
                 int xPos = this->geometry().x();
@@ -338,29 +318,27 @@ void view::on_resultFunc_clicked() {
             }
             print_graph();
         }
+    } else if (!calc_.IsCorrect(str_) && str_.size()) {
+        is_result_ = true;
+        ui->inputOutput->clear();
+        ui->inputOutput->setText(ui->inputOutput->text() + "ERROR: Incorrect data!");
     }
-//    if (calc.get_error()) {
-//        ui->inputOutput->clear();
-//        ui->inputOutput->setText(ui->inputOutput->text() + "ERROR: Incorrect data!");
-//    }
 }
 
 void view::print_graph() {
     check_fields();
     ui->functionGraph->clearGraphs();
-    int xMin = ui->xMinCord->text().toInt();
-    int xMax = ui->xMaxCord->text().toInt();
-    int yMin = ui->yMinCord->text().toInt();
-    int yMax = ui->yMaxCord->text().toInt();
-    ui->functionGraph->xAxis->setRange(xMin, xMax);
-    ui->functionGraph->yAxis->setRange(yMin, yMax);
+    ui->functionGraph->xAxis->setRange(ui->xMinCord->text().toDouble(), ui->xMaxCord->text().toDouble());
+    ui->functionGraph->yAxis->setRange(ui->yMinCord->text().toDouble(), ui->yMaxCord->text().toDouble());
+    QVector<double> xCord, yCord;
     double xBegin = ui->xStart->text().toDouble();
     double xEnd = ui->xEnd->text().toDouble() + 0.01;
-    QVector<double> xCord, yCord;
-    calc_.GraphStart(str_);
-    for (double X = xBegin; X <= xEnd; X += 0.01) {
+    double X = xBegin;
+    calc_.GraphStart(str_ + "=");
+    while (X <= xEnd) {
         xCord.push_back(X);
         yCord.push_back(calc_.Graph(X));
+        X += 0.01;
     }
     calc_.GraphEnd();
     ui->functionGraph->addGraph();
