@@ -1,18 +1,18 @@
-#include "calculator.h"
+#include "model.h"
 
-void s21::calculator::GetNums(double &x) noexcept {
+void s21::model::GetNums(double &x) noexcept {
   x = num_buffer_.top();
   num_buffer_.pop();
 }
 
-void s21::calculator::GetNums(double &x, double &y) noexcept {
+void s21::model::GetNums(double &x, double &y) noexcept {
   x = num_buffer_.top();
   num_buffer_.pop();
   y = num_buffer_.top();
   num_buffer_.pop();
 }
 
-void s21::calculator::GetNums() noexcept {
+void s21::model::GetNums() noexcept {
   if (option_ == 1) {
     GetNums(x_);
   } else if (option_ == 2) {
@@ -27,7 +27,7 @@ void s21::calculator::GetNums() noexcept {
   }
 }
 
-void s21::calculator::InsertNumOutput(size_t &index) noexcept {
+void s21::model::InsertNumOutput(size_t &index) noexcept {
   if (isdigit(str_[index]) || str_[index] == 'x' || str_[index] == 'P') {
     int i = 0;
     bool is_negative_ = false;
@@ -42,7 +42,7 @@ void s21::calculator::InsertNumOutput(size_t &index) noexcept {
   }
 }
 
-void s21::calculator::PushLogic(const std::string str) noexcept {
+void s21::model::PushLogic(const std::string str) noexcept {
   if (str == "mod" || str == "*" || str == "/") {
     while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*" 
     || stack_.top() == "/" || stack_.top() == "^" || stack_.top() == "!")) {
@@ -60,7 +60,7 @@ void s21::calculator::PushLogic(const std::string str) noexcept {
   stack_.push(str);
 }
 
-void s21::calculator::PushFunctions(size_t &index) noexcept {
+void s21::model::PushFunctions(size_t &index) noexcept {
   if (option_ == 1) {
     if (str_[index] == '^') {
       stack_.push("^");
@@ -91,7 +91,7 @@ void s21::calculator::PushFunctions(size_t &index) noexcept {
   }
 }
 
-void s21::calculator::PopFunctions() noexcept {
+void s21::model::PopFunctions() noexcept {
   if (option_ == 1) {
     while (!stack_.empty() && stack_.top() != "(") {
       output_.push_back(stack_.top());
@@ -120,7 +120,7 @@ void s21::calculator::PopFunctions() noexcept {
   }
 }
 
-bool s21::calculator::ConvertNums(size_t i) noexcept {
+bool s21::model::ConvertNums(size_t i) noexcept {
   bool status = false;
   double num_ = 0.0;
   if (CustomIsDigit(output_[i]) || output_[i] == "x" || output_[i] == "Pi") {
@@ -138,7 +138,8 @@ bool s21::calculator::ConvertNums(size_t i) noexcept {
   return status;
 }
 
-void s21::calculator::Notation() noexcept {
+void s21::model::Notation(const std::string str) noexcept {
+  str_ = str;
   is_graph_ = false;
   for (size_t i = 0; i < str_.size() && !is_error_; i++) {
     InsertNumOutput(i);
@@ -173,7 +174,7 @@ void s21::calculator::Notation() noexcept {
   }
 }
 
-void s21::calculator::DoCalculations() noexcept {
+void s21::model::DoCalculations() noexcept {
   if (func_ == "+")
     num_buffer_.push(y_ + x_);
   else if (func_ == "-")
@@ -208,14 +209,7 @@ void s21::calculator::DoCalculations() noexcept {
     num_buffer_.push(fmod(y_, x_));
 }
 
-void s21::calculator::Calculations(const std::vector<std::string> output) noexcept {
-  if (!is_error_) {
-    output_ = output;
-    Calculations();
-  }
-}
-
-void s21::calculator::Calculations() noexcept {
+void s21::model::Calculations() noexcept {
   for (size_t i = 0; i < output_.size(); i++) {
     if (!ConvertNums(i)) {
       switch (output_[i].front()) {
@@ -237,7 +231,6 @@ void s21::calculator::Calculations() noexcept {
           option_ = 1;
           break;
         case '!':
-          output_[i] = "";
           option_ = 4;
           break;
       }
@@ -247,11 +240,9 @@ void s21::calculator::Calculations() noexcept {
     }
   }
   result_ = num_buffer_.top();
-  ClearContainers();
+  num_buffer_.pop();
 }
 
-void s21::calculator::ClearContainers() noexcept {
-  while (!stack_.empty()) stack_.pop();
+void s21::model::ClearOutput() noexcept {
   while (!output_.empty()) output_.pop_back();
-  while (!num_buffer_.empty()) num_buffer_.pop();
 }

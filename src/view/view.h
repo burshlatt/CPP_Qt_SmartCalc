@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef VIEW_H
+#define VIEW_H
 
 #include <QApplication>
 #include <QDialog>
@@ -13,20 +13,20 @@
 //#include "creditwindow.h"
 //#include "depositwindow.h"
 
-#include "../LogicFiles/calculator.h"
+#include "../controller/controller.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-    class MainWindow;
+    class view;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow {
+class view : public QMainWindow {
   Q_OBJECT
 
     public:
-        MainWindow(QWidget *parent = nullptr);
-        ~MainWindow();
+        view(QWidget *parent = nullptr);
+        ~view();
 
     private slots:
         bool IsGraph();
@@ -47,8 +47,8 @@ class MainWindow : public QMainWindow {
         void on_resultFunc_clicked();
 
 private:
-        Ui::MainWindow *ui;
-        s21::calculator calc;
+        Ui::view *ui;
+        s21::controller calc_;
 //        CreditWindow *secondWindow;
 //        DepositWindow *thirdWindow;
 
@@ -67,4 +67,4 @@ private:
         char operators[6] = {'-', '+', '*', '/', '^', 'd'};
 };
 
-#endif // MAINWINDOW_H
+#endif // VIEW_H

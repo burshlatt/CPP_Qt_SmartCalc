@@ -1,15 +1,15 @@
-#include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "view.h"
+#include "ui_view.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow) {
+view::view(QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::view) {
   ui->setupUi(this);
 
 //  secondWindow = new CreditWindow();
-//  connect(secondWindow, &CreditWindow::firstWindow, this, &MainWindow::show);
+//  connect(secondWindow, &CreditWindow::firstWindow, this, &view::show);
 
 //  thirdWindow = new DepositWindow();
-//  connect(thirdWindow, &DepositWindow::firstWindow, this, &MainWindow::show);
+//  connect(thirdWindow, &DepositWindow::firstWindow, this, &view::show);
 
   this->setFixedSize(480, 380);
 
@@ -61,19 +61,19 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->rightBracket, SIGNAL(clicked()), this, SLOT(brackets_clicked()));
 }
 
-MainWindow::~MainWindow() { delete ui; }
+view::~view() { delete ui; }
 
-//void MainWindow::on_credCalc_clicked() {
+//void view::on_credCalc_clicked() {
 //  secondWindow->show();
 //  this->close();
 //}
 
-//void MainWindow::on_deposCalc_clicked() {
+//void view::on_deposCalc_clicked() {
 //  thirdWindow->show();
 //  this->close();
 //}
 
-void MainWindow::GetInfo() {
+void view::GetInfo() {
   button_ = (QPushButton *)sender();
   str_ = ui->inputOutput->text().toStdString();
   last_symbol_ = str_.back();
@@ -84,7 +84,7 @@ void MainWindow::GetInfo() {
   }
 }
 
-void MainWindow::operators_clicked() {
+void view::operators_clicked() {
     GetInfo();
     bool is_operator_ = false;
     if (size_ && last_symbol_ != '(' && last_symbol_ != '.') {
@@ -109,7 +109,7 @@ void MainWindow::operators_clicked() {
     }
 }
 
-void MainWindow::symbols_clicked() {
+void view::symbols_clicked() {
     GetInfo();
     if (size_ < 255) {
         if (last_symbol_ == 'x' || last_symbol_ == ')' || last_symbol_ == 'i') {
@@ -133,7 +133,7 @@ void MainWindow::symbols_clicked() {
     }
 }
 
-void MainWindow::func_clicked() {
+void view::func_clicked() {
   GetInfo();
   if (size_ < 255 && last_symbol_ != '.') {
     if ((last_symbol_ >= '0' && last_symbol_ <= '9') || last_symbol_ == ')' || last_symbol_ == 'i') {
@@ -144,7 +144,7 @@ void MainWindow::func_clicked() {
   }
 }
 
-void MainWindow::brackets_clicked() {
+void view::brackets_clicked() {
   GetInfo();
   l_brackets_ = 0;
   r_brackets_ = 0;
@@ -183,7 +183,7 @@ void MainWindow::brackets_clicked() {
   }
 }
 
-void MainWindow::on_subFunc_clicked() {
+void view::on_subFunc_clicked() {
   GetInfo();
   if (size_ < 255 && last_symbol_ != '.') {
     if (size_ == 0) {
@@ -201,7 +201,7 @@ void MainWindow::on_subFunc_clicked() {
   }
 }
 
-void MainWindow::on_dotSym_clicked() {
+void view::on_dotSym_clicked() {
   GetInfo();
   if (size_ < 255 && last_symbol_ != '.' && !is_dot_) {
     if (last_symbol_ < '0' || last_symbol_ > '9') {
@@ -215,7 +215,7 @@ void MainWindow::on_dotSym_clicked() {
   }
 }
 
-void MainWindow::on_delElem_clicked() {
+void view::on_delElem_clicked() {
   GetInfo();
   if (last_symbol_ == '.') {
     is_dot_ = 0;
@@ -236,12 +236,12 @@ void MainWindow::on_delElem_clicked() {
   }
 }
 
-void MainWindow::on_delAll_clicked() {
+void view::on_delAll_clicked() {
   is_dot_ = false;
   ui->inputOutput->clear();
 }
 
-void MainWindow::check_fields() {
+void view::check_fields() {
   if (ui->xValue->text().size() == 0) {
     ui->xValue->setText("0");
   }
@@ -277,7 +277,7 @@ void MainWindow::check_fields() {
   }
 }
 
-bool MainWindow::IsGraph() {
+bool view::IsGraph() {
     bool status = false;
     for (size_t i = 0; i < str_.size(); i++) {
         if (str_[i] == 'x') {
@@ -287,7 +287,7 @@ bool MainWindow::IsGraph() {
     return status;
 }
 
-void MainWindow::on_showGraph_clicked() {
+void view::on_showGraph_clicked() {
   int xPos = this->geometry().x();
   int yPos = this->geometry().y();
   if (!graph_open_) {
@@ -303,7 +303,7 @@ void MainWindow::on_showGraph_clicked() {
   }
 }
 
-void MainWindow::on_resultFunc_clicked() {
+void view::on_resultFunc_clicked() {
     check_fields();
     bool can_do_ = true;
     str_ = ui->inputOutput->text().toStdString();
@@ -312,21 +312,21 @@ void MainWindow::on_resultFunc_clicked() {
             can_do_ = false;
         }
     }
-    calc.set_str(str_ + "=");
-    calc.Notation();
-    output = calc.get_output();
+//    calc.set_str(str_ + "=");
+//    calc.Notation();
+//    output = calc.get_output();
     if (can_do_) {
         if (!IsGraph()) {
-            if (!calc.get_error()) {
-                calc.Calculations(output);
-                double result_ = calc.get_res();
-                ui->inputOutput->clear();
-                if (std::fabs(result_ - (int)result_) < std::numeric_limits<double>::epsilon()) {
-                    ui->inputOutput->setText(ui->inputOutput->text() + QString::number(result_, 'f', 0));
-                } else {
-                    ui->inputOutput->setText(ui->inputOutput->text() + QString::number(result_, 'f', 7));
-                }
-            }
+//            if (!calc.get_error()) {
+//                calc.Calculations(output);
+//                double result_ = calc.get_res();
+//                ui->inputOutput->clear();
+//                if (std::fabs(result_ - (int)result_) < std::numeric_limits<double>::epsilon()) {
+//                    ui->inputOutput->setText(ui->inputOutput->text() + QString::number(result_, 'f', 0));
+//                } else {
+//                    ui->inputOutput->setText(ui->inputOutput->text() + QString::number(result_, 'f', 7));
+//                }
+//            }
         } else {
             if (!graph_open_) {
                 int xPos = this->geometry().x();
@@ -339,13 +339,13 @@ void MainWindow::on_resultFunc_clicked() {
             print_graph();
         }
     }
-    if (calc.get_error()) {
-        ui->inputOutput->clear();
-        ui->inputOutput->setText(ui->inputOutput->text() + "ERROR: Incorrect data!");
-    }
+//    if (calc.get_error()) {
+//        ui->inputOutput->clear();
+//        ui->inputOutput->setText(ui->inputOutput->text() + "ERROR: Incorrect data!");
+//    }
 }
 
-void MainWindow::print_graph() {
+void view::print_graph() {
     check_fields();
     ui->functionGraph->clearGraphs();
     int xMin = ui->xMinCord->text().toInt();
@@ -357,12 +357,12 @@ void MainWindow::print_graph() {
     double xBegin = ui->xStart->text().toDouble();
     double xEnd = ui->xEnd->text().toDouble() + 0.01;
     QVector<double> xCord, yCord;
+    calc_.GraphStart(str_);
     for (double X = xBegin; X <= xEnd; X += 0.01) {
-        calc.set_x(X);
-        calc.Calculations(output);
         xCord.push_back(X);
-        yCord.push_back(calc.get_res());
+        yCord.push_back(calc_.Graph(X));
     }
+    calc_.GraphEnd();
     ui->functionGraph->addGraph();
     ui->functionGraph->graph(0)->addData(xCord, yCord);
     ui->functionGraph->replot();
