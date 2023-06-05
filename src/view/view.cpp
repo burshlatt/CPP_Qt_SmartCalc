@@ -342,3 +342,15 @@ void view::print_graph() {
     ui->functionGraph->graph(0)->addData(xCord, yCord);
     ui->functionGraph->replot();
 }
+
+void view::on_rad_clicked() {
+    ui->rad->setStyleSheet("background-color: rgb(255, 160, 122); color: black; border: 1px solid gray;");
+    ui->deg->setStyleSheet("background-color: rgb(255, 219, 139); color: black; border: 1px solid gray;");
+    calc_.SetRad(true);
+}
+
+void view::on_deg_clicked() {
+    ui->deg->setStyleSheet("background-color: rgb(255, 160, 122); color: black; border: 1px solid gray;");
+    ui->rad->setStyleSheet("background-color: rgb(255, 219, 139); color: black; border: 1px solid gray;");
+    calc_.SetRad(false);
+}

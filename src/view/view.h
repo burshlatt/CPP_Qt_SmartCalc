@@ -36,6 +36,10 @@ class view : public QMainWindow {
         void on_showGraph_clicked();
         void on_resultFunc_clicked();
 
+        void on_rad_clicked();
+
+        void on_deg_clicked();
+
 private:
         Ui::view *ui;
         s21::controller calc_;

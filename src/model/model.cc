@@ -19,7 +19,7 @@ void s21::model::GetNums() noexcept {
     GetNums(x_, y_);
   } else if (option_ == 3) {
     GetNums(x_);
-    x_ = is_graph_ ? x_ * M_PI / 180 : x_;
+    x_ = is_rad_ ? x_ : x_ * M_PI / 180;
   } else if (option_ == 4) {
     double n_num_ = num_buffer_.top();
     num_buffer_.pop();

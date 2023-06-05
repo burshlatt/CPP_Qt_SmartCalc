@@ -17,7 +17,7 @@ namespace s21 {
       bool get_error() const noexcept { return is_error_; }
       std::string get_str() const noexcept { return str_; }
       void set_x(const double num) noexcept { x_value_ = num; }
-      void set_graph(const bool graph) noexcept { is_graph_ = graph; }
+      void set_rad(const bool graph) noexcept { is_rad_ = graph; }
 
       void GetNums() noexcept;
       void ClearOutput() noexcept;
@@ -39,7 +39,7 @@ namespace s21 {
       std::string func_;
       double result_ = 0.0;
       double x_value_ = 0.0;
-      bool is_graph_ = false;
+      bool is_rad_ = false;
       bool is_error_ = false;
       double x_ = 0.0, y_ = 0.0;
       const size_t array_size_ = 11;

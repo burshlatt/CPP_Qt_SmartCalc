@@ -1003,9 +1003,9 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>60</y>
+      <y>90</y>
       <width>60</width>
-      <height>60</height>
+      <height>30</height>
      </rect>
     </property>
     <property name="font">
@@ -1033,9 +1033,9 @@ QPushButton:pressed {
     <property name="geometry">
      <rect>
       <x>400</x>
-      <y>60</y>
+      <y>90</y>
       <width>60</width>
-      <height>60</height>
+      <height>30</height>
      </rect>
     </property>
     <property name="font">
@@ -1518,6 +1518,56 @@ color: black;
     </property>
     <property name="text">
      <string>X value:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="rad">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>60</y>
+      <width>60</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>17</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+  background-color: rgb(255, 219, 139);
+  color: black; 
+  border: 1px solid gray;
+}</string>
+    </property>
+    <property name="text">
+     <string>Rad</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="deg">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>60</y>
+      <width>60</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>17</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+  background-color: rgb(255, 160, 122);
+  color: black; 
+  border: 1px solid gray;
+}</string>
+    </property>
+    <property name="text">
+     <string>Deg</string>
     </property>
    </widget>
   </widget>

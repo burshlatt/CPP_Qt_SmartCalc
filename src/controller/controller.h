@@ -14,6 +14,7 @@ namespace s21 {
             bool IsCorrect(const std::string str) noexcept;
 
             void GraphEnd() noexcept;
+            void SetRad(const bool is_rad_) noexcept;
             void GraphStart(const std::string str) noexcept;
 
             double Graph(const double x) noexcept;

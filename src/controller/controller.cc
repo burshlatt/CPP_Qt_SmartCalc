@@ -7,8 +7,11 @@ bool s21::controller::IsGraph(const std::string str) noexcept {
             status_ = true;
         }
     }
-    model_.set_graph(status_);
     return status_;
+}
+
+void s21::controller::SetRad(const bool is_rad_) noexcept {
+    model_.set_rad(is_rad_);
 }
 
 bool s21::controller::IsCorrect(const std::string str) noexcept {
