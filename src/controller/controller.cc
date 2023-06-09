@@ -10,8 +10,8 @@ bool s21::controller::IsGraph(const std::string str) noexcept {
     return status_;
 }
 
-void s21::controller::SetRad(const bool is_rad_) noexcept {
-    model_.set_rad(is_rad_);
+void s21::controller::SetRad(const bool is_rad) noexcept {
+    model_.set_rad(is_rad);
 }
 
 bool s21::controller::IsCorrect(const std::string str) noexcept {
@@ -19,6 +19,12 @@ bool s21::controller::IsCorrect(const std::string str) noexcept {
     if (str.back() != ')' && (str.back() < '0' || str.back() > '9') && str.back() != 'x') {
         status_ = false;
     }
+    int l_bracket = 0, r_bracket = 0;
+    for (size_t i = 0; i < str.size(); i++) {
+        if (str[i] == '(') l_bracket++;
+        if (str[i] == ')') r_bracket++;
+    }
+    if (l_bracket != r_bracket) status_ = false;
     return status_;
 }
 

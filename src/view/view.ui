@@ -35,7 +35,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>SmartCalc v.1.0 (by Stephank)</string>
+   <string>SmartCalc v.2.0 (by Stephank)</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QMainWindow {
@@ -43,18 +43,18 @@
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLineEdit" name="inputOutput">
+   <widget class="QLineEdit" name="input">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
       <width>460</width>
-      <height>60</height>
+      <height>30</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>25</pointsize>
+      <pointsize>20</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1142,7 +1142,7 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>Кредитный калькулятор</string>
+     <string>Credit Calc</string>
     </property>
    </widget>
    <widget class="QPushButton" name="deposCalc">
@@ -1167,7 +1167,7 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>Депозитный калькулятор</string>
+     <string>Deposit Calc</string>
     </property>
    </widget>
    <widget class="QCustomPlot" name="functionGraph" native="true">
@@ -1568,6 +1568,33 @@ color: black;
     </property>
     <property name="text">
      <string>Deg</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="output">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>30</y>
+      <width>460</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit{
+	qproperty-alignment: 'AlignVCenter | AlignRight';
+	border: 1px solid gray;
+}
+
+background-color : gray;
+</string>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

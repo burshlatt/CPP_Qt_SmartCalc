@@ -63,17 +63,14 @@ void view::on_credCalc_clicked() {
 //}
 
 void view::GetInfo() {
-  if (is_result_) {
-    ui->inputOutput->clear();
-    is_result_ = false;
-  }
   button_ = (QPushButton *)sender();
-  str_ = ui->inputOutput->text().toStdString();
+  str_ = ui->input->text().toStdString();
   last_symbol_ = str_.back();
   size_ = str_.size();
   if (size_ >= 255) {
-    ui->inputOutput->clear();
-    ui->inputOutput->setText(ui->inputOutput->text() + "ERROR: Too many elements!");
+    ui->input->clear();
+    ui->output->clear();
+    ui->output->setText("ERROR: Too many elements!");
   }
 }
 
@@ -96,7 +93,7 @@ void view::operators_clicked() {
             on_delElem_clicked();
         }
         if (size_ < 255) {
-          ui->inputOutput->setText(ui->inputOutput->text() + button_->text());
+          ui->input->setText(ui->input->text() + button_->text());
           is_dot_ = false;
         }
     }
@@ -104,25 +101,23 @@ void view::operators_clicked() {
 
 void view::symbols_clicked() {
     GetInfo();
-    if (size_ < 255) {
-        if (last_symbol_ == 'x' || last_symbol_ == ')' || last_symbol_ == 'i') {
-            ui->inputOutput->setText(ui->inputOutput->text() + "*");
+    if (last_symbol_ == 'x' || last_symbol_ == ')' || last_symbol_ == 'i') {
+        ui->input->setText(ui->input->text() + "*");
+    }
+    if (button_->text() == "Pi" && last_symbol_ != '.') {
+        if (last_symbol_ >= '0' && last_symbol_ <= '9') {
+            ui->input->setText(ui->input->text() + "*");
         }
-        if (button_->text() == "Pi" && last_symbol_ != '.') {
-            if (last_symbol_ >= '0' && last_symbol_ <= '9') {
-                ui->inputOutput->setText(ui->inputOutput->text() + "*");
-            }
-            ui->inputOutput->setText(ui->inputOutput->text() + button_->text());
-            is_dot_ = false;
-        } else if (button_->text() == 'x' && last_symbol_ != '.') {
-            if (last_symbol_ >= '0' && last_symbol_ <= '9') {
-                ui->inputOutput->setText(ui->inputOutput->text() + "*");
-            }
-            ui->inputOutput->setText(ui->inputOutput->text() + "x");
-            is_dot_ = false;
-        } else if (button_->text() >= '0' && button_->text() <= '9') {
-            ui->inputOutput->setText(ui->inputOutput->text() + button_->text());
+        ui->input->setText(ui->input->text() + button_->text());
+        is_dot_ = false;
+    } else if (button_->text() == 'x' && last_symbol_ != '.') {
+        if (last_symbol_ >= '0' && last_symbol_ <= '9') {
+            ui->input->setText(ui->input->text() + "*");
         }
+        ui->input->setText(ui->input->text() + "x");
+        is_dot_ = false;
+    } else if (button_->text() >= '0' && button_->text() <= '9') {
+        ui->input->setText(ui->input->text() + button_->text());
     }
 }
 
@@ -130,17 +125,16 @@ void view::func_clicked() {
   GetInfo();
   if (size_ < 255 && last_symbol_ != '.') {
     if ((last_symbol_ >= '0' && last_symbol_ <= '9') || last_symbol_ == ')' || last_symbol_ == 'i') {
-      ui->inputOutput->setText(ui->inputOutput->text() + "*");
+      ui->input->setText(ui->input->text() + "*");
     }
-    ui->inputOutput->setText(ui->inputOutput->text() + button_->text() + "(");
+    ui->input->setText(ui->input->text() + button_->text() + "(");
     is_dot_ = false;
   }
 }
 
 void view::brackets_clicked() {
   GetInfo();
-  l_brackets_ = 0;
-  r_brackets_ = 0;
+  int l_brackets_ = 0, r_brackets_ = 0;
   bool can_do_ = true;
   if (last_symbol_ != '.') {
     for (size_t i = 0; i < size_; i++) {
@@ -155,9 +149,9 @@ void view::brackets_clicked() {
       if (button_->text() == '(') {
         if ((last_symbol_ >= '0' && last_symbol_ <= '9') || last_symbol_ == 'x' ||
             last_symbol_ == ')') {
-          ui->inputOutput->setText(ui->inputOutput->text() + "*");
+          ui->input->setText(ui->input->text() + "*");
         }
-        ui->inputOutput->setText(ui->inputOutput->text() + "(");
+        ui->input->setText(ui->input->text() + "(");
         is_dot_ = false;
       }
       if (button_->text() == ')' &&
@@ -168,7 +162,7 @@ void view::brackets_clicked() {
           }
         }
         if (can_do_) {
-          ui->inputOutput->setText(ui->inputOutput->text() + ")");
+          ui->input->setText(ui->input->text() + ")");
           is_dot_ = false;
         }
       }
@@ -180,16 +174,16 @@ void view::on_subFunc_clicked() {
   GetInfo();
   if (size_ < 255 && last_symbol_ != '.') {
     if (size_ == 0) {
-      ui->inputOutput->setText(ui->inputOutput->text() + "(");
+      ui->input->setText(ui->input->text() + "(");
     } else {
       for (int i = 0; i < 6; i++) {
         if (last_symbol_ == operators[i]) {
-          ui->inputOutput->setText(ui->inputOutput->text() + "(");
+          ui->input->setText(ui->input->text() + "(");
           break;
         }
       }
     }
-    ui->inputOutput->setText(ui->inputOutput->text() + "-");
+    ui->input->setText(ui->input->text() + "-");
     is_dot_ = false;
   }
 }
@@ -199,11 +193,11 @@ void view::on_dotSym_clicked() {
   if (size_ < 255 && last_symbol_ != '.' && !is_dot_) {
     if (last_symbol_ < '0' || last_symbol_ > '9') {
       if (last_symbol_ == ')') {
-        ui->inputOutput->setText(ui->inputOutput->text() + "*");
+        ui->input->setText(ui->input->text() + "*");
       }
-      ui->inputOutput->setText(ui->inputOutput->text() + "0");
+      ui->input->setText(ui->input->text() + "0");
     }
-    ui->inputOutput->setText(ui->inputOutput->text() + ".");
+    ui->input->setText(ui->input->text() + ".");
     is_dot_ = true;
   }
 }
@@ -214,11 +208,11 @@ void view::on_delElem_clicked() {
     is_dot_ = false;
   }
   if (size_ == 0) {
-    ui->inputOutput->clear();
+    ui->input->clear();
   } else {
-    QString text = ui->inputOutput->text();
+    QString text = ui->input->text();
     text.chop(1);
-    ui->inputOutput->setText(text);
+    ui->input->setText(text);
   }
   GetInfo();
   for (int i = str_.size() - 1;
@@ -231,7 +225,8 @@ void view::on_delElem_clicked() {
 
 void view::on_delAll_clicked() {
   is_dot_ = false;
-  ui->inputOutput->clear();
+  ui->input->clear();
+  ui->output->clear();
 }
 
 void view::check_fields() {
@@ -288,22 +283,21 @@ void view::on_showGraph_clicked() {
 
 void view::on_resultFunc_clicked() {
     check_fields();
-    str_ = ui->inputOutput->text().toStdString();
+    ui->output->clear();
+    str_ = ui->input->text().toStdString();
     if (calc_.IsCorrect(str_) && str_.size()) {
         if (!calc_.IsGraph(str_)) {
             double result_ = calc_.Calculator(str_ + "=");
             if (!calc_.IsError()) {
-                ui->inputOutput->clear();
+                ui->output->clear();
                 if (std::fabs(result_ - (int)result_) < std::numeric_limits<double>::epsilon()) {
-                    ui->inputOutput->setText(ui->inputOutput->text() + QString::number(result_, 'f', 0));
+                    ui->output->setText(QString::number(result_, 'f', 0));
                 } else {
-                    ui->inputOutput->setText(ui->inputOutput->text() + QString::number(result_, 'f', 7));
+                    ui->output->setText(QString::number(result_, 'f', 7));
                 }
             } else {
-                ui->inputOutput->clear();
-                ui->inputOutput->setText(ui->inputOutput->text() + "ERROR: Incorrect data!");
+                ui->output->setText("ERROR: Incorrect data!");
             }
-            is_result_ = true;
         } else {
             if (!graph_open_) {
                 int xPos = this->geometry().x();
@@ -316,14 +310,13 @@ void view::on_resultFunc_clicked() {
             print_graph();
         }
     } else if (!calc_.IsCorrect(str_) && str_.size()) {
-        is_result_ = true;
-        ui->inputOutput->clear();
-        ui->inputOutput->setText(ui->inputOutput->text() + "ERROR: Incorrect data!");
+        ui->output->setText("ERROR: Incorrect data!");
     }
 }
 
 void view::print_graph() {
     check_fields();
+    ui->output->setText("GRAPH");
     ui->functionGraph->clearGraphs();
     ui->functionGraph->xAxis->setRange(ui->xMinCord->text().toDouble(), ui->xMaxCord->text().toDouble());
     ui->functionGraph->yAxis->setRange(ui->yMinCord->text().toDouble(), ui->yMaxCord->text().toDouble());
@@ -347,10 +340,12 @@ void view::on_rad_clicked() {
     ui->rad->setStyleSheet("background-color: rgb(255, 160, 122); color: black; border: 1px solid gray;");
     ui->deg->setStyleSheet("background-color: rgb(255, 219, 139); color: black; border: 1px solid gray;");
     calc_.SetRad(true);
+    on_resultFunc_clicked();
 }
 
 void view::on_deg_clicked() {
     ui->deg->setStyleSheet("background-color: rgb(255, 160, 122); color: black; border: 1px solid gray;");
     ui->rad->setStyleSheet("background-color: rgb(255, 219, 139); color: black; border: 1px solid gray;");
     calc_.SetRad(false);
+    on_resultFunc_clicked();
 }

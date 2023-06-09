@@ -51,12 +51,9 @@ private:
         std::vector<std::string> output;
 
         bool is_dot_ = false;
-        bool is_result_ = false;
         bool graph_open_ = false;
 
         size_t size_ = 0;
-        int l_brackets_ = 0;
-        int r_brackets_ = 0;
 
         char last_symbol_ = str_.back();
         char operators[6] = {'-', '+', '*', '/', '^', 'd'};
