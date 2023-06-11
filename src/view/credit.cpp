@@ -60,7 +60,6 @@ void credit::on_showResult_clicked() {
     double sum_ = ui->creditSum->text().toDouble();
     double percent_ = ui->percent->text().toDouble();
     int term_ = ui->month->isChecked() ? ui->creditTerm->text().toInt() : ui->creditTerm->text().toInt() * 12;
-//    ui->monthRes->setText(ui->monthRes->text() + "0");
     if (ui->annu->isChecked()) {
       result_ = calc_.AnnuityCredit(sum_, term_, percent_);
       ui->monthRes->clear();
