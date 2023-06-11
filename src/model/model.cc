@@ -244,3 +244,41 @@ void s21::model::Calculations() noexcept {
 void s21::model::ClearOutput() noexcept {
   while (!output_.empty()) output_.pop_back();
 }
+
+void s21::model::ClearCredit() noexcept {
+  overpay_ = 0.0;
+  month_pay_ = 0.0;
+  f_payment_ = 0.0;
+  l_payment_ = 0.0;
+  result_sum_ = 0.0;
+}
+
+void s21::model::AnnuityCredit(double sum, int term, double percent) noexcept {
+  ClearCredit();
+  percent = percent / (100 * percent);
+  month_pay_ = sum * (percent * pow((1 + percent), term)) / (pow((1 + percent), term) - 1);
+  overpay_ = month_pay_ * term - sum;
+  result_sum_ = sum + overpay_;
+}
+
+void s21::model::DifferentiatedCredit(double sum, int term, double percent) noexcept {
+  ClearCredit();
+  int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+  time_t now_;
+  time(&now_);
+  struct tm *local_ = localtime(&now_);
+  int month_ = local_->tm_mon;
+  double credit_body_ = sum / term;
+  overpay_ = (sum * (percent / 100) * days[month_]) / 365;
+  f_payment_ = overpay_ + credit_body_;
+  double sum_copy_ = sum;
+  double percent_month_ = 0.0;
+  for (int i = 0; i < term - 1; i++) {
+    sum_copy_ -= credit_body_;
+    month_ = month_ == 11 ? 0 : month_ + 1;
+    percent_month_ = (sum_copy_ * (percent / 100) * days[month_]) / 365;
+    overpay_ += percent_month_;
+  }
+  l_payment_ = percent_month_ + credit_body_;
+  result_sum_ = sum + overpay_;
+}

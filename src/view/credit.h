@@ -6,18 +6,18 @@
 #include "../controller/controller.h"
 
 namespace Ui {
-class CreditWindow;
+class credit;
 }
 
-class CreditWindow : public QDialog {
+class credit : public QDialog {
   Q_OBJECT
 
 public:
-  explicit CreditWindow(QWidget *parent = nullptr);
-  ~CreditWindow();
+  explicit credit(QWidget *parent = nullptr);
+  ~credit();
 
 private slots:
-  void check_correct_data();
+  bool IsCorrect();
   void on_showResult_clicked();
   void on_calculator_clicked();
 
@@ -25,9 +25,8 @@ signals:
   void firstWindow();
 
 private:
-  Ui::CreditWindow *ui;
-
-  int error = 0;
+  Ui::credit *ui;
+  s21::controller calc_;
 };
 
 #endif // CREDITWINDOW_H

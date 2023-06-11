@@ -1,6 +1,7 @@
 #ifndef SRC_CONTROLLER_CONTROLLER_H_
 #define SRC_CONTROLLER_CONTROLLER_H_
 
+// #include <vector>
 #include "../model/model.h"
 
 namespace s21 {
@@ -19,6 +20,9 @@ namespace s21 {
 
             double Graph(const double x) noexcept;
             double Calculator(const std::string str) noexcept;
+
+            double* AnnuityCredit(double sum, int term, double percent) noexcept;
+            double* DifferentiatedCredit(double sum, int term, double percent) noexcept;
 
         private:
             s21::model model_;

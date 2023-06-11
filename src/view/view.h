@@ -2,7 +2,7 @@
 #define VIEW_H
 
 #include <QMainWindow>
-#include "creditwindow.h"
+#include "credit.h"
 //#include "depositwindow.h"
 #include "../controller/controller.h"
 
@@ -42,9 +42,9 @@ class view : public QMainWindow {
 
 private:
         Ui::view *ui;
-        s21::controller calc_;
-        CreditWindow *secondWindow;
+        credit *credit_;
 //        DepositWindow *thirdWindow;
+        s21::controller calc_;
 
         std::string str_;
         QPushButton *button_;

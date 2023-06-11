@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CreditWindow</class>
- <widget class="QDialog" name="CreditWindow">
+ <class>credit</class>
+ <widget class="QDialog" name="credit">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -479,6 +479,7 @@ QPushButton:pressed {
       <property name="font">
        <font>
         <pointsize>14</pointsize>
+        <underline>true</underline>
        </font>
       </property>
       <property name="styleSheet">
@@ -489,6 +490,9 @@ QPushButton:pressed {
       <property name="text">
        <string>Аннуитетные</string>
       </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item>
@@ -496,6 +500,7 @@ QPushButton:pressed {
       <property name="font">
        <font>
         <pointsize>14</pointsize>
+        <underline>true</underline>
        </font>
       </property>
       <property name="styleSheet">
@@ -525,7 +530,14 @@ QPushButton:pressed {
       <property name="font">
        <font>
         <pointsize>14</pointsize>
+        <italic>false</italic>
+        <bold>false</bold>
+        <underline>true</underline>
+        <strikeout>false</strikeout>
        </font>
+      </property>
+      <property name="tabletTracking">
+       <bool>false</bool>
       </property>
       <property name="styleSheet">
        <string notr="true">QRadioButton {
@@ -535,6 +547,9 @@ QPushButton:pressed {
       <property name="text">
        <string>Месяцев</string>
       </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item>
@@ -542,6 +557,7 @@ QPushButton:pressed {
       <property name="font">
        <font>
         <pointsize>14</pointsize>
+        <underline>true</underline>
        </font>
       </property>
       <property name="styleSheet">
@@ -551,6 +567,9 @@ QPushButton:pressed {
       </property>
       <property name="text">
        <string>Лет</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
       </property>
      </widget>
     </item>

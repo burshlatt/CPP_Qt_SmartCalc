@@ -13,7 +13,7 @@ ICON = ../icon/smartcalc.png
 SOURCES += \
     ../controller/controller.cc \
     ../model/model.cc \
-    creditwindow.cpp \
+    credit.cpp \
     main.cpp \
     qcustomplot.cpp \
     view.cpp
@@ -21,12 +21,12 @@ SOURCES += \
 HEADERS += \
     ../controller/controller.h \
     ../model/model.h \
-    creditwindow.h \
+    credit.h \
     qcustomplot.h \
     view.h
 
 FORMS += \
-    creditwindow.ui \
+    credit.ui \
     view.ui
 
 # Default rules for deployment.

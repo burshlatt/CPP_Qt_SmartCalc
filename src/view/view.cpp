@@ -5,8 +5,8 @@ view::view(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::view) {
   ui->setupUi(this);
 
-  secondWindow = new CreditWindow();
-  connect(secondWindow, &CreditWindow::firstWindow, this, &view::show);
+  credit_ = new credit();
+  connect(credit_, &credit::firstWindow, this, &view::show);
 
 //  thirdWindow = new DepositWindow();
 //  connect(thirdWindow, &DepositWindow::firstWindow, this, &view::show);
@@ -53,7 +53,7 @@ view::view(QWidget *parent)
 view::~view() { delete ui; }
 
 void view::on_credCalc_clicked() {
-  secondWindow->show();
+  credit_->show();
   this->close();
 }
 

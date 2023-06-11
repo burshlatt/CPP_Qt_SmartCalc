@@ -1198,7 +1198,7 @@ QPushButton:pressed {
      </font>
     </property>
     <property name="text">
-     <string/>
+     <string>-5</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="xMaxCord">
@@ -1216,7 +1216,7 @@ QPushButton:pressed {
      </font>
     </property>
     <property name="text">
-     <string/>
+     <string>5</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="yMinCord">
@@ -1234,7 +1234,7 @@ QPushButton:pressed {
      </font>
     </property>
     <property name="text">
-     <string/>
+     <string>-5</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="yMaxCord">
@@ -1252,7 +1252,7 @@ QPushButton:pressed {
      </font>
     </property>
     <property name="text">
-     <string/>
+     <string>5</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="xValue">
@@ -1270,7 +1270,7 @@ QPushButton:pressed {
      </font>
     </property>
     <property name="text">
-     <string/>
+     <string>0</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton">
@@ -1373,7 +1373,7 @@ QPushButton:pressed {
      </font>
     </property>
     <property name="text">
-     <string/>
+     <string>-200</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="xEnd">
@@ -1391,7 +1391,7 @@ QPushButton:pressed {
      </font>
     </property>
     <property name="text">
-     <string/>
+     <string>200</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
