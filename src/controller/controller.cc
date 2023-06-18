@@ -54,20 +54,11 @@ void s21::controller::GraphEnd() noexcept {
 }
 
 double* s21::controller::AnnuityCredit(double sum, int term, double percent) noexcept {
-    double *result_ = new double[4]{};
     model_.AnnuityCredit(sum, term, percent);
-    result_[0] = model_.get_overpay();
-    result_[1] = model_.get_result_sum();
-    result_[2] = model_.get_month_pay();
-    return result_;
+    return model_.get_annu();
 }
 
 double* s21::controller::DifferentiatedCredit(double sum, int term, double percent) noexcept {
-    double *result_ = new double[4]{};
     model_.DifferentiatedCredit(sum, term, percent);
-    result_[0] = model_.get_overpay();
-    result_[1] = model_.get_result_sum();
-    result_[2] = model_.get_f_payment();
-    result_[3] = model_.get_l_payment();
-    return result_;
+    return model_.get_diff();
 }

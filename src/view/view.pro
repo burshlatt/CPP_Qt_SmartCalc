@@ -27,6 +27,7 @@ HEADERS += \
 
 FORMS += \
     credit.ui \
+    depositwindow.ui \
     view.ui
 
 # Default rules for deployment.

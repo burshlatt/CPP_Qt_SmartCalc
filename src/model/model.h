@@ -3,8 +3,6 @@
 
 #include <cmath>
 #include <stack>
-#include <vector>
-#include <string>
 #include <iostream>
 
 namespace s21 {
@@ -13,17 +11,12 @@ namespace s21 {
       model() {}
       ~model() {}
       
-      double get_res() const noexcept { return result_; }
-      bool get_error() const noexcept { return is_error_; }
-      std::string get_str() const noexcept { return str_; }
-      double get_overpay() const noexcept { return overpay_; }
-      double get_month_pay() const noexcept { return month_pay_; }
-      double get_f_payment() const noexcept { return f_payment_; }
-      double get_l_payment() const noexcept { return l_payment_; }
-      double get_result_sum() const noexcept { return result_sum_; }
-      
-      void set_x(const double num) noexcept { x_value_ = num; }
-      void set_rad(const bool graph) noexcept { is_rad_ = graph; }
+      bool get_error() const noexcept;
+      double get_res() const noexcept;
+      double* get_annu() const noexcept;
+      double* get_diff() const noexcept;
+      void set_x(const double num) noexcept;
+      void set_rad(const bool graph) noexcept;
 
       void GetNums() noexcept;
       void ClearCredit() noexcept;
@@ -40,9 +33,9 @@ namespace s21 {
       void PushLogic(const std::string str) noexcept;
       void AnnuityCredit(double sum, int term, double percent) noexcept;
       void DifferentiatedCredit(double sum, int term, double percent) noexcept;
-      bool CustomIsDigit(const std::string str) const noexcept { return str.front() >= '0' && str.front() <= '9'; }
 
     private:
+      int pos_ = 0;
       int option_ = 0;
       std::string str_;
       std::string func_;
@@ -59,7 +52,7 @@ namespace s21 {
       const size_t array_size_ = 11;
       std::stack<double> num_buffer_;
       std::stack<std::string> stack_;
-      std::vector<std::string> output_;
+      std::array<std::string, 256> output_;
       std::string functions_[11]{"cos", "sin", "tan", "acos", "asin", "atan", "ln", "log", "sqrt", "abs", "^"};
   };
 }

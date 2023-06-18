@@ -19,35 +19,35 @@ view::view(QWidget *parent)
   int y = (screenGeometry.height() - 380) / 2;
   move(x, y);
 
-  connect(ui->lnFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
-  connect(ui->logFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
-  connect(ui->absFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
-  connect(ui->cosFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
-  connect(ui->sinFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
-  connect(ui->tanFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
-  connect(ui->acosFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
-  connect(ui->asinFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
-  connect(ui->atanFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
-  connect(ui->sqrtFunc, SIGNAL(clicked()), this, SLOT(func_clicked()));
-  connect(ui->xSym, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
-  connect(ui->num_0, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
-  connect(ui->num_1, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
-  connect(ui->num_2, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
-  connect(ui->num_3, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
-  connect(ui->num_4, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
-  connect(ui->num_5, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
-  connect(ui->num_6, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
-  connect(ui->num_7, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
-  connect(ui->num_8, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
-  connect(ui->num_9, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
-  connect(ui->num_pi, SIGNAL(clicked()), this, SLOT(symbols_clicked()));
-  connect(ui->addFunc, SIGNAL(clicked()), this, SLOT(operators_clicked()));
-  connect(ui->mulFunc, SIGNAL(clicked()), this, SLOT(operators_clicked()));
-  connect(ui->divFunc, SIGNAL(clicked()), this, SLOT(operators_clicked()));
-  connect(ui->powFunc, SIGNAL(clicked()), this, SLOT(operators_clicked()));
-  connect(ui->modFunc, SIGNAL(clicked()), this, SLOT(operators_clicked()));
-  connect(ui->leftBracket, SIGNAL(clicked()), this, SLOT(brackets_clicked()));
-  connect(ui->rightBracket, SIGNAL(clicked()), this, SLOT(brackets_clicked()));
+  connect(ui->lnFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
+  connect(ui->logFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
+  connect(ui->absFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
+  connect(ui->cosFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
+  connect(ui->sinFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
+  connect(ui->tanFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
+  connect(ui->acosFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
+  connect(ui->asinFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
+  connect(ui->atanFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
+  connect(ui->sqrtFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
+  connect(ui->xSym, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
+  connect(ui->num_0, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
+  connect(ui->num_1, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
+  connect(ui->num_2, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
+  connect(ui->num_3, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
+  connect(ui->num_4, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
+  connect(ui->num_5, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
+  connect(ui->num_6, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
+  connect(ui->num_7, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
+  connect(ui->num_8, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
+  connect(ui->num_9, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
+  connect(ui->num_pi, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
+  connect(ui->addFunc, SIGNAL(clicked()), this, SLOT(OperatorsClicked()));
+  connect(ui->mulFunc, SIGNAL(clicked()), this, SLOT(OperatorsClicked()));
+  connect(ui->divFunc, SIGNAL(clicked()), this, SLOT(OperatorsClicked()));
+  connect(ui->powFunc, SIGNAL(clicked()), this, SLOT(OperatorsClicked()));
+  connect(ui->modFunc, SIGNAL(clicked()), this, SLOT(OperatorsClicked()));
+  connect(ui->leftBracket, SIGNAL(clicked()), this, SLOT(BracketsClicked()));
+  connect(ui->rightBracket, SIGNAL(clicked()), this, SLOT(BracketsClicked()));
 }
 
 view::~view() { delete ui; }
@@ -65,7 +65,6 @@ void view::on_credCalc_clicked() {
 void view::GetInfo() {
   button_ = (QPushButton *)sender();
   str_ = ui->input->text().toStdString();
-  last_symbol_ = str_.back();
   size_ = str_.size();
   if (size_ >= 255) {
     ui->input->clear();
@@ -74,44 +73,47 @@ void view::GetInfo() {
   }
 }
 
-void view::operators_clicked() {
+void view::OperatorsClicked() {
     GetInfo();
     bool is_operator_ = false;
-    if (size_ && last_symbol_ != '(' && last_symbol_ != '.') {
-        for (int i = 0; i < 6; i++) {
-            if (last_symbol_ == operators[i]) {
-                if (last_symbol_ != '-' || str_[str_.size() - 2] != '(') {
-                    is_operator_ = true;
+    if (size_ && str_.back() != '(' && str_.back() != '.') {
+        if ((str_.back() == '-' && str_[str_.size() - 2] != '(') || str_.back() != '-') {
+            for (int i = 0; i < 6; i++) {
+                if (str_.back() == operators[i]) {
+                    if (str_.back() != '-' || str_[str_.size() - 2] != '(') {
+                        is_operator_ = true;
+                        break;
+                    }
                 }
             }
-        }
-        if (is_operator_) {
-            if (last_symbol_ == 'd') {
-                on_delElem_clicked();
+            if (is_operator_) {
+                if (str_.back() == 'd') {
+                    on_delElem_clicked();
+                    on_delElem_clicked();
+                }
                 on_delElem_clicked();
             }
-            on_delElem_clicked();
-        }
-        if (size_ < 255) {
-          ui->input->setText(ui->input->text() + button_->text());
-          is_dot_ = false;
+            if (size_ < 255) {
+              ui->input->setText(ui->input->text() + button_->text());
+              is_dot_ = false;
+            }
         }
     }
 }
 
-void view::symbols_clicked() {
+void view::SymbolsClicked() {
     GetInfo();
-    if (last_symbol_ == 'x' || last_symbol_ == ')' || last_symbol_ == 'i') {
+    if (str_.back() == 'x' || str_.back() == ')' || str_.back() == 'i') {
         ui->input->setText(ui->input->text() + "*");
     }
-    if (button_->text() == "Pi" && last_symbol_ != '.') {
-        if (last_symbol_ >= '0' && last_symbol_ <= '9') {
+    if (button_->text() == "Pi" && str_.back() != '.') {
+        if (str_.back() >= '0' && str_.back() <= '9') {
             ui->input->setText(ui->input->text() + "*");
         }
         ui->input->setText(ui->input->text() + button_->text());
         is_dot_ = false;
-    } else if (button_->text() == 'x' && last_symbol_ != '.') {
-        if (last_symbol_ >= '0' && last_symbol_ <= '9') {
+    } else if (button_->text() == 'x' && str_.back() != '.') {
+        if (str_.back() >= '0' && str_.back() <= '9') {
             ui->input->setText(ui->input->text() + "*");
         }
         ui->input->setText(ui->input->text() + "x");
@@ -121,10 +123,10 @@ void view::symbols_clicked() {
     }
 }
 
-void view::func_clicked() {
+void view::FuncClicked() {
   GetInfo();
-  if (size_ < 255 && last_symbol_ != '.') {
-    if ((last_symbol_ >= '0' && last_symbol_ <= '9') || last_symbol_ == ')' || last_symbol_ == 'i') {
+  if (size_ < 255 && str_.back() != '.') {
+    if ((str_.back() >= '0' && str_.back() <= '9') || str_.back() == ')' || str_.back() == 'i') {
       ui->input->setText(ui->input->text() + "*");
     }
     ui->input->setText(ui->input->text() + button_->text() + "(");
@@ -132,11 +134,11 @@ void view::func_clicked() {
   }
 }
 
-void view::brackets_clicked() {
+void view::BracketsClicked() {
   GetInfo();
   int l_brackets_ = 0, r_brackets_ = 0;
   bool can_do_ = true;
-  if (last_symbol_ != '.') {
+  if (str_.back() != '.') {
     for (size_t i = 0; i < size_; i++) {
       if (str_[i] == '(') {
         l_brackets_++;
@@ -147,8 +149,8 @@ void view::brackets_clicked() {
     }
     if (size_ < 255) {
       if (button_->text() == '(') {
-        if ((last_symbol_ >= '0' && last_symbol_ <= '9') || last_symbol_ == 'x' ||
-            last_symbol_ == ')') {
+        if ((str_.back() >= '0' && str_.back() <= '9') || str_.back() == 'x' ||
+            str_.back() == ')') {
           ui->input->setText(ui->input->text() + "*");
         }
         ui->input->setText(ui->input->text() + "(");
@@ -157,7 +159,7 @@ void view::brackets_clicked() {
       if (button_->text() == ')' &&
           r_brackets_ < l_brackets_) {
         for (int i = 0; i < 6; i++) {
-          if (last_symbol_ == operators[i]) {
+          if (str_.back() == operators[i]) {
             can_do_ = false;
           }
         }
@@ -172,12 +174,12 @@ void view::brackets_clicked() {
 
 void view::on_subFunc_clicked() {
   GetInfo();
-  if (size_ < 255 && last_symbol_ != '.') {
+  if (size_ < 255 && str_.back() != '.') {
     if (size_ == 0) {
       ui->input->setText(ui->input->text() + "(");
     } else {
       for (int i = 0; i < 6; i++) {
-        if (last_symbol_ == operators[i]) {
+        if (str_.back() == operators[i]) {
           ui->input->setText(ui->input->text() + "(");
           break;
         }
@@ -190,9 +192,14 @@ void view::on_subFunc_clicked() {
 
 void view::on_dotSym_clicked() {
   GetInfo();
-  if (size_ < 255 && last_symbol_ != '.' && !is_dot_) {
-    if (last_symbol_ < '0' || last_symbol_ > '9') {
-      if (last_symbol_ == ')') {
+  for (int i = str_.size() - 1; str_[i] >= '0' && str_[i] <= '9'; i--) {
+    if (str_[i - 1] == '.') {
+      is_dot_ = true;
+    }
+  }
+  if (size_ < 255 && str_.back() != '.' && !is_dot_) {
+    if (str_.back() < '0' || str_.back() > '9') {
+      if (str_.back() == ')' || str_.back() == 'i' || str_.back() == 'x') {
         ui->input->setText(ui->input->text() + "*");
       }
       ui->input->setText(ui->input->text() + "0");
@@ -204,22 +211,24 @@ void view::on_dotSym_clicked() {
 
 void view::on_delElem_clicked() {
   GetInfo();
-  if (last_symbol_ == '.') {
-    is_dot_ = false;
-  }
-  if (size_ == 0) {
-    ui->input->clear();
-  } else {
+  if (str_.back() == '.') is_dot_ = false;
+  if (size_ != 0) {
+    char m_five = str_[str_.size() - 5];
+    char m_four = str_[str_.size() - 4];
+    char m_three = str_[str_.size() - 3];
+    char m_two = str_[str_.size() - 2];
     QString text = ui->input->text();
-    text.chop(1);
+    if (str_.back() == '(' && (m_five == 'a' || m_five == 's'))
+        text.chop(5);
+    else if (str_.back() == '(' && m_five != 'a' && (m_four != 'c' || m_four != 's' || m_four != 't' || m_four != 'l' || m_four != 'a'))
+        text.chop(4);
+    else if (str_.back() == '(' && m_three != 'l')
+        text.chop(3);
+    else if (str_.back() == 'i' && m_two == 'P')
+        text.chop(2);
+    else
+        text.chop(1);
     ui->input->setText(text);
-  }
-  GetInfo();
-  for (int i = str_.size() - 1;
-       str_[i] >= '0' && str_[i] <= '9'; i--) {
-    if (str_[i - 1] == '.') {
-      is_dot_ = true;
-    }
   }
 }
 
@@ -229,7 +238,7 @@ void view::on_delAll_clicked() {
   ui->output->clear();
 }
 
-void view::check_fields() {
+void view::CheckFields() {
   if (ui->xValue->text().size() == 0) {
     ui->xValue->setText("0");
   }
@@ -265,24 +274,7 @@ void view::check_fields() {
   }
 }
 
-void view::on_showGraph_clicked() {
-  int xPos = this->geometry().x();
-  int yPos = this->geometry().y();
-  if (!graph_open_) {
-    this->setFixedSize(960, 380);
-    ui->showGraph->setText("<");
-    setGeometry(xPos, yPos, width() + 480, height());
-    graph_open_ = true;
-  } else {
-    this->setFixedSize(480, 380);
-    ui->showGraph->setText(">");
-    setGeometry(xPos, yPos, width() - 480, height());
-    graph_open_ = false;
-  }
-}
-
 void view::on_resultFunc_clicked() {
-    check_fields();
     ui->output->clear();
     str_ = ui->input->text().toStdString();
     if (calc_.IsCorrect(str_) && str_.size()) {
@@ -307,15 +299,31 @@ void view::on_resultFunc_clicked() {
                 setGeometry(xPos, yPos, width() + 480, height());
                 graph_open_ = true;
             }
-            print_graph();
+            PrintGraph();
         }
     } else if (!calc_.IsCorrect(str_) && str_.size()) {
         ui->output->setText("ERROR: Incorrect data!");
     }
 }
 
-void view::print_graph() {
-    check_fields();
+void view::on_showGraph_clicked() {
+  int xPos = this->geometry().x();
+  int yPos = this->geometry().y();
+  if (!graph_open_) {
+    this->setFixedSize(960, 380);
+    ui->showGraph->setText("<");
+    setGeometry(xPos, yPos, width() + 480, height());
+    graph_open_ = true;
+  } else {
+    this->setFixedSize(480, 380);
+    ui->showGraph->setText(">");
+    setGeometry(xPos, yPos, width() - 480, height());
+    graph_open_ = false;
+  }
+}
+
+void view::PrintGraph() {
+    CheckFields();
     ui->output->setText("GRAPH");
     ui->functionGraph->clearGraphs();
     ui->functionGraph->xAxis->setRange(ui->xMinCord->text().toDouble(), ui->xMaxCord->text().toDouble());

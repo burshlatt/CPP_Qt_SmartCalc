@@ -1,5 +1,13 @@
 #include "model.h"
 
+double s21::model::get_res() const noexcept { return result_; }
+
+bool s21::model::get_error() const noexcept { return is_error_; }
+
+void s21::model::set_x(const double num) noexcept { x_value_ = num; }
+
+void s21::model::set_rad(const bool graph) noexcept { is_rad_ = graph; }
+
 void s21::model::GetNums(double &x) noexcept {
   x = num_buffer_.top();
   num_buffer_.pop();
@@ -37,7 +45,7 @@ void s21::model::InsertNumOutput(size_t &index) noexcept {
     || str_[index] == 'P' || str_[index] == 'i') {
       char_str_[i++] = str_[index++];
     }
-    output_.push_back(is_negative_ ? std::string(char_str_) + "-" : std::string(char_str_));
+    output_[pos_++] = is_negative_ ? std::string(char_str_) + "-" : std::string(char_str_);
   }
 }
 
@@ -45,14 +53,14 @@ void s21::model::PushLogic(const std::string str) noexcept {
   if (str == "mod" || str == "*" || str == "/") {
     while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*" 
     || stack_.top() == "/" || stack_.top() == "^" || stack_.top() == "!")) {
-      output_.push_back(stack_.top());
+      output_[pos_++] = stack_.top();
       stack_.pop();
     }
   } else if (str == "+" || str == "-") {
     while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*" 
     || stack_.top() == "/" || stack_.top() == "+" || stack_.top() == "-" 
     || stack_.top() == "^" || stack_.top() == "!")) {
-      output_.push_back(stack_.top());
+      output_[pos_++] = stack_.top();
       stack_.pop();
     }
   }
@@ -93,7 +101,7 @@ void s21::model::PushFunctions(size_t &index) noexcept {
 void s21::model::PopFunctions() noexcept {
   if (option_ == 1) {
     while (!stack_.empty() && stack_.top() != "(") {
-      output_.push_back(stack_.top());
+      output_[pos_++] = stack_.top();
       stack_.pop();
     }
     if (stack_.empty()) {
@@ -102,7 +110,7 @@ void s21::model::PopFunctions() noexcept {
       stack_.pop();
       for (size_t i = 0; i < array_size_ && !stack_.empty(); i++) {
         if (stack_.top() == functions_[i]) {
-          output_.push_back(stack_.top());
+          output_[pos_++] = stack_.top();
           stack_.pop();
         }
       }
@@ -112,7 +120,7 @@ void s21::model::PopFunctions() noexcept {
       if (stack_.top() == "(") {
         is_error_ = true;
       } else {
-        output_.push_back(stack_.top());
+        output_[pos_++] = stack_.top();
         stack_.pop();
       }
     }
@@ -122,7 +130,7 @@ void s21::model::PopFunctions() noexcept {
 bool s21::model::ConvertNums(size_t i) noexcept {
   bool status = false;
   double num_ = 0.0;
-  if (CustomIsDigit(output_[i]) || output_[i] == "x" || output_[i] == "Pi") {
+  if (isdigit(output_[i].front()) || output_[i] == "x" || output_[i] == "Pi") {
     if (output_[i] == "x")
       num_ = x_value_;
     else if (output_[i] == "Pi")
@@ -208,7 +216,7 @@ void s21::model::DoCalculations() noexcept {
 }
 
 void s21::model::Calculations() noexcept {
-  for (size_t i = 0; i < output_.size(); i++) {
+  for (int i = 0; i < pos_; i++) {
     if (!ConvertNums(i)) {
       switch (output_[i].front()) {
         case '+':
@@ -242,7 +250,25 @@ void s21::model::Calculations() noexcept {
 }
 
 void s21::model::ClearOutput() noexcept {
-  while (!output_.empty()) output_.pop_back();
+  output_.fill("");
+  pos_ = 0;
+}
+
+double* s21::model::get_annu() const noexcept {
+  double *result_ = new double[3]{};
+  result_[0] = overpay_;
+  result_[1] = result_sum_;
+  result_[2] = month_pay_;
+  return result_;
+}
+
+double* s21::model::get_diff() const noexcept {
+  double *result_ = new double[4]{};
+  result_[0] = overpay_;
+  result_[1] = result_sum_;
+  result_[2] = f_payment_;
+  result_[3] = l_payment_;
+  return result_;
 }
 
 void s21::model::ClearCredit() noexcept {
@@ -256,7 +282,7 @@ void s21::model::ClearCredit() noexcept {
 void s21::model::AnnuityCredit(double sum, int term, double percent) noexcept {
   ClearCredit();
   percent = percent / (100 * percent);
-  month_pay_ = sum * (percent * pow((1 + percent), term)) / (pow((1 + percent), term) - 1);
+  month_pay_ = sum * percent / (1 - pow(1 + percent, -term));
   overpay_ = month_pay_ * term - sum;
   result_sum_ = sum + overpay_;
 }

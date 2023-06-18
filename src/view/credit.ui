@@ -6,21 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>480</width>
+    <width>960</width>
     <height>480</height>
    </rect>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>480</width>
-    <height>480</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>480</width>
-    <height>480</height>
-   </size>
   </property>
   <property name="windowTitle">
    <string>Credit Calculator (by Stephank)</string>
@@ -391,7 +379,7 @@ QPushButton:pressed {
     <rect>
      <x>440</x>
      <y>330</y>
-     <width>40</width>
+     <width>50</width>
      <height>35</height>
     </rect>
    </property>
@@ -414,7 +402,7 @@ QPushButton:pressed {
     <rect>
      <x>440</x>
      <y>380</y>
-     <width>40</width>
+     <width>50</width>
      <height>35</height>
     </rect>
    </property>
@@ -437,7 +425,7 @@ QPushButton:pressed {
     <rect>
      <x>440</x>
      <y>430</y>
-     <width>40</width>
+     <width>50</width>
      <height>35</height>
     </rect>
    </property>
@@ -571,6 +559,58 @@ QPushButton:pressed {
       <property name="checked">
        <bool>false</bool>
       </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLabel" name="label_13">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>0</y>
+     <width>140</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	color: black; 
+}</string>
+   </property>
+   <property name="text">
+    <string>График погашения</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>500</x>
+     <y>30</y>
+     <width>451</width>
+     <height>441</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="tableLayout">
+    <item>
+     <widget class="QScrollArea" name="tableScroll">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>447</width>
+         <height>437</height>
+        </rect>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>

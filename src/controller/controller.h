@@ -1,7 +1,6 @@
 #ifndef SRC_CONTROLLER_CONTROLLER_H_
 #define SRC_CONTROLLER_CONTROLLER_H_
 
-// #include <vector>
 #include "../model/model.h"
 
 namespace s21 {

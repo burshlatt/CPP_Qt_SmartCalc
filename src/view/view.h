@@ -21,12 +21,14 @@ class view : public QMainWindow {
 
     private slots:
         void GetInfo();
-        void print_graph();
-        void check_fields();
-        void func_clicked();
-        void symbols_clicked();
-        void brackets_clicked();
-        void operators_clicked();
+        void PrintGraph();
+        void CheckFields();
+        void FuncClicked();
+        void on_rad_clicked();
+        void on_deg_clicked();
+        void SymbolsClicked();
+        void BracketsClicked();
+        void OperatorsClicked();
         void on_dotSym_clicked();
         void on_delAll_clicked();
         void on_subFunc_clicked();
@@ -36,26 +38,18 @@ class view : public QMainWindow {
         void on_showGraph_clicked();
         void on_resultFunc_clicked();
 
-        void on_rad_clicked();
-
-        void on_deg_clicked();
-
 private:
         Ui::view *ui;
         credit *credit_;
 //        DepositWindow *thirdWindow;
-        s21::controller calc_;
-
         std::string str_;
         QPushButton *button_;
+        s21::controller calc_;
         std::vector<std::string> output;
 
+        size_t size_ = 0;
         bool is_dot_ = false;
         bool graph_open_ = false;
-
-        size_t size_ = 0;
-
-        char last_symbol_ = str_.back();
         char operators[6] = {'-', '+', '*', '/', '^', 'd'};
 };
 
