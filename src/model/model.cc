@@ -90,7 +90,8 @@ void s21::model::PushFunctions(size_t &index) noexcept {
     } else if (str_[index] == '+') {
       PushLogic("+");
     } else if (str_[index] == '-') {
-      if (str_[index - 1] == '(' && !isdigit(str_[index + 1]))
+      if (str_[index - 1] == '(' && !isdigit(str_[index + 1])
+       && str_[index + 1] != 'P' && str_[index + 1] != 'x')
         PushLogic("!");
       else if (str_[index - 1] != '(')
         PushLogic("-");
@@ -130,10 +131,10 @@ void s21::model::PopFunctions() noexcept {
 bool s21::model::ConvertNums(size_t i) noexcept {
   bool status = false;
   double num_ = 0.0;
-  if (isdigit(output_[i].front()) || output_[i] == "x" || output_[i] == "Pi") {
-    if (output_[i] == "x")
+  if (isdigit(output_[i].front()) || output_[i].front() == 'x' || output_[i].front() == 'P') {
+    if (output_[i].front() == 'x')
       num_ = x_value_;
-    else if (output_[i] == "Pi")
+    else if (output_[i].front() == 'P')
       num_ = M_PI;
     else
       num_ = atof(output_[i].c_str());
@@ -250,7 +251,7 @@ void s21::model::Calculations() noexcept {
 }
 
 void s21::model::ClearOutput() noexcept {
-  output_.fill("");
+  // output_.fill("");
   pos_ = 0;
 }
 
