@@ -6,22 +6,22 @@
 namespace s21 {
     class controller {
         public:
-            controller() {};
-            ~controller() {};
+            controller() {}
+            ~controller() {}
             
             bool IsError() noexcept;
-            bool IsGraph(const std::string str) noexcept;
-            bool IsCorrect(const std::string str) noexcept;
+            bool IsGraph(const std::string &str) noexcept;
+            bool IsCorrect(const std::string &str) noexcept;
 
             void GraphEnd() noexcept;
-            void SetRad(const bool is_rad) noexcept;
-            void GraphStart(const std::string str) noexcept;
+            void SetRad(const bool &is_rad) noexcept;
+            void GraphStart(const std::string &str) noexcept;
 
-            double Graph(const double x) noexcept;
-            double Calculator(const std::string str) noexcept;
+            double Graph(const double &x) noexcept;
+            double Calculator(const std::string &str) noexcept;
 
-            double* AnnuityCredit(double sum, int term, double percent) noexcept;
-            double* DifferentiatedCredit(double sum, int term, double percent) noexcept;
+            double* AnnuCred(const double &sum, const int &term, const double &percent) noexcept;
+            double* DifferCred(const double &sum, const int &term, const double &percent) noexcept;
 
         private:
             s21::model model_;

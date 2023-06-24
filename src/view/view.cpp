@@ -87,10 +87,6 @@ void view::OperatorsClicked() {
                 }
             }
             if (is_operator_) {
-                if (str_.back() == 'd') {
-                    on_delElem_clicked();
-                    on_delElem_clicked();
-                }
                 on_delElem_clicked();
             }
             if (size_ < 255) {
@@ -220,9 +216,9 @@ void view::on_delElem_clicked() {
     QString text = ui->input->text();
     if (str_.back() == '(' && (m_five == 'a' || m_five == 's'))
         text.chop(5);
-    else if (str_.back() == '(' && m_five != 'a' && (m_four != 'c' || m_four != 's' || m_four != 't' || m_four != 'l' || m_four != 'a'))
+    else if (str_.back() == '(' && m_five != 'a' && (m_four == 'c' || m_four == 's' || m_four == 't' || m_four == 'a' || m_four == 'l'))
         text.chop(4);
-    else if (str_.back() == '(' && m_three != 'l')
+    else if ((str_.back() == '(' && m_three == 'l') || (str_.back() == 'd' && m_three == 'm'))
         text.chop(3);
     else if (str_.back() == 'i' && m_two == 'P')
         text.chop(2);

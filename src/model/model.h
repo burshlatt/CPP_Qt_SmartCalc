@@ -15,8 +15,8 @@ namespace s21 {
       double get_res() const noexcept;
       double* get_annu() const noexcept;
       double* get_diff() const noexcept;
-      void set_x(const double num) noexcept;
-      void set_rad(const bool graph) noexcept;
+      void set_x(const double& num) noexcept;
+      void set_rad(const bool& graph) noexcept;
 
       void GetNums() noexcept;
       void ClearCredit() noexcept;
@@ -25,14 +25,14 @@ namespace s21 {
       void PopFunctions() noexcept;
       void DoCalculations() noexcept;
       void GetNums(double &x) noexcept;
-      bool ConvertNums(size_t i) noexcept;
+      bool ConvertNums(const size_t &i) noexcept;
       void PushFunctions(size_t &index) noexcept;
       void GetNums(double &x, double &y) noexcept;
       void InsertNumOutput(size_t &index) noexcept;
-      void Notation(const std::string str) noexcept;
-      void PushLogic(const std::string str) noexcept;
-      void AnnuityCredit(double sum, int term, double percent) noexcept;
-      void DifferentiatedCredit(double sum, int term, double percent) noexcept;
+      void Notation(const std::string &str) noexcept;
+      void PushLogic(const std::string &str) noexcept;
+      void AnnuCred(const double &sum, const int &term, const double &percent) noexcept;
+      void DifferCred(const double &sum, const int &term, const double &percent) noexcept;
 
     private:
       int pos_ = 0;

@@ -35,7 +35,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>SmartCalc v.2.0 (by Stephank)</string>
+   <string>SmartCalc (by Burshlat)</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QMainWindow {
@@ -181,7 +181,7 @@ QPushButton:pressed {
    <widget class="QPushButton" name="sqrtFunc">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>80</x>
       <y>240</y>
       <width>80</width>
       <height>60</height>
@@ -217,7 +217,7 @@ QPushButton:pressed {
    <widget class="QPushButton" name="lnFunc">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>80</x>
       <y>300</y>
       <width>80</width>
       <height>60</height>
@@ -397,7 +397,7 @@ QPushButton:pressed {
    <widget class="QPushButton" name="logFunc">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>0</x>
       <y>300</y>
       <width>80</width>
       <height>60</height>
@@ -1331,7 +1331,7 @@ QPushButton:pressed {
    <widget class="QPushButton" name="absFunc">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>0</x>
       <y>240</y>
       <width>80</width>
       <height>60</height>

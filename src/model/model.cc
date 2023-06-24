@@ -4,9 +4,9 @@ double s21::model::get_res() const noexcept { return result_; }
 
 bool s21::model::get_error() const noexcept { return is_error_; }
 
-void s21::model::set_x(const double num) noexcept { x_value_ = num; }
+void s21::model::set_x(const double &num) noexcept { x_value_ = num; }
 
-void s21::model::set_rad(const bool graph) noexcept { is_rad_ = graph; }
+void s21::model::set_rad(const bool &graph) noexcept { is_rad_ = graph; }
 
 void s21::model::GetNums(double &x) noexcept {
   x = num_buffer_.top();
@@ -49,7 +49,7 @@ void s21::model::InsertNumOutput(size_t &index) noexcept {
   }
 }
 
-void s21::model::PushLogic(const std::string str) noexcept {
+void s21::model::PushLogic(const std::string &str) noexcept {
   if (str == "mod" || str == "*" || str == "/") {
     while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*" 
     || stack_.top() == "/" || stack_.top() == "^" || stack_.top() == "!")) {
@@ -128,7 +128,7 @@ void s21::model::PopFunctions() noexcept {
   }
 }
 
-bool s21::model::ConvertNums(size_t i) noexcept {
+bool s21::model::ConvertNums(const size_t &i) noexcept {
   bool status = false;
   double num_ = 0.0;
   if (isdigit(output_[i].front()) || output_[i].front() == 'x' || output_[i].front() == 'P') {
@@ -146,7 +146,7 @@ bool s21::model::ConvertNums(size_t i) noexcept {
   return status;
 }
 
-void s21::model::Notation(const std::string str) noexcept {
+void s21::model::Notation(const std::string &str) noexcept {
   str_ = str;
   for (size_t i = 0; i < str_.size() && !is_error_; i++) {
     InsertNumOutput(i);
@@ -280,15 +280,15 @@ void s21::model::ClearCredit() noexcept {
   result_sum_ = 0.0;
 }
 
-void s21::model::AnnuityCredit(double sum, int term, double percent) noexcept {
+void s21::model::AnnuCred(const double &sum, const int &term, const double &percent) noexcept {
   ClearCredit();
-  percent = percent / (100 * percent);
-  month_pay_ = sum * percent / (1 - pow(1 + percent, -term));
+  double percent_ = percent / (100 * percent);
+  month_pay_ = sum * percent_ / (1 - pow(1 + percent_, -term));
   overpay_ = month_pay_ * term - sum;
   result_sum_ = sum + overpay_;
 }
 
-void s21::model::DifferentiatedCredit(double sum, int term, double percent) noexcept {
+void s21::model::DifferCred(const double &sum, const int &term, const double &percent) noexcept {
   ClearCredit();
   int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
   time_t now_;

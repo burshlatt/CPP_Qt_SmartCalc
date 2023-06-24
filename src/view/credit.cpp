@@ -113,11 +113,11 @@ void credit::on_showResult_clicked() {
     double percent_ = ui->percent->text().toDouble();
     int term_ = ui->month->isChecked() ? ui->creditTerm->text().toInt() : ui->creditTerm->text().toInt() * 12;
     if (ui->annu->isChecked()) {
-      result_ = calc_.AnnuityCredit(sum_, term_, percent_);
+      result_ = calc_.AnnuCred(sum_, term_, percent_);
       ui->monthRes->clear();
       ui->monthRes->setText(QString::number(result_[2], 'f', 2));
     } else {
-      result_ = calc_.DifferentiatedCredit(sum_, term_, percent_);
+      result_ = calc_.DifferCred(sum_, term_, percent_);
       ui->monthRes->clear();
       ui->monthRes->setText(QString::number(result_[2], 'f', 2) + " ... " + QString::number(result_[3], 'f', 2));
     }

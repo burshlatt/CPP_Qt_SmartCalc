@@ -1,6 +1,6 @@
 #include "controller.h"
 
-bool s21::controller::IsGraph(const std::string str) noexcept {
+bool s21::controller::IsGraph(const std::string &str) noexcept {
     bool status_ = false;
     for (size_t i = 0; i < str.size(); i++) {
         if (str[i] == 'x') {
@@ -10,11 +10,11 @@ bool s21::controller::IsGraph(const std::string str) noexcept {
     return status_;
 }
 
-void s21::controller::SetRad(const bool is_rad) noexcept {
+void s21::controller::SetRad(const bool &is_rad) noexcept {
     model_.set_rad(is_rad);
 }
 
-bool s21::controller::IsCorrect(const std::string str) noexcept {
+bool s21::controller::IsCorrect(const std::string &str) noexcept {
     bool status_ = true;
     if (str.back() != ')' && (str.back() < '0' || str.back() > '9') && str.back() != 'x') {
         status_ = false;
@@ -32,18 +32,18 @@ bool s21::controller::IsError() noexcept {
     return model_.get_error();
 }
 
-double s21::controller::Calculator(const std::string str) noexcept {
+double s21::controller::Calculator(const std::string &str) noexcept {
     model_.Notation(str);
     model_.Calculations();
     model_.ClearOutput();
     return model_.get_res();
 }
 
-void s21::controller::GraphStart(const std::string str) noexcept {
+void s21::controller::GraphStart(const std::string &str) noexcept {
     model_.Notation(str);
 }
 
-double s21::controller::Graph(const double x) noexcept {
+double s21::controller::Graph(const double &x) noexcept {
     model_.set_x(x);
     model_.Calculations();
     return model_.get_res();
@@ -53,12 +53,12 @@ void s21::controller::GraphEnd() noexcept {
     model_.ClearOutput();
 }
 
-double* s21::controller::AnnuityCredit(double sum, int term, double percent) noexcept {
-    model_.AnnuityCredit(sum, term, percent);
+double* s21::controller::AnnuCred(const double &sum, const int &term, const double &percent) noexcept {
+    model_.AnnuCred(sum, term, percent);
     return model_.get_annu();
 }
 
-double* s21::controller::DifferentiatedCredit(double sum, int term, double percent) noexcept {
-    model_.DifferentiatedCredit(sum, term, percent);
+double* s21::controller::DifferCred(const double &sum, const int &term, const double &percent) noexcept {
+    model_.DifferCred(sum, term, percent);
     return model_.get_diff();
 }
