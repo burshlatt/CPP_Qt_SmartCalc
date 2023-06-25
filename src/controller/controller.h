@@ -10,6 +10,7 @@ namespace s21 {
             ~controller() {}
             
             bool IsError() noexcept;
+            bool IsInteger(const double &res) noexcept;
             bool IsGraph(const std::string &str) noexcept;
             bool IsCorrect(const std::string &str) noexcept;
 

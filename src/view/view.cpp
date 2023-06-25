@@ -278,10 +278,8 @@ void view::on_resultFunc_clicked() {
             double result_ = calc_.Calculator(str_ + "=");
             if (!calc_.IsError()) {
                 ui->output->clear();
-                if (std::fabs(result_ - (int)result_) < std::numeric_limits<double>::epsilon())
-                    ui->output->setText(QString::number(result_, 'f', 0));
-                else
-                    ui->output->setText(QString::number(result_, 'f', 7));
+                int count_ = calc_.IsInteger(result_) ? 0 : 7;
+                ui->output->setText(QString::number(result_, 'f', count_));
             } else {
                 ui->output->setText("ERROR: Incorrect data!");
             }

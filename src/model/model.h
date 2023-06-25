@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <stack>
+#include <array>
 #include <iostream>
 
 namespace s21 {

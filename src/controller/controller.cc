@@ -1,5 +1,9 @@
 #include "controller.h"
 
+void s21::controller::SetRad(const bool &is_rad) noexcept {
+    model_.set_rad(is_rad);
+}
+
 bool s21::controller::IsGraph(const std::string &str) noexcept {
     bool status_ = false;
     for (size_t i = 0; i < str.size(); i++) {
@@ -10,15 +14,10 @@ bool s21::controller::IsGraph(const std::string &str) noexcept {
     return status_;
 }
 
-void s21::controller::SetRad(const bool &is_rad) noexcept {
-    model_.set_rad(is_rad);
-}
-
 bool s21::controller::IsCorrect(const std::string &str) noexcept {
     bool status_ = true;
-    if (str.back() != ')' && (str.back() < '0' || str.back() > '9') && str.back() != 'x') {
+    if (str.back() != ')' && (str.back() < '0' || str.back() > '9') && str.back() != 'x')
         status_ = false;
-    }
     int l_bracket = 0, r_bracket = 0;
     for (size_t i = 0; i < str.size(); i++) {
         if (str[i] == '(') l_bracket++;
@@ -30,6 +29,13 @@ bool s21::controller::IsCorrect(const std::string &str) noexcept {
 
 bool s21::controller::IsError() noexcept {
     return model_.get_error();
+}
+
+bool s21::controller::IsInteger(const double &res) noexcept {
+    if (std::fabs(res - (int)res) < std::numeric_limits<double>::epsilon())
+        return true;
+    else
+        return false;
 }
 
 double s21::controller::Calculator(const std::string &str) noexcept {
