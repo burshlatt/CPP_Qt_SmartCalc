@@ -76,34 +76,34 @@ void credit::AddRow(QString str) {
   labels_[2]->setText(str);
   labels_[3]->setText(str);
   addVbox->addLayout(hboxLayout);
-  count++;
+  count_++;
 }
 
 void credit::DelRow() {
-  if (count > 0) {
-//    QLayout *layout = addVbox->itemAt(count_of_elem_add - 1)->layout();
-//    QWidget *widget1 = layout->itemAt(0)->widget();
-//    QWidget *widget2 = layout->itemAt(1)->widget();
-//    QWidget *widget3 = layout->itemAt(2)->widget();
-//    delete labels_[0];
-//    delete labels_[1];
-//    delete labels_[2];
-//    delete labels_[3];
-//    labels_[0] = nullptr;
-//    labels_[1] = nullptr;
-//    labels_[2] = nullptr;
-//    labels_[3] = nullptr;
+  if (count_ > 0) {
+    QLayout *layout_ = addVbox->itemAt(count_ - 1)->layout();
+    QWidget *widget_1_ = layout_->itemAt(0)->widget();
+    QWidget *widget_2_ = layout_->itemAt(1)->widget();
+    QWidget *widget_3_ = layout_->itemAt(2)->widget();
+    QWidget *widget_4_ = layout_->itemAt(3)->widget();
+    delete layout_;
+    delete widget_1_;
+    delete widget_2_;
+    delete widget_3_;
+    delete widget_4_;
 //    labels_.pop_back();
 //    labels_.pop_back();
 //    labels_.pop_back();
 //    labels_.pop_back();
-    count--;
+    count_--;
   }
 }
 
 void credit::on_showResult_clicked() {
   if (IsCorrect()) {
-    DelRow();
+      while (count_) {
+        DelRow();
+      }
     this->setFixedSize(960, 480);
     ui->monthRes->clear();
     ui->overPay->clear();

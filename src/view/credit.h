@@ -36,7 +36,7 @@ signals:
   void firstWindow();
 
 private:
-  int count = 0;
+  int count_ = 0;
   Ui::credit *ui;
   QVBoxLayout *addVbox;
   s21::controller calc_;
