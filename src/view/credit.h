@@ -28,7 +28,7 @@ public:
 private slots:
   void DelRow();
   bool IsCorrect();
-  void AddRow(QString str);
+  void AddRow(int term, QString str_sum);
   void on_showResult_clicked();
   void on_calculator_clicked();
 

@@ -55,28 +55,30 @@ bool credit::IsCorrect() {
   return is_correct_;
 }
 
-void credit::AddRow(QString str) {
-  QVector<QLabel *> labels_;
-  QHBoxLayout *hboxLayout = new QHBoxLayout();
-  QLabel* label_table_1 = new QLabel(ui->tableScroll->widget());
-  QLabel* label_table_2 = new QLabel(ui->tableScroll->widget());
-  QLabel* label_table_3 = new QLabel(ui->tableScroll->widget());
-  QLabel* label_table_4 = new QLabel(ui->tableScroll->widget());
-  labels_.push_back(label_table_1);
-  labels_.push_back(label_table_2);
-  labels_.push_back(label_table_3);
-  labels_.push_back(label_table_4);
-  for (int i = 0; i < 4; i++) {
-    labels_[i]->setFixedWidth(110);
-    labels_[i]->setFixedHeight(35);
-    hboxLayout->addWidget(labels_[i]);
-  }
-  labels_[0]->setText(str);
-  labels_[1]->setText(str);
-  labels_[2]->setText(str);
-  labels_[3]->setText(str);
-  addVbox->addLayout(hboxLayout);
-  count_++;
+void credit::AddRow(int term, QString str_sum) {
+    for (int i = 1; i <= term; i++) {
+      QVector<QLabel *> labels_;
+      QHBoxLayout *hboxLayout = new QHBoxLayout();
+      QLabel* label_table_1 = new QLabel(ui->tableScroll->widget());
+      QLabel* label_table_2 = new QLabel(ui->tableScroll->widget());
+      QLabel* label_table_3 = new QLabel(ui->tableScroll->widget());
+//      QLabel* label_table_4 = new QLabel(ui->tableScroll->widget());
+      labels_.push_back(label_table_1);
+      labels_.push_back(label_table_2);
+      labels_.push_back(label_table_3);
+//      labels_.push_back(label_table_4);
+      for (int i = 0; i < 3; i++) {
+        labels_[i]->setFixedWidth(110);
+        labels_[i]->setFixedHeight(35);
+        hboxLayout->addWidget(labels_[i]);
+      }
+      labels_[0]->setText(QString::number(i));
+      labels_[1]->setText(str_sum);
+      labels_[2]->setText(str_sum);
+//      labels_[3]->setText(str);
+      addVbox->addLayout(hboxLayout);
+      count_++;
+    }
 }
 
 void credit::DelRow() {
@@ -85,16 +87,12 @@ void credit::DelRow() {
     QWidget *widget_1_ = layout_->itemAt(0)->widget();
     QWidget *widget_2_ = layout_->itemAt(1)->widget();
     QWidget *widget_3_ = layout_->itemAt(2)->widget();
-    QWidget *widget_4_ = layout_->itemAt(3)->widget();
+//    QWidget *widget_4_ = layout_->itemAt(3)->widget();
     delete layout_;
     delete widget_1_;
     delete widget_2_;
     delete widget_3_;
-    delete widget_4_;
-//    labels_.pop_back();
-//    labels_.pop_back();
-//    labels_.pop_back();
-//    labels_.pop_back();
+//    delete widget_4_;
     count_--;
   }
 }
@@ -116,6 +114,7 @@ void credit::on_showResult_clicked() {
       result_ = calc_.AnnuCred(sum_, term_, percent_);
       ui->monthRes->clear();
       ui->monthRes->setText(QString::number(result_[2], 'f', 2));
+      AddRow(term_, QString::number(result_[2]));
     } else {
       result_ = calc_.DifferCred(sum_, term_, percent_);
       ui->monthRes->clear();
@@ -125,9 +124,5 @@ void credit::on_showResult_clicked() {
     ui->resultSum->setText(QString::number(result_[1], 'f', 2));
     delete[] result_;
     result_ = nullptr;
-//    QString str[4]{};
-    for (int i = 1; i <= term_; i++) {
-        AddRow(QString::number(i));
-    }
   }
 }
