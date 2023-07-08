@@ -259,12 +259,12 @@ std::vector<double> s21::model::get_cred() const noexcept {
 }
 
 void s21::model::ClearCredit() noexcept {
-  cred_arr_.clear();
   overpay_ = 0.0;
   month_pay_ = 0.0;
   f_payment_ = 0.0;
   l_payment_ = 0.0;
   result_sum_ = 0.0;
+  cred_arr_.clear();
 }
 
 void s21::model::AnnuCred(const double &sum, const int &term, const double &percent) noexcept {
