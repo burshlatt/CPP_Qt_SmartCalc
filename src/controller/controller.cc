@@ -59,12 +59,12 @@ void s21::controller::GraphEnd() noexcept {
     model_.ClearOutput();
 }
 
-double* s21::controller::AnnuCred(const double &sum, const int &term, const double &percent) noexcept {
+std::vector<double> s21::controller::AnnuCred(const double &sum, const int &term, const double &percent) noexcept {
     model_.AnnuCred(sum, term, percent);
-    return model_.get_annu();
+    return model_.get_cred();
 }
 
-double* s21::controller::DifferCred(const double &sum, const int &term, const double &percent) noexcept {
+std::vector<double> s21::controller::DifferCred(const double &sum, const int &term, const double &percent) noexcept {
     model_.DifferCred(sum, term, percent);
-    return model_.get_diff();
+    return model_.get_cred();
 }

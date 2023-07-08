@@ -55,58 +55,62 @@ bool credit::IsCorrect() {
   return is_correct_;
 }
 
-void credit::AddRow(int term, QString str_sum) {
+void credit::AddRow(int term, std::vector<double> res_arr, bool is_annu) {
     for (int i = 1; i <= term; i++) {
-      QVector<QLabel *> labels_;
       QHBoxLayout *hboxLayout = new QHBoxLayout();
-      QLabel* label_table_1 = new QLabel(ui->tableScroll->widget());
-      QLabel* label_table_2 = new QLabel(ui->tableScroll->widget());
-      QLabel* label_table_3 = new QLabel(ui->tableScroll->widget());
-//      QLabel* label_table_4 = new QLabel(ui->tableScroll->widget());
-      labels_.push_back(label_table_1);
-      labels_.push_back(label_table_2);
-      labels_.push_back(label_table_3);
-//      labels_.push_back(label_table_4);
-      for (int i = 0; i < 3; i++) {
-        labels_[i]->setFixedWidth(110);
-        labels_[i]->setFixedHeight(35);
-        hboxLayout->addWidget(labels_[i]);
-      }
-      labels_[0]->setText(QString::number(i));
-      labels_[1]->setText(str_sum);
-      labels_[2]->setText(str_sum);
-//      labels_[3]->setText(str);
+      QLabel* id_ = new QLabel(ui->tableScroll->widget());
+      QDateEdit* date_ = new QDateEdit(ui->tableScroll->widget());
+      QLabel* sum_ = new QLabel(ui->tableScroll->widget());
+
+      id_->setFixedWidth(110);
+      id_->setFixedHeight(35);
+      hboxLayout->addWidget(id_);
+
+      date_->setReadOnly(true);
+      date_->setCalendarPopup(true);
+      date_->setFixedWidth(110);
+      date_->setFixedHeight(35);
+      hboxLayout->addWidget(date_);
+
+      sum_->setFixedWidth(110);
+      sum_->setFixedHeight(35);
+      hboxLayout->addWidget(sum_);
+
+      id_->setText(QString::number(i));
+
+      date_->setDate(QDate::currentDate());
+      QDate current_date_ = date_->date();
+      date_->setDate(current_date_.addMonths(i - 1));
+
+      is_annu ? sum_->setText(QString::number(res_arr[2])) : sum_->setText(QString::number(res_arr[i - 1]));
+
       addVbox->addLayout(hboxLayout);
       count_++;
     }
 }
 
 void credit::DelRow() {
-  if (count_ > 0) {
+  while (count_) {
     QLayout *layout_ = addVbox->itemAt(count_ - 1)->layout();
     QWidget *widget_1_ = layout_->itemAt(0)->widget();
     QWidget *widget_2_ = layout_->itemAt(1)->widget();
     QWidget *widget_3_ = layout_->itemAt(2)->widget();
-//    QWidget *widget_4_ = layout_->itemAt(3)->widget();
     delete layout_;
     delete widget_1_;
     delete widget_2_;
     delete widget_3_;
-//    delete widget_4_;
     count_--;
   }
 }
 
 void credit::on_showResult_clicked() {
   if (IsCorrect()) {
-      while (count_) {
-        DelRow();
-      }
+    DelRow();
     this->setFixedSize(960, 480);
     ui->monthRes->clear();
     ui->overPay->clear();
     ui->resultSum->clear();
-    double *result_ = nullptr;
+    std::vector<double> result_;
     double sum_ = ui->creditSum->text().toDouble();
     double percent_ = ui->percent->text().toDouble();
     int term_ = ui->month->isChecked() ? ui->creditTerm->text().toInt() : ui->creditTerm->text().toInt() * 12;
@@ -114,15 +118,16 @@ void credit::on_showResult_clicked() {
       result_ = calc_.AnnuCred(sum_, term_, percent_);
       ui->monthRes->clear();
       ui->monthRes->setText(QString::number(result_[2], 'f', 2));
-      AddRow(term_, QString::number(result_[2]));
+      AddRow(term_, result_, true);
+      ui->overPay->setText(QString::number(result_[0], 'f', 2));
+      ui->resultSum->setText(QString::number(result_[1], 'f', 2));
     } else {
       result_ = calc_.DifferCred(sum_, term_, percent_);
       ui->monthRes->clear();
-      ui->monthRes->setText(QString::number(result_[2], 'f', 2) + " ... " + QString::number(result_[3], 'f', 2));
+      ui->monthRes->setText(QString::number(result_[0], 'f', 2) + " ... " + QString::number(result_[result_.size() - 3], 'f', 2));
+      AddRow(term_, result_, false);
+      ui->overPay->setText(QString::number(result_[result_.size() - 2], 'f', 2));
+      ui->resultSum->setText(QString::number(result_[result_.size() - 1], 'f', 2));
     }
-    ui->overPay->setText(QString::number(result_[0], 'f', 2));
-    ui->resultSum->setText(QString::number(result_[1], 'f', 2));
-    delete[] result_;
-    result_ = nullptr;
   }
 }

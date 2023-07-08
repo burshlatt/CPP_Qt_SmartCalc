@@ -251,28 +251,15 @@ void s21::model::Calculations() noexcept {
 }
 
 void s21::model::ClearOutput() noexcept {
-  // output_.fill("");
   pos_ = 0;
 }
 
-double* s21::model::get_annu() const noexcept {
-  double *result_ = new double[3]{};
-  result_[0] = overpay_;
-  result_[1] = result_sum_;
-  result_[2] = month_pay_;
-  return result_;
-}
-
-double* s21::model::get_diff() const noexcept {
-  double *result_ = new double[4]{};
-  result_[0] = overpay_;
-  result_[1] = result_sum_;
-  result_[2] = f_payment_;
-  result_[3] = l_payment_;
-  return result_;
+std::vector<double> s21::model::get_cred() const noexcept {
+  return cred_arr_;
 }
 
 void s21::model::ClearCredit() noexcept {
+  cred_arr_.clear();
   overpay_ = 0.0;
   month_pay_ = 0.0;
   f_payment_ = 0.0;
@@ -286,6 +273,9 @@ void s21::model::AnnuCred(const double &sum, const int &term, const double &perc
   month_pay_ = sum * percent_ / (1 - pow(1 + percent_, -term));
   overpay_ = month_pay_ * term - sum;
   result_sum_ = sum + overpay_;
+  cred_arr_.push_back(overpay_);
+  cred_arr_.push_back(result_sum_);
+  cred_arr_.push_back(month_pay_);
 }
 
 void s21::model::DifferCred(const double &sum, const int &term, const double &percent) noexcept {
@@ -298,6 +288,7 @@ void s21::model::DifferCred(const double &sum, const int &term, const double &pe
   double credit_body_ = sum / term;
   overpay_ = (sum * (percent / 100) * days[month_]) / 365;
   f_payment_ = overpay_ + credit_body_;
+  cred_arr_.push_back(f_payment_);
   double sum_copy_ = sum;
   double percent_month_ = 0.0;
   for (int i = 0; i < term - 1; i++) {
@@ -305,7 +296,11 @@ void s21::model::DifferCred(const double &sum, const int &term, const double &pe
     month_ = month_ == 11 ? 0 : month_ + 1;
     percent_month_ = (sum_copy_ * (percent / 100) * days[month_]) / 365;
     overpay_ += percent_month_;
+    cred_arr_.push_back(credit_body_ + percent_month_);
   }
   l_payment_ = percent_month_ + credit_body_;
   result_sum_ = sum + overpay_;
+  cred_arr_.push_back(l_payment_);
+  cred_arr_.push_back(overpay_);
+  cred_arr_.push_back(result_sum_);
 }

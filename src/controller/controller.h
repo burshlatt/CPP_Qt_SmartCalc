@@ -21,8 +21,8 @@ namespace s21 {
             double Graph(const double &x) noexcept;
             double Calculator(const std::string &str) noexcept;
 
-            double* AnnuCred(const double &sum, const int &term, const double &percent) noexcept;
-            double* DifferCred(const double &sum, const int &term, const double &percent) noexcept;
+            std::vector<double> AnnuCred(const double &sum, const int &term, const double &percent) noexcept;
+            std::vector<double> DifferCred(const double &sum, const int &term, const double &percent) noexcept;
 
         private:
             s21::model model_;

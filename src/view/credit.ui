@@ -566,9 +566,9 @@ QPushButton:pressed {
   <widget class="QLabel" name="label_13">
    <property name="geometry">
     <rect>
-     <x>660</x>
+     <x>525</x>
      <y>0</y>
-     <width>140</width>
+     <width>21</width>
      <height>35</height>
     </rect>
    </property>
@@ -583,7 +583,7 @@ QPushButton:pressed {
 }</string>
    </property>
    <property name="text">
-    <string>График погашения</string>
+    <string>id</string>
    </property>
   </widget>
   <widget class="QWidget" name="verticalLayoutWidget">
@@ -614,6 +614,52 @@ QPushButton:pressed {
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QLabel" name="label_14">
+   <property name="geometry">
+    <rect>
+     <x>645</x>
+     <y>0</y>
+     <width>131</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	color: black; 
+}</string>
+   </property>
+   <property name="text">
+    <string>Даты погашения</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_15">
+   <property name="geometry">
+    <rect>
+     <x>795</x>
+     <y>0</y>
+     <width>141</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	color: black; 
+}</string>
+   </property>
+   <property name="text">
+    <string>Сумма погашения</string>
+   </property>
   </widget>
  </widget>
  <resources/>

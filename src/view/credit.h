@@ -1,15 +1,15 @@
 #ifndef CREDITWINDOW_H
 #define CREDITWINDOW_H
 
-#include <QDialog>
-#include <QScreen>
 #include "../controller/controller.h"
 
-#include <QComboBox>
-#include <QDateEdit>
-#include <QDialog>
+#include <QDate>
 #include <QLabel>
+#include <QScreen>
+#include <QDialog>
 #include <QLineEdit>
+#include <QDateEdit>
+#include <QComboBox>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QVBoxLayout>
@@ -26,11 +26,12 @@ public:
   ~credit();
 
 private slots:
-  void DelRow();
   bool IsCorrect();
-  void AddRow(int term, QString str_sum);
+
+  void DelRow();
   void on_showResult_clicked();
   void on_calculator_clicked();
+  void AddRow(int term, std::vector<double> res_arr, bool is_annu);
 
 signals:
   void firstWindow();
@@ -40,7 +41,6 @@ private:
   Ui::credit *ui;
   QVBoxLayout *addVbox;
   s21::controller calc_;
-//  QVector<QLabel *> labels_;
 };
 
 #endif // CREDITWINDOW_H

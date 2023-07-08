@@ -4,6 +4,8 @@
 #include <cmath>
 #include <stack>
 #include <array>
+#include <ctime>
+#include <vector>
 #include <iostream>
 
 namespace s21 {
@@ -14,10 +16,9 @@ namespace s21 {
       
       bool get_error() const noexcept;
       double get_res() const noexcept;
-      double* get_annu() const noexcept;
-      double* get_diff() const noexcept;
       void set_x(const double& num) noexcept;
       void set_rad(const bool& graph) noexcept;
+      std::vector<double> get_cred() const noexcept;
 
       void GetNums() noexcept;
       void ClearCredit() noexcept;
@@ -51,6 +52,7 @@ namespace s21 {
       double result_sum_ = 0.0;
       double x_ = 0.0, y_ = 0.0;
       const size_t array_size_ = 11;
+      std::vector<double> cred_arr_;
       std::stack<double> num_buffer_;
       std::stack<std::string> stack_;
       std::array<std::string, 256> output_;
