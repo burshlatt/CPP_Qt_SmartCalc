@@ -104,30 +104,36 @@ void credit::DelRow() {
 }
 
 void credit::on_showResult_clicked() {
-  if (IsCorrect()) {
-    DelRow();
-    this->setFixedSize(960, 480);
-    ui->monthRes->clear();
-    ui->overPay->clear();
-    ui->resultSum->clear();
-    std::vector<double> result_;
-    double sum_ = ui->creditSum->text().toDouble();
-    double percent_ = ui->percent->text().toDouble();
-    int term_ = ui->month->isChecked() ? ui->creditTerm->text().toInt() : ui->creditTerm->text().toInt() * 12;
-    if (ui->annu->isChecked()) {
-      result_ = calc_.AnnuCred(sum_, term_, percent_);
-      ui->monthRes->clear();
-      ui->monthRes->setText(QString::number(result_[2], 'f', 2));
-      AddRow(term_, result_, true);
-      ui->overPay->setText(QString::number(result_[0], 'f', 2));
-      ui->resultSum->setText(QString::number(result_[1], 'f', 2));
-    } else {
-      result_ = calc_.DifferCred(sum_, term_, percent_);
-      ui->monthRes->clear();
-      ui->monthRes->setText(QString::number(result_[0], 'f', 2) + " ... " + QString::number(result_[result_.size() - 3], 'f', 2));
-      AddRow(term_, result_, false);
-      ui->overPay->setText(QString::number(result_[result_.size() - 2], 'f', 2));
-      ui->resultSum->setText(QString::number(result_[result_.size() - 1], 'f', 2));
-    }
+  double sum_ = ui->creditSum->text().toDouble();
+  double percent_ = ui->percent->text().toDouble();
+  int term_ = ui->month->isChecked() ? ui->creditTerm->text().toInt() : ui->creditTerm->text().toInt() * 12;
+  if (term_ > 600) {
+      QMessageBox msg_box_;
+      msg_box_.setText("Срок должен быть не больше 50 лет (600 месяцев).");
+      msg_box_.exec();
+  } else {
+      if (IsCorrect()) {
+        DelRow();
+        this->setFixedSize(960, 480);
+        ui->monthRes->clear();
+        ui->overPay->clear();
+        ui->resultSum->clear();
+        std::vector<double> result_;
+        if (ui->annu->isChecked()) {
+          result_ = calc_.AnnuCred(sum_, term_, percent_);
+          ui->monthRes->clear();
+          ui->monthRes->setText(QString::number(result_[2], 'f', 2));
+          AddRow(term_, result_, true);
+          ui->overPay->setText(QString::number(result_[0], 'f', 2));
+          ui->resultSum->setText(QString::number(result_[1], 'f', 2));
+        } else {
+          result_ = calc_.DifferCred(sum_, term_, percent_);
+          ui->monthRes->clear();
+          ui->monthRes->setText(QString::number(result_[0], 'f', 2) + " ... " + QString::number(result_[result_.size() - 3], 'f', 2));
+          AddRow(term_, result_, false);
+          ui->overPay->setText(QString::number(result_[result_.size() - 2], 'f', 2));
+          ui->resultSum->setText(QString::number(result_[result_.size() - 1], 'f', 2));
+        }
+      }
   }
 }

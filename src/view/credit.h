@@ -12,6 +12,7 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QMessageBox>
 #include <QVBoxLayout>
 
 namespace Ui {
