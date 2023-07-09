@@ -67,7 +67,6 @@ void credit::AddRow(int term, std::vector<double> res_arr, bool is_annu) {
       hboxLayout->addWidget(id_);
 
       date_->setReadOnly(true);
-      date_->setCalendarPopup(true);
       date_->setFixedWidth(110);
       date_->setFixedHeight(35);
       hboxLayout->addWidget(date_);
@@ -82,7 +81,7 @@ void credit::AddRow(int term, std::vector<double> res_arr, bool is_annu) {
       QDate current_date_ = date_->date();
       date_->setDate(current_date_.addMonths(i - 1));
 
-      is_annu ? sum_->setText(QString::number(res_arr[2])) : sum_->setText(QString::number(res_arr[i - 1]));
+      is_annu ? sum_->setText(QString::number(res_arr[2], 'f', 2)) : sum_->setText(QString::number(res_arr[i - 1], 'f', 2));
 
       addVbox->addLayout(hboxLayout);
       count_++;

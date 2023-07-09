@@ -14,6 +14,7 @@ SOURCES += \
     ../controller/controller.cc \
     ../model/model.cc \
     credit.cpp \
+    deposit.cpp \
     main.cpp \
     qcustomplot.cpp \
     view.cpp
@@ -21,13 +22,15 @@ SOURCES += \
 HEADERS += \
     ../controller/controller.h \
     ../model/model.h \
+    calculator.h \
     credit.h \
+    deposit.h \
     qcustomplot.h \
     view.h
 
 FORMS += \
     credit.ui \
-    depositwindow.ui \
+    deposit.ui \
     view.ui
 
 # Default rules for deployment.

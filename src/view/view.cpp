@@ -8,8 +8,8 @@ view::view(QWidget *parent)
   credit_ = new credit();
   connect(credit_, &credit::firstWindow, this, &view::show);
 
-//  thirdWindow = new DepositWindow();
-//  connect(thirdWindow, &DepositWindow::firstWindow, this, &view::show);
+  deposit_ = new deposit();
+  connect(deposit_, &deposit::firstWindow, this, &view::show);
 
   this->setFixedSize(480, 380);
 
@@ -57,10 +57,10 @@ void view::on_credCalc_clicked() {
   this->close();
 }
 
-//void view::on_deposCalc_clicked() {
-//  thirdWindow->show();
-//  this->close();
-//}
+void view::on_deposCalc_clicked() {
+  deposit_->show();
+  this->close();
+}
 
 void view::GetInfo() {
   button_ = (QPushButton *)sender();

@@ -1,19 +1,8 @@
 #ifndef CREDITWINDOW_H
 #define CREDITWINDOW_H
 
+#include "calculator.h"
 #include "../controller/controller.h"
-
-#include <QDate>
-#include <QLabel>
-#include <QScreen>
-#include <QDialog>
-#include <QLineEdit>
-#include <QDateEdit>
-#include <QComboBox>
-#include <QPushButton>
-#include <QScrollArea>
-#include <QMessageBox>
-#include <QVBoxLayout>
 
 namespace Ui {
 class credit;
