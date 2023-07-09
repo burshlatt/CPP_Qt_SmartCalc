@@ -7,14 +7,6 @@ deposit::deposit(QWidget *parent)
 
   this->setFixedSize(1000, 425);
 
-  ui->periodCombo->addItem("Каждый день");
-  ui->periodCombo->addItem("Каждую неделю");
-  ui->periodCombo->addItem("Раз в месяц");
-  ui->periodCombo->addItem("Раз в квартал");
-  ui->periodCombo->addItem("Раз в полгода");
-  ui->periodCombo->addItem("Раз в год");
-  ui->periodCombo->addItem("В конце срока");
-
   add_box_ = new QVBoxLayout();
   ui->scrollPayment->widget()->setLayout(add_box_);
   ui->addLayout->addWidget(ui->scrollPayment);
@@ -140,74 +132,74 @@ bool deposit::IsCorrect(QString sum) {
   return true;
 }
 
-//void deposit::additional_payment() {
-//  if (combo_boxes_add_.size() > 0 && date_edits_add_.size() > 0 && line_edits_add_.size() > 0) {
-//    add_sum_ = 0.0;
-//    for (int i = 0; i < add_count_; i++) {
-//      QDate date_add = date_edits_add_[i]->date();
-//      QString text_add = line_edits_add_[i]->text();
-//      QString combobox_add = combo_boxes_add_[i]->currentText();
-//      int diff_time_ = (last_date_.year() - date_edits_add_[i]->date().year()) * 12;
-//      diff_time_ += last_date_.month() - date_edits_add_[i]->date().month();
-//      if (IsCorrect(text_add)) {
-//        if (date_add <= last_date_) {
-//          if (combobox_add == "Разовое") {
-//            if (date_add >= QDate::currentDate()) {
-//              add_sum_ += text_add.toDouble();
-//            }
-//          } else if (combobox_add == "Раз в месяц") {
+void deposit::additional_payment() {
+  if (combo_boxes_add_.size() > 0 && date_edits_add_.size() > 0 && line_edits_add_.size() > 0) {
+    add_sum_ = 0.0;
+    for (int i = 0; i < add_count_; i++) {
+      QDate date_add = date_edits_add_[i]->date();
+      QString text_add = line_edits_add_[i]->text();
+      QString combobox_add = combo_boxes_add_[i]->currentText();
+      int diff_time_ = (last_date_.year() - date_edits_add_[i]->date().year()) * 12;
+      diff_time_ += last_date_.month() - date_edits_add_[i]->date().month();
+      if (IsCorrect(text_add)) {
+        if (date_add <= last_date_) {
+          if (combobox_add == "Разовое") {
+            if (date_add >= QDate::currentDate()) {
+              add_sum_ += text_add.toDouble();
+            }
+          } else if (combobox_add == "Раз в месяц") {
 //            add_sum_ += calc_.AddSum(text_add.toDouble(), diff_time_, 1);
-//          } else if (combobox_add == "Раз в 2 месяца") {
+          } else if (combobox_add == "Раз в 2 месяца") {
 //            add_sum_ += calc_.AddSum(text_add.toDouble(), (int)(diff_time_ / 2), 2);
-//          } else if (combobox_add == "Раз в квартал") {
+          } else if (combobox_add == "Раз в квартал") {
 //            add_sum_ += calc_.AddSum(text_add.toDouble(), (int)(diff_time_ / 3), 3);
-//          } else if (combobox_add == "Раз в полгода") {
+          } else if (combobox_add == "Раз в полгода") {
 //            add_sum_ += calc_.AddSum(text_add.toDouble(), (int)(diff_time_ / 6), 4);
-//          } else if (combobox_add == "Раз в год") {
+          } else if (combobox_add == "Раз в год") {
 //            add_sum_ += calc_.AddSum(text_add.toDouble(), (int)(diff_time_ / 12), 5);
-//          }
-//        }
-//      } else {
-//        line_edits_add_[i]->setText("ERROR!");
-//      }
-//    }
-//  }
-//}
+          }
+        }
+      } else {
+        line_edits_add_[i]->setText("ERROR!");
+      }
+    }
+  }
+}
 
-//void deposit::additional_waste() {
-//  if (combo_boxes_waste_.size() > 0 && date_edits_waste_.size() > 0 && line_edits_waste_.size() > 0) {
-//    waste_sum_ = 0.0;
-//    for (int i = 0; i < waste_count_; i++) {
-//      QDate date_waste = date_edits_waste_[i]->date();
-//      QString text_waste = line_edits_waste_[i]->text();
-//      QString combobox_waste = combo_boxes_waste_[i]->currentText();
-//      std::string date_stdstr = date_edits_waste_[i]->text().toStdString();
-//      int diff_time_ = (last_date_.year() - date_edits_add_[i]->date().year()) * 12;
-//      diff_time_ += last_date_.month() - date_edits_add_[i]->date().month();
-//      if (IsCorrect(text_waste)) {
-//        if (date_waste <= last_date_) {
-//          if (combobox_waste == "Разовое") {
-//            if (date_waste >= QDate::currentDate()) {
-//              waste_sum_ += text_waste.toDouble();
-//            }
-//          } else if (combobox_waste == "Раз в месяц") {
+void deposit::additional_waste() {
+  if (combo_boxes_waste_.size() > 0 && date_edits_waste_.size() > 0 && line_edits_waste_.size() > 0) {
+    waste_sum_ = 0.0;
+    for (int i = 0; i < waste_count_; i++) {
+      QDate date_waste = date_edits_waste_[i]->date();
+      QString text_waste = line_edits_waste_[i]->text();
+      QString combobox_waste = combo_boxes_waste_[i]->currentText();
+      std::string date_stdstr = date_edits_waste_[i]->text().toStdString();
+      int diff_time_ = (last_date_.year() - date_edits_add_[i]->date().year()) * 12;
+      diff_time_ += last_date_.month() - date_edits_add_[i]->date().month();
+      if (IsCorrect(text_waste)) {
+        if (date_waste <= last_date_) {
+          if (combobox_waste == "Разовое") {
+            if (date_waste >= QDate::currentDate()) {
+              waste_sum_ += text_waste.toDouble();
+            }
+          } else if (combobox_waste == "Раз в месяц") {
 //            waste_sum_ += calc_.AddSum(text_waste.toDouble(), diff_time_, 1);
-//          } else if (combobox_waste == "Раз в 2 месяца") {
+          } else if (combobox_waste == "Раз в 2 месяца") {
 //            waste_sum_ += calc_.AddSum(text_waste.toDouble(), (int)(diff_time_ / 2), 2);
-//          } else if (combobox_waste == "Раз в квартал") {
+          } else if (combobox_waste == "Раз в квартал") {
 //            waste_sum_ += calc_.AddSum(text_waste.toDouble(), (int)(diff_time_ / 3), 3);
-//          } else if (combobox_waste == "Раз в полгода") {
+          } else if (combobox_waste == "Раз в полгода") {
 //            waste_sum_ += calc_.AddSum(text_waste.toDouble(), (int)(diff_time_ / 6), 4);
-//          } else if (combobox_waste == "Раз в год") {
+          } else if (combobox_waste == "Раз в год") {
 //            waste_sum_ += calc_.AddSum(text_waste.toDouble(), (int)(diff_time_ / 12), 5);
-//          }
-//        }
-//      } else {
-//        line_edits_waste_[i]->setText("ERROR!");
-//      }
-//    }
-//  }
-//}
+          }
+        }
+      } else {
+        line_edits_waste_[i]->setText("ERROR!");
+      }
+    }
+  }
+}
 
 void deposit::CheckTypes() {
   if (ui->yes->isChecked()) {
@@ -276,35 +268,35 @@ bool deposit::DataIsCorrect() {
   return is_correct_;
 }
 
-//void deposit::on_showResult_clicked() {
-//  if (DataIsCorrect()) {
-//    this->setFixedSize(1000, 520);
-//    ui->tax->clear();
-//    ui->resultSum->clear();
-//    ui->resultProfit->clear();
-//    ui->resultPercent->clear();
-//    double sum_result = 0.0;
-//    double tax_result = 0.0;
-//    double profit_result = 0.0;
-//    double percent_result = 0.0;
-//    double percent = ui->percent->text().toDouble();
-//    double tax_rate = ui->taxRate->text().toDouble();
-//    double sum = ui->depositAmount->text().toDouble();
+void deposit::on_showResult_clicked() {
+  if (DataIsCorrect()) {
+    this->setFixedSize(1000, 520);
+    ui->tax->clear();
+    ui->resultSum->clear();
+    ui->resultProfit->clear();
+    ui->resultPercent->clear();
+    double sum_result = 0.0;
+    double tax_result = 0.0;
+    double profit_result = 0.0;
+    double percent_result = 0.0;
+    double percent = ui->percent->text().toDouble();
+    double tax_rate = ui->taxRate->text().toDouble();
+    double sum = ui->depositAmount->text().toDouble();
 
-//    int time_ = ui->time->text().toInt();
-//    CheckTypes();
-//    if (time_type_ == 1) last_date_ = QDate::currentDate().addDays(time_);
-//    else if (time_type_ == 2) last_date_ = QDate::currentDate().addMonths(time_);
-//    else if (time_type_ == 3) last_date_ = QDate::currentDate().addYears(time_);
+    int time_ = ui->time->text().toInt();
+    CheckTypes();
+    if (time_type_ == 1) last_date_ = QDate::currentDate().addDays(time_);
+    else if (time_type_ == 2) last_date_ = QDate::currentDate().addMonths(time_);
+    else if (time_type_ == 3) last_date_ = QDate::currentDate().addYears(time_);
 
 //    additional_payment();
 //    additional_waste();
 
 //    deposit_calculator(sum + add_sum_ - waste_sum_, time, time_type, percent, tax_rate, period_type, capitalization, &percent_result, &tax_result, &profit_result, &sum_result);
 
-//    ui->tax->setText(ui->resultPercent->text() + QString::number(tax_result, 'f', 2));
-//    ui->resultSum->setText(ui->resultPercent->text() + QString::number(sum_result, 'f', 2));
-//    ui->resultProfit->setText(ui->resultPercent->text() + QString::number(profit_result, 'f', 2));
-//    ui->resultPercent->setText(ui->resultPercent->text() + QString::number(percent_result, 'f', 2));
-//  }
-//}
+    ui->tax->setText(ui->resultPercent->text() + QString::number(tax_result, 'f', 2));
+    ui->resultSum->setText(ui->resultPercent->text() + QString::number(sum_result, 'f', 2));
+    ui->resultProfit->setText(ui->resultPercent->text() + QString::number(profit_result, 'f', 2));
+    ui->resultPercent->setText(ui->resultPercent->text() + QString::number(percent_result, 'f', 2));
+  }
+}

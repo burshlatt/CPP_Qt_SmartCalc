@@ -18,12 +18,12 @@ public:
 private slots:
   void CheckTypes();
   bool DataIsCorrect();
-//  void additional_waste();
-//  void additional_payment();
+  void additional_waste();
+  void additional_payment();
   void on_addWaste_clicked();
   bool IsCorrect(QString sum);
   void on_calculator_clicked();
-//  void on_showResult_clicked();
+  void on_showResult_clicked();
   void on_addPayment_clicked();
   void on_deleteWaste_clicked();
   void on_deletePayment_clicked();

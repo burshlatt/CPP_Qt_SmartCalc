@@ -942,6 +942,41 @@ QPushButton:pressed {
 	color: white;
 }</string>
    </property>
+   <item>
+    <property name="text">
+     <string>Каждый день</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Каждую неделю</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раз в месяц</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раз в квартал</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раз в полгода</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Раз в год</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>В конце срока</string>
+    </property>
+   </item>
   </widget>
  </widget>
  <resources/>
