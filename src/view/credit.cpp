@@ -98,14 +98,17 @@ void credit::on_showResult_clicked() noexcept {
         ui->overPay->clear();
         ui->resultSum->clear();
         QVector<QString> result_;
+        calc_.set_sum(sum_);
+        calc_.set_term(term_);
+        calc_.set_percent(percent_);
         if (ui->annu->isChecked()) {
-          result_ = calc_.AnnuCred(sum_, term_, percent_);
+          result_ = calc_.AnnuCred();
           ui->overPay->setText(result_[0]);
           ui->resultSum->setText(result_[1]);
           ui->monthRes->setText(result_[2]);
           AddRow(term_, result_, true);
         } else {
-          result_ = calc_.DifferCred(sum_, term_, percent_);
+          result_ = calc_.DifferCred();
           ui->overPay->setText(result_[result_.size() - 2]);
           ui->resultSum->setText(result_[result_.size() - 1]);
           ui->monthRes->setText(result_[0] + " ... " + result_[result_.size() - 3]);

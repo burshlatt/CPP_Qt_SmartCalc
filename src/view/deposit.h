@@ -41,8 +41,8 @@ private:
   double add_sum_ = 0.0;
   double waste_sum_ = 0.0;
 
+  bool is_cap_ = false;
   bool is_error_ = false;
-  bool is_capitalization_ = false;
 
   QString sum_;
   QString term_;

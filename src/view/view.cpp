@@ -339,13 +339,13 @@ void view::PrintGraph() noexcept {
 void view::on_rad_clicked() noexcept {
     ui->rad->setStyleSheet("background-color: rgb(255, 160, 122); color: black; border: 1px solid gray;");
     ui->deg->setStyleSheet("background-color: rgb(255, 219, 139); color: black; border: 1px solid gray;");
-    calc_.SetRad(true);
+    calc_.set_rad(true);
     on_resultFunc_clicked();
 }
 
 void view::on_deg_clicked() noexcept {
     ui->deg->setStyleSheet("background-color: rgb(255, 160, 122); color: black; border: 1px solid gray;");
     ui->rad->setStyleSheet("background-color: rgb(255, 219, 139); color: black; border: 1px solid gray;");
-    calc_.SetRad(false);
+    calc_.set_rad(false);
     on_resultFunc_clicked();
 }

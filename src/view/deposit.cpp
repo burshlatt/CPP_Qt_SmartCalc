@@ -191,9 +191,9 @@ void deposit::add_waste() noexcept {
 
 void deposit::CheckTypes() noexcept {
   if (ui->yes->isChecked()) {
-    is_capitalization_ = true;
+    is_cap_ = true;
   } else if (ui->no->isChecked()) {
-    is_capitalization_ = false;
+    is_cap_ = false;
   }
   if (ui->day->isChecked()) {
     time_type_ = 1;
@@ -242,9 +242,6 @@ void deposit::on_showResult_clicked() noexcept {
     double tax_result = 0.0;
     double profit_result = 0.0;
     double percent_result = 0.0;
-    double percent = ui->percent->text().toDouble();
-    double tax_rate = ui->taxRate->text().toDouble();
-    double sum = ui->depositAmount->text().toDouble();
 
     int time_ = ui->time->text().toInt();
     CheckTypes();
@@ -254,6 +251,13 @@ void deposit::on_showResult_clicked() noexcept {
 
     add_payment();
     add_waste();
+
+    calc_.set_sum(sum_.toDouble() + add_sum_ - waste_sum_);
+    calc_.set_term();
+    calc_.set_cap(is_cap_);
+    calc_.set_percent(percent_);
+    calc_.set_period(period_type_);
+    calc_.set_tax(tax_rate_);
 
 //    deposit_calculator(sum + add_sum_ - waste_sum_, time, time_type, percent, tax_rate, period_type, capitalization, &percent_result, &tax_result, &profit_result, &sum_result);
 
