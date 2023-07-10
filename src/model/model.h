@@ -8,6 +8,8 @@
 #include <vector>
 #include <iostream>
 
+#include "../view/calculator.h"
+
 namespace s21 {
   class model {
     public:
@@ -27,7 +29,8 @@ namespace s21 {
       void set_term(const double &term) noexcept;
       void set_period(const double &period) noexcept;
       void set_percent(const double &percent) noexcept;
-
+      
+      void Deposit() noexcept;
       void GetNums() noexcept;
       void AnnuCred() noexcept;
       int FormatTime() noexcept;
@@ -44,7 +47,6 @@ namespace s21 {
       void InsertNumOutput(size_t &index) noexcept;
       void Notation(const std::string &str) noexcept;
       void PushLogic(const std::string &str) noexcept;
-      std::array<double, 4> s21::model::Deposit() noexcept;
       double AddSum(const double &sum, const int &time) const noexcept;
 
     private:
@@ -63,10 +65,6 @@ namespace s21 {
       double percent_ = 0.0;
       double x_value_ = 0.0;
       double overpay_ = 0.0;
-      double month_pay_ = 0.0;
-      double f_payment_ = 0.0;
-      double l_payment_ = 0.0;
-      double result_sum_ = 0.0;
       double x_ = 0.0, y_ = 0.0;
       const size_t array_size_ = 11;
       std::vector<double> cred_arr_;

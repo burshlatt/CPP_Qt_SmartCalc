@@ -108,7 +108,7 @@ QVector<QString> s21::controller::AnnuCred() noexcept {
     std::vector<double> result_ = model_.get_cred();
     QVector<QString> format_result_;
     for (size_t i = 0; i < result_.size(); i++) {
-        format_result_.push_back(QString::number(result_[i], 'f', 2));
+      format_result_.push_back(QString::number(result_[i], 'f', 2));
     }
     return format_result_;
 }
@@ -118,7 +118,7 @@ QVector<QString> s21::controller::DifferCred() noexcept {
     std::vector<double> result_ = model_.get_cred();
     QVector<QString> format_result_;
     for (size_t i = 0; i < result_.size(); i++) {
-        format_result_.push_back(QString::number(result_[i], 'f', 2));
+      format_result_.push_back(QString::number(result_[i], 'f', 2));
     }
     return format_result_;
 }
@@ -138,7 +138,7 @@ QVector<QString> s21::controller::Deposit() noexcept {
     std::array<double, 4> result_ = model_.get_depos();
     QVector<QString> format_result_;
     for (size_t i = 0; i < result_.size(); i++) {
-        format_result_.push_back(QString::number(result_[i], 'f', 2));
+      format_result_.push_back(QString::number(result_[i], 'f', 2));
     }
     return format_result_;
 }

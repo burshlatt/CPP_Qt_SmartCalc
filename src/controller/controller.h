@@ -2,7 +2,6 @@
 #define SRC_CONTROLLER_CONTROLLER_H_
 
 #include "../model/model.h"
-#include "../view/calculator.h"
 
 namespace s21 {
     class controller {
@@ -31,10 +30,10 @@ namespace s21 {
             double Graph(const double &x) noexcept;
             double AddSum(const double &sum, const int &time) const noexcept;
 
+            QVector<QString> Deposit() noexcept;
             QVector<QString> AnnuCred() noexcept;
             QVector<QString> DifferCred() noexcept;
             QString Calculator(const std::string &str) noexcept;
-            QVector<QString> s21::controller::Deposit() noexcept;
 
         private:
             s21::model model_;

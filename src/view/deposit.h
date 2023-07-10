@@ -35,7 +35,7 @@ private:
 
   int time_type_ = 0;
   int add_count_ = 0;
-  int period_type_ = 0;
+  int period_ = 0;
   int waste_count_ = 0;
 
   double add_sum_ = 0.0;

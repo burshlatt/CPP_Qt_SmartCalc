@@ -84,7 +84,6 @@ bool credit::DataIsCorrect() noexcept {
 
 void credit::on_showResult_clicked() noexcept {
   double sum_ = ui->creditSum->text().toDouble();
-  double percent_ = ui->percent->text().toDouble();
   int term_ = ui->month->isChecked() ? ui->creditTerm->text().toInt() : ui->creditTerm->text().toInt() * 12;
   if (term_ > 600) {
       QMessageBox msg_box_;
@@ -100,7 +99,7 @@ void credit::on_showResult_clicked() noexcept {
         QVector<QString> result_;
         calc_.set_sum(sum_);
         calc_.set_term(term_);
-        calc_.set_percent(percent_);
+        calc_.set_percent(ui->percent->text());
         if (ui->annu->isChecked()) {
           result_ = calc_.AnnuCred();
           ui->overPay->setText(result_[0]);

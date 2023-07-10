@@ -203,19 +203,19 @@ void deposit::CheckTypes() noexcept {
     time_type_ = 3;
   }
   if (ui->periodCombo->currentText() == "Каждый день") {
-    period_type_ = 1;
+    period_ = 1;
   } else if (ui->periodCombo->currentText() == "Каждую неделю") {
-    period_type_ = 2;
+    period_ = 2;
   } else if (ui->periodCombo->currentText() == "Раз в месяц") {
-    period_type_ = 3;
+    period_ = 3;
   } else if (ui->periodCombo->currentText() == "Раз в квартал") {
-    period_type_ = 4;
+    period_ = 4;
   } else if (ui->periodCombo->currentText() == "Раз в полгода") {
-    period_type_ = 5;
+    period_ = 5;
   } else if (ui->periodCombo->currentText() == "Раз в год") {
-    period_type_ = 6;
+    period_ = 6;
   } else if (ui->periodCombo->currentText() == "В конце срока") {
-    period_type_ = 7;
+    period_ = 7;
   }
 }
 
@@ -238,10 +238,6 @@ void deposit::on_showResult_clicked() noexcept {
     ui->resultSum->clear();
     ui->resultProfit->clear();
     ui->resultPercent->clear();
-    double sum_result = 0.0;
-    double tax_result = 0.0;
-    double profit_result = 0.0;
-    double percent_result = 0.0;
 
     int time_ = ui->time->text().toInt();
     CheckTypes();
@@ -253,18 +249,18 @@ void deposit::on_showResult_clicked() noexcept {
     add_waste();
 
     calc_.set_sum(sum_.toDouble() + add_sum_ - waste_sum_);
-    calc_.set_term();
+    calc_.set_term(QDate::currentDate().daysTo(last_date_));
     calc_.set_cap(is_cap_);
     calc_.set_percent(percent_);
-    calc_.set_period(period_type_);
+    calc_.set_period(period_);
     calc_.set_tax(tax_rate_);
 
-//    deposit_calculator(sum + add_sum_ - waste_sum_, time, time_type, percent, tax_rate, period_type, capitalization, &percent_result, &tax_result, &profit_result, &sum_result);
+    QVector<QString> result_ = calc_.Deposit();
 
-    ui->tax->setText(ui->resultPercent->text() + QString::number(tax_result, 'f', 2));
-    ui->resultSum->setText(ui->resultPercent->text() + QString::number(sum_result, 'f', 2));
-    ui->resultProfit->setText(ui->resultPercent->text() + QString::number(profit_result, 'f', 2));
-    ui->resultPercent->setText(ui->resultPercent->text() + QString::number(percent_result, 'f', 2));
+    ui->tax->setText(result_[1]);
+    ui->resultSum->setText(result_[3]);
+    ui->resultProfit->setText(result_[2]);
+    ui->resultPercent->setText(result_[0]);
   } else {
       QMessageBox msg_box_;
       msg_box_.setText("Вы ввели некорректные данные!");
