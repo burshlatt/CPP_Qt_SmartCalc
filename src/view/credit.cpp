@@ -72,6 +72,16 @@ void credit::DelRow() noexcept {
   }
 }
 
+bool credit::DataIsCorrect() noexcept {
+    QString sum_ = ui->creditSum->text();
+    QString term_ = ui->creditTerm->text();
+    QString percent_ = ui->percent->text();
+    if (calc_.IsCorrectInt(term_) && calc_.IsCorrectDec(sum_) && calc_.IsCorrectDec(percent_))
+        return true;
+    else
+        return false;
+}
+
 void credit::on_showResult_clicked() noexcept {
   double sum_ = ui->creditSum->text().toDouble();
   double percent_ = ui->percent->text().toDouble();
@@ -81,10 +91,7 @@ void credit::on_showResult_clicked() noexcept {
       msg_box_.setText("Срок должен быть не больше 50 лет (600 месяцев).");
       msg_box_.exec();
   } else {
-      QString sum_str_ = ui->creditSum->text();
-      QString term_str_ = ui->creditTerm->text();
-      QString percent_str_ = ui->percent->text();
-      if (calc_.IsCorrectInt(term_str_) && calc_.IsCorrectDec(sum_str_) && calc_.IsCorrectDec(percent_str_)) {
+      if (DataIsCorrect()) {
         DelRow();
         this->setFixedSize(960, 480);
         ui->monthRes->clear();
