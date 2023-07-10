@@ -366,6 +366,9 @@ QPushButton:pressed {
       <property name="text">
        <string>Месяц</string>
       </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item>
@@ -564,6 +567,9 @@ QPushButton:pressed {
       </property>
       <property name="text">
        <string>Нет</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
       </property>
      </widget>
     </item>

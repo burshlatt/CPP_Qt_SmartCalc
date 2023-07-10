@@ -38,11 +38,12 @@ bool s21::controller::IsInteger(const double &res) noexcept {
         return false;
 }
 
-double s21::controller::Calculator(const std::string &str) noexcept {
+QString s21::controller::Calculator(const std::string &str) noexcept {
     model_.Notation(str);
     model_.Calculations();
     model_.ClearOutput();
-    return model_.get_res();
+    double res_ = model_.get_res();
+    return QString::number(res_, 'f', IsInteger(res_) ? 0 : 7);
 }
 
 void s21::controller::GraphStart(const std::string &str) noexcept {
@@ -59,12 +60,44 @@ void s21::controller::GraphEnd() noexcept {
     model_.ClearOutput();
 }
 
-std::vector<double> s21::controller::AnnuCred(const double &sum, const int &term, const double &percent) noexcept {
+QVector<QString> s21::controller::AnnuCred(const double &sum, const int &term, const double &percent) noexcept {
     model_.AnnuCred(sum, term, percent);
-    return model_.get_cred();
+    std::vector<double> result_ = model_.get_cred();
+    QVector<QString> format_result_;
+    for (size_t i = 0; i < result_.size(); i++) {
+        format_result_.push_back(QString::number(result_[i], 'f', 2));
+    }
+    return format_result_;
 }
 
-std::vector<double> s21::controller::DifferCred(const double &sum, const int &term, const double &percent) noexcept {
+QVector<QString> s21::controller::DifferCred(const double &sum, const int &term, const double &percent) noexcept {
     model_.DifferCred(sum, term, percent);
-    return model_.get_cred();
+    std::vector<double> result_ = model_.get_cred();
+    QVector<QString> format_result_;
+    for (size_t i = 0; i < result_.size(); i++) {
+        format_result_.push_back(QString::number(result_[i], 'f', 2));
+    }
+    return format_result_;
+}
+
+bool s21::controller::IsCorrectInt(const QString &str) const noexcept {
+  for (int i = 0; i < str.size(); i++) {
+    if (str[i] < '0' || str[i] > '9') {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool s21::controller::IsCorrectDec(const QString &str) const noexcept {
+  for (int i = 0; i < str.size(); i++) {
+    if ((str[i] < '0' || str[i] > '9') && str[i] != '.') {
+      return false;
+    }
+  }
+  return true;
+}
+
+double s21::controller::AddSum(const double &sum, const int &time) const noexcept {
+    return model_.AddSum(sum, time);
 }

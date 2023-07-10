@@ -2,6 +2,7 @@
 #define SRC_CONTROLLER_CONTROLLER_H_
 
 #include "../model/model.h"
+#include "../view/calculator.h"
 
 namespace s21 {
     class controller {
@@ -12,6 +13,8 @@ namespace s21 {
             bool IsError() noexcept;
             bool IsInteger(const double &res) noexcept;
             bool IsGraph(const std::string &str) noexcept;
+            bool IsCorrectInt(const QString &str) const noexcept;
+            bool IsCorrectDec(const QString &str) const noexcept;
             bool IsCorrect(const std::string &str) noexcept;
 
             void GraphEnd() noexcept;
@@ -19,10 +22,11 @@ namespace s21 {
             void GraphStart(const std::string &str) noexcept;
 
             double Graph(const double &x) noexcept;
-            double Calculator(const std::string &str) noexcept;
+            double AddSum(const double &sum, const int &time) const noexcept;
 
-            std::vector<double> AnnuCred(const double &sum, const int &term, const double &percent) noexcept;
-            std::vector<double> DifferCred(const double &sum, const int &term, const double &percent) noexcept;
+            QString Calculator(const std::string &str) noexcept;
+            QVector<QString> AnnuCred(const double &sum, const int &term, const double &percent) noexcept;
+            QVector<QString> DifferCred(const double &sum, const int &term, const double &percent) noexcept;
 
         private:
             s21::model model_;

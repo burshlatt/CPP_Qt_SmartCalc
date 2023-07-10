@@ -413,7 +413,7 @@ void s21::model::DifferCred(const double &sum, const int &term, const double &pe
 //   return n;
 // }
 
-double AddSum(const double &sum, const int &time) {
+double s21::model::AddSum(const double &sum, const int &time) const noexcept {
   double sum_result_ = 0.0;
   for (int i = 0; i < time; i++) {
     sum_result_ += sum;

@@ -1,7 +1,6 @@
 #ifndef CREDITWINDOW_H
 #define CREDITWINDOW_H
 
-#include "calculator.h"
 #include "../controller/controller.h"
 
 namespace Ui {
@@ -16,12 +15,10 @@ public:
   ~credit();
 
 private slots:
-  bool IsCorrect();
-
-  void DelRow();
-  void on_showResult_clicked();
-  void on_calculator_clicked();
-  void AddRow(int term, std::vector<double> res_arr, bool is_annu);
+  void DelRow() noexcept;
+  void on_showResult_clicked() noexcept;
+  void on_calculator_clicked() noexcept;
+  void AddRow(const int &term, const QVector<QString> &res_arr, const bool &is_annu) noexcept;
 
 signals:
   void firstWindow();

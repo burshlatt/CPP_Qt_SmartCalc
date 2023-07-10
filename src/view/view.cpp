@@ -52,17 +52,17 @@ view::view(QWidget *parent)
 
 view::~view() { delete ui; }
 
-void view::on_credCalc_clicked() {
+void view::on_credCalc_clicked() noexcept {
   credit_->show();
   this->close();
 }
 
-void view::on_deposCalc_clicked() {
+void view::on_deposCalc_clicked() noexcept {
   deposit_->show();
   this->close();
 }
 
-void view::GetInfo() {
+void view::GetInfo() noexcept {
   button_ = (QPushButton *)sender();
   str_ = ui->input->text().toStdString();
   size_ = str_.size();
@@ -73,7 +73,7 @@ void view::GetInfo() {
   }
 }
 
-void view::OperatorsClicked() {
+void view::OperatorsClicked() noexcept {
     GetInfo();
     bool is_operator_ = false;
     if (size_ && str_.back() != '(' && str_.back() != '.') {
@@ -97,7 +97,7 @@ void view::OperatorsClicked() {
     }
 }
 
-void view::SymbolsClicked() {
+void view::SymbolsClicked() noexcept {
     GetInfo();
     if (str_.back() == 'x' || str_.back() == ')' || str_.back() == 'i') {
         ui->input->setText(ui->input->text() + "*");
@@ -119,7 +119,7 @@ void view::SymbolsClicked() {
     }
 }
 
-void view::FuncClicked() {
+void view::FuncClicked() noexcept {
   GetInfo();
   if (size_ < 255 && str_.back() != '.') {
     if ((str_.back() >= '0' && str_.back() <= '9') || str_.back() == ')' || str_.back() == 'i') {
@@ -130,7 +130,7 @@ void view::FuncClicked() {
   }
 }
 
-void view::BracketsClicked() {
+void view::BracketsClicked() noexcept {
   GetInfo();
   int l_brackets_ = 0, r_brackets_ = 0;
   bool can_do_ = true;
@@ -168,7 +168,7 @@ void view::BracketsClicked() {
   }
 }
 
-void view::on_subFunc_clicked() {
+void view::on_subFunc_clicked() noexcept {
   GetInfo();
   if (size_ < 255 && str_.back() != '.') {
     if (size_ == 0) {
@@ -186,7 +186,7 @@ void view::on_subFunc_clicked() {
   }
 }
 
-void view::on_dotSym_clicked() {
+void view::on_dotSym_clicked() noexcept {
   GetInfo();
   for (int i = str_.size() - 1; str_[i] >= '0' && str_[i] <= '9'; i--) {
     if (str_[i - 1] == '.') {
@@ -205,7 +205,7 @@ void view::on_dotSym_clicked() {
   }
 }
 
-void view::on_delElem_clicked() {
+void view::on_delElem_clicked() noexcept {
   GetInfo();
   if (str_.back() == '.') is_dot_ = false;
   if (size_ != 0) {
@@ -228,13 +228,13 @@ void view::on_delElem_clicked() {
   }
 }
 
-void view::on_delAll_clicked() {
+void view::on_delAll_clicked() noexcept {
   is_dot_ = false;
   ui->input->clear();
   ui->output->clear();
 }
 
-void view::CheckFields() {
+void view::CheckFields() noexcept {
   if (ui->xValue->text().size() == 0) {
     ui->xValue->setText("0");
   }
@@ -270,16 +270,15 @@ void view::CheckFields() {
   }
 }
 
-void view::on_resultFunc_clicked() {
+void view::on_resultFunc_clicked() noexcept {
     ui->output->clear();
     str_ = ui->input->text().toStdString();
     if (calc_.IsCorrect(str_) && str_.size()) {
         if (!calc_.IsGraph(str_)) {
-            double result_ = calc_.Calculator(str_ + "=");
+            QString result_ = calc_.Calculator(str_ + "=");
             if (!calc_.IsError()) {
                 ui->output->clear();
-                int count_ = calc_.IsInteger(result_) ? 0 : 7;
-                ui->output->setText(QString::number(result_, 'f', count_));
+                ui->output->setText(result_);
             } else {
                 ui->output->setText("ERROR: Incorrect data!");
             }
@@ -299,7 +298,7 @@ void view::on_resultFunc_clicked() {
     }
 }
 
-void view::on_showGraph_clicked() {
+void view::on_showGraph_clicked() noexcept {
   int xPos = this->geometry().x();
   int yPos = this->geometry().y();
   if (!graph_open_) {
@@ -315,7 +314,7 @@ void view::on_showGraph_clicked() {
   }
 }
 
-void view::PrintGraph() {
+void view::PrintGraph() noexcept {
     CheckFields();
     ui->output->setText("GRAPH");
     ui->functionGraph->clearGraphs();
@@ -337,14 +336,14 @@ void view::PrintGraph() {
     ui->functionGraph->replot();
 }
 
-void view::on_rad_clicked() {
+void view::on_rad_clicked() noexcept {
     ui->rad->setStyleSheet("background-color: rgb(255, 160, 122); color: black; border: 1px solid gray;");
     ui->deg->setStyleSheet("background-color: rgb(255, 219, 139); color: black; border: 1px solid gray;");
     calc_.SetRad(true);
     on_resultFunc_clicked();
 }
 
-void view::on_deg_clicked() {
+void view::on_deg_clicked() noexcept {
     ui->deg->setStyleSheet("background-color: rgb(255, 160, 122); color: black; border: 1px solid gray;");
     ui->rad->setStyleSheet("background-color: rgb(255, 219, 139); color: black; border: 1px solid gray;");
     calc_.SetRad(false);

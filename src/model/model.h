@@ -33,6 +33,7 @@ namespace s21 {
       void InsertNumOutput(size_t &index) noexcept;
       void Notation(const std::string &str) noexcept;
       void PushLogic(const std::string &str) noexcept;
+      double AddSum(const double &sum, const int &time) const noexcept;
       void AnnuCred(const double &sum, const int &term, const double &percent) noexcept;
       void DifferCred(const double &sum, const int &term, const double &percent) noexcept;
 

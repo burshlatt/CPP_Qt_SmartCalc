@@ -1,7 +1,6 @@
 #ifndef DEPOSIT_H
 #define DEPOSIT_H
 
-#include "calculator.h"
 #include "../controller/controller.h"
 
 namespace Ui {
@@ -16,17 +15,16 @@ public:
   ~deposit();
 
 private slots:
-  void CheckTypes();
-  bool DataIsCorrect();
-  void additional_waste();
-  void additional_payment();
-  void on_addWaste_clicked();
-  bool IsCorrect(QString sum);
-  void on_calculator_clicked();
-  void on_showResult_clicked();
-  void on_addPayment_clicked();
-  void on_deleteWaste_clicked();
-  void on_deletePayment_clicked();
+  void add_waste() noexcept;
+  void CheckTypes() noexcept;
+  void add_payment() noexcept;
+  bool DataIsCorrect() noexcept;
+  void on_addWaste_clicked() noexcept;
+  void on_calculator_clicked() noexcept;
+  void on_showResult_clicked() noexcept;
+  void on_addPayment_clicked() noexcept;
+  void on_deleteWaste_clicked() noexcept;
+  void on_deletePayment_clicked() noexcept;
 
 signals:
   void firstWindow();
@@ -45,6 +43,11 @@ private:
 
   bool is_error_ = false;
   bool is_capitalization_ = false;
+
+  QString sum_;
+  QString term_;
+  QString percent_;
+  QString tax_rate_;
 
   QDate last_date_;
 
