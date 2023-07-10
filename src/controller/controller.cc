@@ -1,9 +1,8 @@
 #include "controller.h"
 
-void s21::controller::SetRad(const bool &is_rad) noexcept {
-    model_.set_rad(is_rad);
-}
-
+/*
+  ==================== V A L I D A T O R S ====================
+*/
 bool s21::controller::IsGraph(const std::string &str) noexcept {
     bool status_ = false;
     for (size_t i = 0; i < str.size(); i++) {
@@ -38,6 +37,44 @@ bool s21::controller::IsInteger(const double &res) noexcept {
         return false;
 }
 
+bool s21::controller::IsCorrectInt(const QString &str) const noexcept {
+  for (int i = 0; i < str.size(); i++) {
+    if (str[i] < '0' || str[i] > '9') {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool s21::controller::IsCorrectDec(const QString &str) const noexcept {
+  for (int i = 0; i < str.size(); i++) {
+    if ((str[i] < '0' || str[i] > '9') && str[i] != '.') {
+      return false;
+    }
+  }
+  return true;
+}
+/*
+  ==================== V A L I D A T O R S ====================
+*/
+
+/*
+  ========================= M U T A T O R S =========================
+*/
+void s21::controller::set_cap(const bool &cap) noexcept { model_.set_cap(cap); }
+void s21::controller::set_sum(const double &sum) noexcept { model_.set_sum(sum); }
+void s21::controller::set_term(const double &term) noexcept { model_.set_term(term); }
+void s21::controller::set_rad(const bool &is_rad) noexcept { model_.set_rad(is_rad); }
+void s21::controller::set_period(const int &period) noexcept { model_.set_period(period); }
+void s21::controller::set_tax(const QString &tax) noexcept { model_.set_tax(tax.toDouble()); }
+void s21::controller::set_percent(const QString &percent) noexcept { model_.set_percent(percent.toDouble()); }
+/*
+  ========================= M U T A T O R S =========================
+*/
+
+/*
+  ==================== C A L C U L A T O R ====================
+*/
 QString s21::controller::Calculator(const std::string &str) noexcept {
     model_.Notation(str);
     model_.Calculations();
@@ -59,9 +96,15 @@ double s21::controller::Graph(const double &x) noexcept {
 void s21::controller::GraphEnd() noexcept {
     model_.ClearOutput();
 }
+/*
+  ==================== C A L C U L A T O R ====================
+*/
 
-QVector<QString> s21::controller::AnnuCred(const double &sum, const int &term, const double &percent) noexcept {
-    model_.AnnuCred(sum, term, percent);
+/*
+  ==================== C R E D I T - C A L C U L A T O R ====================
+*/
+QVector<QString> s21::controller::AnnuCred() noexcept {
+    model_.AnnuCred();
     std::vector<double> result_ = model_.get_cred();
     QVector<QString> format_result_;
     for (size_t i = 0; i < result_.size(); i++) {
@@ -70,34 +113,35 @@ QVector<QString> s21::controller::AnnuCred(const double &sum, const int &term, c
     return format_result_;
 }
 
-QVector<QString> s21::controller::DifferCred(const double &sum, const int &term, const double &percent) noexcept {
-    model_.DifferCred(sum, term, percent);
+QVector<QString> s21::controller::DifferCred() noexcept {
+    model_.DifferCred();
     std::vector<double> result_ = model_.get_cred();
     QVector<QString> format_result_;
     for (size_t i = 0; i < result_.size(); i++) {
         format_result_.push_back(QString::number(result_[i], 'f', 2));
     }
     return format_result_;
-}
-
-bool s21::controller::IsCorrectInt(const QString &str) const noexcept {
-  for (int i = 0; i < str.size(); i++) {
-    if (str[i] < '0' || str[i] > '9') {
-      return false;
-    }
-  }
-  return true;
-}
-
-bool s21::controller::IsCorrectDec(const QString &str) const noexcept {
-  for (int i = 0; i < str.size(); i++) {
-    if ((str[i] < '0' || str[i] > '9') && str[i] != '.') {
-      return false;
-    }
-  }
-  return true;
 }
 
 double s21::controller::AddSum(const double &sum, const int &time) const noexcept {
     return model_.AddSum(sum, time);
 }
+/*
+  ==================== C R E D I T - C A L C U L A T O R ====================
+*/
+
+/*
+  ==================== D E P O S I T - C A L C U L A T O R ====================
+*/
+QVector<QString> s21::controller::Deposit() noexcept {
+    model_.Deposit();
+    std::array<double, 4> result_ = model_.get_depos();
+    QVector<QString> format_result_;
+    for (size_t i = 0; i < result_.size(); i++) {
+        format_result_.push_back(QString::number(result_[i], 'f', 2));
+    }
+    return format_result_;
+}
+/*
+  ==================== D E P O S I T - C A L C U L A T O R ====================
+*/

@@ -1,13 +1,48 @@
 #include "model.h"
 
+/*
+  ==================== CALCULATOR ACCESSORS ====================
+*/
 double s21::model::get_res() const noexcept { return result_; }
-
 bool s21::model::get_error() const noexcept { return is_error_; }
+/*
+  ==================== CALCULATOR ACCESSORS ====================
+*/
 
+/*
+  ==================== CREDIT && DEPOSIT ACCESSORS ====================
+*/
+std::vector<double> s21::model::get_cred() const noexcept { return cred_arr_; }
+std::array<double, 4> s21::model::get_depos() const noexcept { return depos_arr_; }
+/*
+  ==================== CREDIT && DEPOSIT ACCESSORS ====================
+*/
+
+/*
+  ==================== CALCULATOR MUTATORS ====================
+*/
 void s21::model::set_x(const double &num) noexcept { x_value_ = num; }
-
 void s21::model::set_rad(const bool &graph) noexcept { is_rad_ = graph; }
+/*
+  ==================== CALCULATOR MUTATORS ====================
+*/
 
+/*
+  ==================== CREDIT && DEPOSIT MUTATORS ====================
+*/
+void s21::model::set_sum(const double &sum) noexcept { sum_ = sum; }
+void s21::model::set_tax(const double &tax) noexcept { tax_ = tax; }
+void s21::model::set_cap(const bool &cap) noexcept { is_cap_ = cap; }
+void s21::model::set_term(const double &term) noexcept { term_ = term; }
+void s21::model::set_period(const double &period) noexcept { period_ = period; }
+void s21::model::set_percent(const double &percent) noexcept { percent_ = percent; }
+/*
+  ==================== CREDIT && DEPOSIT MUTATORS ====================
+*/
+
+/*
+  ==================== C A L C U L A T O R ====================
+*/
 void s21::model::GetNums(double &x) noexcept {
   x = num_buffer_.top();
   num_buffer_.pop();
@@ -254,9 +289,13 @@ void s21::model::ClearOutput() noexcept {
   pos_ = 0;
 }
 
-std::vector<double> s21::model::get_cred() const noexcept {
-  return cred_arr_;
-}
+/*
+  ==================== C A L C U L A T O R ====================
+*/
+
+/*
+  ==================== C R E D I T - C A L C U L A T O R ====================
+*/
 
 void s21::model::ClearCredit() noexcept {
   overpay_ = 0.0;
@@ -267,151 +306,115 @@ void s21::model::ClearCredit() noexcept {
   cred_arr_.clear();
 }
 
-void s21::model::AnnuCred(const double &sum, const int &term, const double &percent) noexcept {
+void s21::model::AnnuCred() noexcept {
   ClearCredit();
-  double percent_ = percent / (100 * percent);
-  month_pay_ = sum * percent_ / (1 - pow(1 + percent_, -term));
-  overpay_ = month_pay_ * term - sum;
-  result_sum_ = sum + overpay_;
+  double percent_ = percent_ / (100 * percent_);
+  month_pay_ = sum_ * percent_ / (1 - pow(1 + percent_, -term_));
+  overpay_ = month_pay_ * term_ - sum_;
+  result_sum_ = sum_ + overpay_;
   cred_arr_.push_back(overpay_);
   cred_arr_.push_back(result_sum_);
   cred_arr_.push_back(month_pay_);
 }
 
-void s21::model::DifferCred(const double &sum, const int &term, const double &percent) noexcept {
+void s21::model::DifferCred() noexcept {
   ClearCredit();
   int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
   time_t now_;
   time(&now_);
   struct tm *local_ = localtime(&now_);
   int month_ = local_->tm_mon;
-  double credit_body_ = sum / term;
-  overpay_ = (sum * (percent / 100) * days[month_]) / 365;
+  double credit_body_ = sum_ / term_;
+  overpay_ = (sum_ * (percent_ / 100) * days[month_]) / 365;
   f_payment_ = overpay_ + credit_body_;
   cred_arr_.push_back(f_payment_);
-  double sum_copy_ = sum;
+  double sum_copy_ = sum_;
   double percent_month_ = 0.0;
-  for (int i = 0; i < term - 1; i++) {
+  for (int i = 0; i < term_ - 1; i++) {
     sum_copy_ -= credit_body_;
     month_ = month_ == 11 ? 0 : month_ + 1;
-    percent_month_ = (sum_copy_ * (percent / 100) * days[month_]) / 365;
+    percent_month_ = (sum_copy_ * (percent_ / 100) * days[month_]) / 365;
     overpay_ += percent_month_;
     cred_arr_.push_back(credit_body_ + percent_month_);
   }
   l_payment_ = percent_month_ + credit_body_;
-  result_sum_ = sum + overpay_;
+  result_sum_ = sum_ + overpay_;
   cred_arr_.push_back(l_payment_);
   cred_arr_.push_back(overpay_);
   cred_arr_.push_back(result_sum_);
 }
 
 /*
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
-  |
+  ==================== C R E D I T - C A L C U L A T O R ====================
 */
 
-// void deposit_calculator(const double &sum, const int &time_contrib, const int &type_of_time, const double &percent, const double &tax_rate, const int &period, const int &capitalization, double *res_percent, double &tax_rate_res, double &sum_with_tax, double &sum_res) {
-//   double time_copy = convert_to_days(time_contrib, type_of_time);
-//   int n = check_period(capitalization, period, &time_copy);
-//   if (!capitalization) {
-//     sum_res = sum;
-//     res_percent = (sum * (percent / 100) / n) * time_copy;
-//   } else {
-//     sum_res = sum * pow(1 + (percent / 100) / n, time_copy / 365 * n);
-//     res_percent = sum_res - sum;
-//   }
-//   tax_rate_res = res_percent - 1000000 * (7.5 / 100);
-//   if (tax_rate_res > 0) {
-//     tax_rate_res *= tax_rate / 100;
-//   } else {
-//     tax_rate_res = 0;
-//   }
-//   sum_with_tax = res_percent - tax_rate_res;
-// }
+/*
+  ==================== D E P O S I T - C A L C U L A T O R ====================
+*/
 
-// double convert_to_days(int time_contrib, int type_of_time) {
-//   int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-//   time_t now;
-//   time(&now);
-//   struct tm *local = localtime(&now);
-//   int month = local->tm_mon;
-//   double time_copy = 0;
-//   if (type_of_time == 1) {
-//     time_copy = time_contrib;
-//   } else if (type_of_time == 3) {
-//     time_contrib *= 12;
-//   }
-//   if (type_of_time != 1) {
-//     for (int i = 0; i < time_contrib; i++) {
-//       time_copy += days[month];
-//       if (month == 11) {
-//         month = 0;
-//       } else {
-//         month++;
-//       }
-//     }
-//   }
-//   return time_copy;
-// }
+std::array<double, 4> s21::model::Deposit() noexcept {
+  int format_time_ = FormatTime();
+  std::array<double, 4> result_;
+  double res_per_ = 0.0, tax_res_ = 0.0, sum_tax_res_ = 0.0, sum_res_ = 0.0;
+  if (!is_cap_) {
+    sum_res_ = sum_;
+    res_per_ = (sum_ * (percent_ / 100) / format_time_) * term_;
+  } else {
+    sum_res_ = sum_ * pow(1 + (percent_ / 100) / format_time_, term_ / 365 * format_time_);
+    res_per_ = sum_res_ - sum_;
+  }
+  tax_res_ = res_per_ - 1000000 * (7.5 / 100);
+  if (tax_res_ > 0) {
+    tax_res_ *= tax_ / 100;
+  } else {
+    tax_res_ = 0;
+  }
+  sum_tax_res_ = res_per_ - tax_res_;
+  result_[0] = res_per_;
+  result_[1] = tax_res_;
+  result_[2] = sum_tax_res_;
+  result_[3] = sum_res_;
+  return result_;
+}
 
-// int check_period(int capitalization, int period, double *time_copy) {
-//   int n = 0;
-//   if (!capitalization) {
-//     if (period == 1 || period == 7) {
-//       n = 365;
-//     } else if (period == 2) {
-//       n = 52;
-//       *time_copy = floor(*time_copy / 7);
-//     } else if (period == 3) {
-//       n = 12;
-//       *time_copy = floor(*time_copy / 30.5);
-//     } else if (period == 4) {
-//       n = 4;
-//       *time_copy = floor(*time_copy / 91.25);
-//     } else if (period == 5) {
-//       n = 2;
-//       *time_copy = floor(*time_copy / 182.5);
-//     } else if (period == 6) {
-//       n = 1;
-//       *time_copy = floor(*time_copy / 365);
-//     }
-//   } else {
-//     if (period == 1) {
-//       n = 365;
-//     } else if (period == 2) {
-//       n = 52;
-//     } else if (period == 3) {
-//       n = 12;
-//     } else if (period == 4) {
-//       n = 4;
-//     } else if (period == 5) {
-//       n = 2;
-//     } else if (period == 6 || period == 7) {
-//       n = 1;
-//     }
-//   }
-//   return n;
-// }
+int s21::model::FormatTime() noexcept {
+  int n = 0;
+  if (!is_cap_) {
+    if (period_ == 1 || period_ == 7) {
+      n = 365;
+    } else if (period_ == 2) {
+      n = 52;
+      term_ = floor(term_ / 7);
+    } else if (period_ == 3) {
+      n = 12;
+      term_ = floor(term_ / 30.5);
+    } else if (period_ == 4) {
+      n = 4;
+      term_ = floor(term_ / 91.25);
+    } else if (period_ == 5) {
+      n = 2;
+      term_ = floor(term_ / 182.5);
+    } else if (period_ == 6) {
+      n = 1;
+      term_ = floor(term_ / 365);
+    }
+  } else {
+    if (period_ == 1) {
+      n = 365;
+    } else if (period_ == 2) {
+      n = 52;
+    } else if (period_ == 3) {
+      n = 12;
+    } else if (period_ == 4) {
+      n = 4;
+    } else if (period_ == 5) {
+      n = 2;
+    } else if (period_ == 6 || period_ == 7) {
+      n = 1;
+    }
+  }
+  return n;
+}
 
 double s21::model::AddSum(const double &sum, const int &time) const noexcept {
   double sum_result_ = 0.0;
@@ -420,3 +423,7 @@ double s21::model::AddSum(const double &sum, const int &time) const noexcept {
   }
   return sum_result_;
 }
+
+/*
+  ==================== D E P O S I T - C A L C U L A T O R ====================
+*/
