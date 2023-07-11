@@ -62,13 +62,6 @@ void view::on_deposCalc_clicked() noexcept {
   this->close();
 }
 
-//void credit::keyPressEvent(QKeyEvent *event) {
-//    if (event->key() >= Qt::Key_0) {
-//        event->accept();
-//        on_calculator_clicked();
-//    }
-//}
-
 void view::GetInfo() noexcept {
   button_ = (QPushButton *)sender();
   str_ = ui->input->text().toStdString();

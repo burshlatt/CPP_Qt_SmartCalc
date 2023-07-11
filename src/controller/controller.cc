@@ -1,7 +1,7 @@
 #include "controller.h"
 
 /*
-  ==================== V A L I D A T O R S ====================
+  ============================ V A L I D A T O R S ============================
 */
 bool s21::controller::IsGraph(const std::string &str) noexcept {
     bool status_ = false;
@@ -55,11 +55,11 @@ bool s21::controller::IsCorrectDec(const QString &str) const noexcept {
   return true;
 }
 /*
-  ==================== V A L I D A T O R S ====================
+  ============================ V A L I D A T O R S ============================
 */
 
 /*
-  ========================= M U T A T O R S =========================
+  ============================== M U T A T O R S ==============================
 */
 void s21::controller::set_cap(const bool &cap) noexcept { model_.set_cap(cap); }
 void s21::controller::set_sum(const double &sum) noexcept { model_.set_sum(sum); }
@@ -69,11 +69,11 @@ void s21::controller::set_period(const int &period) noexcept { model_.set_period
 void s21::controller::set_tax(const QString &tax) noexcept { model_.set_tax(tax.toDouble()); }
 void s21::controller::set_percent(const QString &percent) noexcept { model_.set_percent(percent.toDouble()); }
 /*
-  ========================= M U T A T O R S =========================
+  ============================== M U T A T O R S ==============================
 */
 
 /*
-  ==================== C A L C U L A T O R ====================
+  ============================ C A L C U L A T O R ============================
 */
 QString s21::controller::Calculator(const std::string &str) noexcept {
     model_.Notation(str);
@@ -97,11 +97,11 @@ void s21::controller::GraphEnd() noexcept {
     model_.ClearOutput();
 }
 /*
-  ==================== C A L C U L A T O R ====================
+  ============================ C A L C U L A T O R ============================
 */
 
 /*
-  ==================== C R E D I T - C A L C U L A T O R ====================
+  ===================== C R E D I T - C A L C U L A T O R =====================
 */
 QVector<QString> s21::controller::AnnuCred() noexcept {
     model_.AnnuCred();
@@ -127,7 +127,7 @@ double s21::controller::AddSum(const double &sum, const int &time) const noexcep
     return model_.AddSum(sum, time);
 }
 /*
-  ==================== C R E D I T - C A L C U L A T O R ====================
+  ===================== C R E D I T - C A L C U L A T O R =====================
 */
 
 /*

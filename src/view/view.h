@@ -36,7 +36,6 @@ class view : public QMainWindow {
         void on_deposCalc_clicked() noexcept;
         void on_showGraph_clicked() noexcept;
         void on_resultFunc_clicked() noexcept;
-//        void keyPressEvent(QKeyEvent *event) override;
 
 private:
         Ui::view *ui;
