@@ -2,6 +2,7 @@
 #define CALCULATOR_H
 
 #include <QScreen>
+#include <QKeyEvent>
 #include <QDateEdit>
 #include <QComboBox>
 #include <QMessageBox>

@@ -15,7 +15,7 @@ bool s21::controller::IsGraph(const std::string &str) noexcept {
 
 bool s21::controller::IsCorrect(const std::string &str) noexcept {
     bool status_ = true;
-    if (str.back() != ')' && (str.back() < '0' || str.back() > '9') && str.back() != 'x')
+    if (str.back() != ')' && (str.back() < '0' || str.back() > '9') && str.back() != 'x' && str.back() != 'i')
         status_ = false;
     int l_bracket = 0, r_bracket = 0;
     for (size_t i = 0; i < str.size(); i++) {

@@ -25,6 +25,13 @@ void credit::on_calculator_clicked() noexcept {
   emit firstWindow();
 }
 
+void credit::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Escape) {
+        event->accept();
+        on_calculator_clicked();
+    }
+}
+
 void credit::AddRow(const int &term, const QVector<QString> &res_arr, const bool &is_annu) noexcept {
     for (int i = 1; i <= term; i++) {
       QHBoxLayout *hboxLayout = new QHBoxLayout();
@@ -51,7 +58,7 @@ void credit::AddRow(const int &term, const QVector<QString> &res_arr, const bool
       QDate current_date_ = date_->date();
       date_->setDate(current_date_.addMonths(i - 1));
 
-      is_annu ? sum_->setText(res_arr[2]) : sum_->setText(res_arr[i - 1]);
+      is_annu ? sum_->setText(res_arr[0]) : sum_->setText(res_arr[i]);
 
       addVbox->addLayout(hboxLayout);
       count_++;
@@ -102,15 +109,15 @@ void credit::on_showResult_clicked() noexcept {
         calc_.set_percent(ui->percent->text());
         if (ui->annu->isChecked()) {
           result_ = calc_.AnnuCred();
-          ui->overPay->setText(result_[0]);
-          ui->resultSum->setText(result_[1]);
-          ui->monthRes->setText(result_[2]);
+          ui->overPay->setText(result_[1]);
+          ui->monthRes->setText(result_[0]);
+          ui->resultSum->setText(result_[2]);
           AddRow(term_, result_, true);
         } else {
           result_ = calc_.DifferCred();
-          ui->overPay->setText(result_[result_.size() - 2]);
-          ui->resultSum->setText(result_[result_.size() - 1]);
-          ui->monthRes->setText(result_[0] + " ... " + result_[result_.size() - 3]);
+          ui->overPay->setText(result_.front());
+          ui->resultSum->setText(result_[result_.size() - 2]);
+          ui->monthRes->setText(result_[1] + " ... " + result_.back());
           AddRow(term_, result_, false);
         }
       } else {

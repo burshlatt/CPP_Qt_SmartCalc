@@ -297,35 +297,28 @@ void s21::model::ClearOutput() noexcept {
   ===================== C R E D I T - C A L C U L A T O R =====================
 */
 
-void s21::model::ClearCredit() noexcept {
-  overpay_ = 0.0;
-  cred_arr_.clear();
-}
-
 void s21::model::AnnuCred() noexcept {
-  ClearCredit();
-  percent_ = percent_ / (100 * percent_);
-  cred_arr_.push_back(sum_ * percent_ / (1 - pow(1 + percent_, -term_))); // month_pay
-  cred_arr_.push_back(cred_arr_.back() * term_ - sum_); // overpay
-  cred_arr_.push_back(sum_ + cred_arr_.back()); // result_sum
+  cred_arr_.clear();
+  cred_arr_.push_back(sum_ * (percent_ / (100 * percent_)) / (1 - pow(1 + (percent_ / (100 * percent_)), -term_))); // MONTH PAY
+  cred_arr_.push_back(cred_arr_.back() * term_ - sum_); // OVERPAY
+  cred_arr_.push_back(sum_ + cred_arr_.back()); // RESULT SUM
 }
 
 void s21::model::DifferCred() noexcept {
-  ClearCredit();
+  cred_arr_.clear();
   double credit_body_ = sum_ / term_;
-  overpay_ = (sum_ * (percent_ / 100) * QDate::currentDate().daysInMonth()) / 365;
-  cred_arr_.push_back(overpay_ + credit_body_);
+  cred_arr_.push_back((sum_ * (percent_ / 100) * QDate::currentDate().daysInMonth()) / 365); // OVERPAY
+  cred_arr_.push_back(cred_arr_.back() + credit_body_); // FIRST PAYMENT
   double sum_copy_ = sum_;
   double percent_month_ = 0.0;
   for (int i = 0; i < term_ - 1; i++) {
     sum_copy_ -= credit_body_;
     percent_month_ = (sum_copy_ * (percent_ / 100) * QDate::currentDate().daysInMonth()) / 365;
-    overpay_ += percent_month_;
-    cred_arr_.push_back(credit_body_ + percent_month_);
+    cred_arr_[0] += percent_month_; // OVERPAY
+    cred_arr_.push_back(credit_body_ + percent_month_); // PAYMENTS
   }
-  cred_arr_.push_back(overpay_); // l_payment
-  cred_arr_.push_back(sum_ + overpay_);
-  cred_arr_.push_back(percent_month_ + credit_body_);
+  cred_arr_.push_back(sum_ + cred_arr_[0]); // RESULT SUM
+  cred_arr_.push_back(percent_month_ + credit_body_); // LAST PAYMENT
 }
 
 /*
@@ -335,11 +328,6 @@ void s21::model::DifferCred() noexcept {
 /*
   ==================== D E P O S I T - C A L C U L A T O R ====================
 */
-
-void s21::model::ClearDeposit() noexcept {
-  overpay_ = 0.0;
-  cred_arr_.clear();
-}
 
 double s21::model::AddSum(const double &sum, const int &time) const noexcept {
   double sum_result_ = 0.0;
@@ -383,25 +371,20 @@ int s21::model::FormatTime() noexcept {
 
 void s21::model::Deposit() noexcept {
   int format_time_ = FormatTime();
-  double res_per_ = 0.0, tax_res_ = 0.0, sum_tax_res_ = 0.0, sum_res_ = 0.0;
   if (!is_cap_) {
-    sum_res_ = sum_;
-    res_per_ = (sum_ * (percent_ / 100) / format_time_) * term_;
+    depos_arr_[0] = sum_; // RESULT SUM
+    depos_arr_[1] = (sum_ * (percent_ / 100) / format_time_) * term_; // RESULT PERCENT
   } else {
-    sum_res_ = sum_ * pow(1 + (percent_ / 100) / format_time_, term_ / 365 * format_time_);
-    res_per_ = sum_res_ - sum_;
+    depos_arr_[0] = sum_ * pow(1 + (percent_ / 100) / format_time_, term_ / 365 * format_time_);  // RESULT SUM
+    depos_arr_[1] = depos_arr_[0] - sum_; // RESULT PERCENT
   }
-  tax_res_ = res_per_ - 1000000 * (7.5 / 100);
-  if (tax_res_ > 0) {
-    tax_res_ *= tax_ / 100;
+  depos_arr_[2] = depos_arr_[1] - 1000000 * (7.5 / 100); // TAX RATE
+  if (depos_arr_[2] > 0) {
+    depos_arr_[2] *= tax_ / 100; // TAX RATE
   } else {
-    tax_res_ = 0;
+    depos_arr_[2] = 0; // TAX RATE
   }
-  sum_tax_res_ = res_per_ - tax_res_;
-  depos_arr_[0] = res_per_;
-  depos_arr_[1] = tax_res_;
-  depos_arr_[2] = sum_tax_res_;
-  depos_arr_[3] = sum_res_;
+  depos_arr_[3] = depos_arr_[1] - depos_arr_[2]; // RESULT SUM WITH TAX
 }
 
 /*

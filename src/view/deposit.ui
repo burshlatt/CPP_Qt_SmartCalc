@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Deposit Calculator (by Stephank)</string>
+   <string>Deposit Calculator (by Burshlat)</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QDialog {
@@ -274,6 +274,15 @@ QPushButton:pressed {
     <font>
      <pointsize>17</pointsize>
     </font>
+   </property>
+   <property name="tabletTracking">
+    <bool>false</bool>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="dragEnabled">
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">

@@ -35,7 +35,6 @@ namespace s21 {
       void AnnuCred() noexcept;
       int FormatTime() noexcept;
       void DifferCred() noexcept;
-      void ClearCredit() noexcept;
       void ClearOutput() noexcept;
       void Calculations() noexcept;
       void PopFunctions() noexcept;
@@ -64,7 +63,6 @@ namespace s21 {
       double period_ = 0.0;
       double percent_ = 0.0;
       double x_value_ = 0.0;
-      double overpay_ = 0.0;
       double x_ = 0.0, y_ = 0.0;
       const size_t array_size_ = 11;
       std::vector<double> cred_arr_;

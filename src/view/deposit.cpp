@@ -23,6 +23,13 @@ void deposit::on_calculator_clicked() noexcept {
   emit firstWindow();
 }
 
+void deposit::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Escape) {
+        event->accept();
+        on_calculator_clicked();
+    }
+}
+
 void deposit::on_addPayment_clicked() noexcept {
   QHBoxLayout *hboxLayout = new QHBoxLayout();
   QComboBox *addComboBox = new QComboBox(ui->scrollPayment->widget());
@@ -124,7 +131,6 @@ void deposit::on_deleteWaste_clicked() noexcept {
 }
 
 void deposit::add_payment() noexcept {
-  if (combo_boxes_add_.size() > 0 && date_edits_add_.size() > 0 && line_edits_add_.size() > 0) {
     add_sum_ = 0.0;
     for (int i = 0; i < add_count_; i++) {
       QDate date_add = date_edits_add_[i]->date();
@@ -153,11 +159,9 @@ void deposit::add_payment() noexcept {
         line_edits_add_[i]->setText("ERROR!");
       }
     }
-  }
 }
 
 void deposit::add_waste() noexcept {
-  if (combo_boxes_waste_.size() > 0 && date_edits_waste_.size() > 0 && line_edits_waste_.size() > 0) {
     waste_sum_ = 0.0;
     for (int i = 0; i < waste_count_; i++) {
       QDate date_waste = date_edits_waste_[i]->date();
@@ -186,7 +190,6 @@ void deposit::add_waste() noexcept {
         line_edits_waste_[i]->setText("ERROR!");
       }
     }
-  }
 }
 
 void deposit::CheckTypes() noexcept {
@@ -257,10 +260,10 @@ void deposit::on_showResult_clicked() noexcept {
 
     QVector<QString> result_ = calc_.Deposit();
 
-    ui->tax->setText(result_[1]);
-    ui->resultSum->setText(result_[3]);
-    ui->resultProfit->setText(result_[2]);
-    ui->resultPercent->setText(result_[0]);
+    ui->tax->setText(result_[2]);
+    ui->resultSum->setText(result_[0]);
+    ui->resultProfit->setText(result_[3]);
+    ui->resultPercent->setText(result_[1]);
   } else {
       QMessageBox msg_box_;
       msg_box_.setText("Вы ввели некорректные данные!");

@@ -25,6 +25,7 @@ private slots:
   void on_addPayment_clicked() noexcept;
   void on_deleteWaste_clicked() noexcept;
   void on_deletePayment_clicked() noexcept;
+  void keyPressEvent(QKeyEvent *event) override;
 
 signals:
   void firstWindow();

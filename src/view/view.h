@@ -36,6 +36,7 @@ class view : public QMainWindow {
         void on_deposCalc_clicked() noexcept;
         void on_showGraph_clicked() noexcept;
         void on_resultFunc_clicked() noexcept;
+//        void keyPressEvent(QKeyEvent *event) override;
 
 private:
         Ui::view *ui;
@@ -50,7 +51,7 @@ private:
         size_t size_ = 0;
         bool is_dot_ = false;
         bool graph_open_ = false;
-        char operators[6] = {'-', '+', '*', '/', '^', 'd'};
+        char operators[7] = {'-', '+', '*', '/', '^', 'd', '('};
 };
 
 #endif // VIEW_H
