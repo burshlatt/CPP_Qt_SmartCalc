@@ -50,7 +50,7 @@ private:
         size_t size_ = 0;
         bool is_dot_ = false;
         bool graph_open_ = false;
-        char operators[7] = {'-', '+', '*', '/', '^', 'd', '('};
+        const std::array<char, 7> operators_ = {'-', '+', '*', '/', '^', 'd', '('};
 };
 
 #endif // VIEW_H

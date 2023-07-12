@@ -78,8 +78,8 @@ void view::OperatorsClicked() noexcept {
     bool is_operator_ = false;
     if (size_ && str_.back() != '(' && str_.back() != '.') {
         if ((str_.back() == '-' && str_[str_.size() - 2] != '(') || str_.back() != '-') {
-            for (int i = 0; i < 6; i++) {
-                if (str_.back() == operators[i]) {
+            for (size_t i = 0; i < operators_.size(); i++) {
+                if (str_.back() == operators_[i]) {
                     if (str_.back() != '-' || str_[str_.size() - 2] != '(') {
                         is_operator_ = true;
                         break;
@@ -154,8 +154,8 @@ void view::BracketsClicked() noexcept {
       }
       if (button_->text() == ')' &&
           r_brackets_ < l_brackets_) {
-        for (int i = 0; i < 7; i++) {
-          if (str_.back() == operators[i]) {
+        for (size_t i = 0; i < operators_.size(); i++) {
+          if (str_.back() == operators_[i]) {
             can_do_ = false;
           }
         }
@@ -174,8 +174,8 @@ void view::on_subFunc_clicked() noexcept {
     if (size_ == 0) {
       ui->input->setText(ui->input->text() + "(");
     } else {
-      for (int i = 0; i < 6; i++) {
-        if (str_.back() == operators[i]) {
+      for (size_t i = 0; i < operators_.size(); i++) {
+        if (str_.back() == operators_[i]) {
           ui->input->setText(ui->input->text() + "(");
           break;
         }

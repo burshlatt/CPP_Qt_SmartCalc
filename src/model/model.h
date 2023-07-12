@@ -62,7 +62,7 @@ namespace s21 {
       std::stack<double> num_buffer_;
       std::stack<std::string> stack_;
       std::array<std::string, 256> output_;
-      std::array<std::string, 11> functions_ = {"cos", "sin", "tan", "acos", "asin", "atan", "ln", "log", "sqrt", "abs", "^"};
+      const std::array<std::string, 11> functions_ = {"cos", "sin", "tan", "acos", "asin", "atan", "ln", "log", "sqrt", "abs", "^"};
   };
 }
 
