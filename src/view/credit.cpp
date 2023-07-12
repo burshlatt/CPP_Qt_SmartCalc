@@ -9,8 +9,8 @@ credit::credit(QWidget *parent)
 
   QScreen *screen = QGuiApplication::primaryScreen();
   QRect screenGeometry = screen->geometry();
-  int x = (screenGeometry.width() - 480) / 2;
-  int y = (screenGeometry.height() - 330) / 2;
+  const int x = (screenGeometry.width() - 480) / 2;
+  const int y = (screenGeometry.height() - 330) / 2;
   move(x, y);
 
   addVbox = new QVBoxLayout();
@@ -90,8 +90,8 @@ bool credit::DataIsCorrect() noexcept {
 }
 
 void credit::on_showResult_clicked() noexcept {
-  double sum_ = ui->creditSum->text().toDouble();
-  int term_ = ui->month->isChecked() ? ui->creditTerm->text().toInt() : ui->creditTerm->text().toInt() * 12;
+  const double sum_ = ui->creditSum->text().toDouble();
+  const int term_ = ui->month->isChecked() ? ui->creditTerm->text().toInt() : ui->creditTerm->text().toInt() * 12;
   if (term_ > 600) {
       QMessageBox msg_box_;
       msg_box_.setText("Срок должен быть не больше 50 лет (600 месяцев).");

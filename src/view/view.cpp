@@ -15,8 +15,8 @@ view::view(QWidget *parent)
 
   QScreen *screen = QGuiApplication::primaryScreen();
   QRect screenGeometry = screen->geometry();
-  int x = (screenGeometry.width() - 480) / 2;
-  int y = (screenGeometry.height() - 380) / 2;
+  const int x = (screenGeometry.width() - 480) / 2;
+  const int y = (screenGeometry.height() - 380) / 2;
   move(x, y);
 
   connect(ui->lnFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
@@ -209,10 +209,10 @@ void view::on_delElem_clicked() noexcept {
   GetInfo();
   if (str_.back() == '.') is_dot_ = false;
   if (size_ != 0) {
-    char m_five = str_[str_.size() - 5];
-    char m_four = str_[str_.size() - 4];
-    char m_three = str_[str_.size() - 3];
-    char m_two = str_[str_.size() - 2];
+    const char m_five = str_[str_.size() - 5];
+    const char m_four = str_[str_.size() - 4];
+    const char m_three = str_[str_.size() - 3];
+    const char m_two = str_[str_.size() - 2];
     QString text = ui->input->text();
     if (str_.back() == '(' && (m_five == 'a' || m_five == 's'))
         text.chop(5);
@@ -284,8 +284,8 @@ void view::on_resultFunc_clicked() noexcept {
             }
         } else {
             if (!graph_open_) {
-                int xPos = this->geometry().x();
-                int yPos = this->geometry().y();
+                const int xPos = this->geometry().x();
+                const int yPos = this->geometry().y();
                 this->setFixedSize(960, 380);
                 ui->showGraph->setText("<");
                 setGeometry(xPos, yPos, width() + 480, height());
@@ -299,8 +299,8 @@ void view::on_resultFunc_clicked() noexcept {
 }
 
 void view::on_showGraph_clicked() noexcept {
-  int xPos = this->geometry().x();
-  int yPos = this->geometry().y();
+  const int xPos = this->geometry().x();
+  const int yPos = this->geometry().y();
   if (!graph_open_) {
     this->setFixedSize(960, 380);
     ui->showGraph->setText("<");
@@ -321,8 +321,8 @@ void view::PrintGraph() noexcept {
     ui->functionGraph->xAxis->setRange(ui->xMinCord->text().toDouble(), ui->xMaxCord->text().toDouble());
     ui->functionGraph->yAxis->setRange(ui->yMinCord->text().toDouble(), ui->yMaxCord->text().toDouble());
     QVector<double> xCord, yCord;
-    double xBegin = ui->xStart->text().toDouble();
-    double xEnd = ui->xEnd->text().toDouble() + 0.01;
+    const double xBegin = ui->xStart->text().toDouble();
+    const double xEnd = ui->xEnd->text().toDouble() + 0.01;
     double X = xBegin;
     calc_.GraphStart(str_ + "=");
     while (X <= xEnd) {

@@ -242,7 +242,7 @@ void deposit::on_showResult_clicked() noexcept {
     ui->resultProfit->clear();
     ui->resultPercent->clear();
 
-    int time_ = ui->time->text().toInt();
+    const int time_ = ui->time->text().toInt();
     CheckTypes();
     if (time_type_ == 1) last_date_ = QDate::currentDate().addDays(time_);
     else if (time_type_ == 2) last_date_ = QDate::currentDate().addMonths(time_);
