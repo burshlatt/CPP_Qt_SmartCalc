@@ -321,9 +321,8 @@ void view::PrintGraph() noexcept {
     ui->functionGraph->xAxis->setRange(ui->xMinCord->text().toDouble(), ui->xMaxCord->text().toDouble());
     ui->functionGraph->yAxis->setRange(ui->yMinCord->text().toDouble(), ui->yMaxCord->text().toDouble());
     QVector<double> xCord, yCord;
-    const double xBegin = ui->xStart->text().toDouble();
+    double X = ui->xStart->text().toDouble();
     const double xEnd = ui->xEnd->text().toDouble() + 0.01;
-    double X = xBegin;
     calc_.GraphStart(str_ + "=");
     while (X <= xEnd) {
         xCord.push_back(X);
