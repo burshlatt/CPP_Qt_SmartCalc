@@ -323,12 +323,12 @@ void View::PrintGraph() noexcept {
                               ui_->yMaxCord->text().toDouble());
   QVector<double> xCord, yCord;
   double X = ui_->xStart->text().toDouble();
-  const double xEnd = ui_->xEnd->text().toDouble() + 0.01;
+  const double xEnd = ui_->xEnd->text().toDouble() + 0.1;
   calc_.GraphStart(str_ + "=");
   while (X <= xEnd) {
     xCord.push_back(X);
     yCord.push_back(calc_.Graph(X));
-    X += 0.01;
+    X += 0.1;
   }
   calc_.GraphEnd();
   ui_->Graph->addGraph();
