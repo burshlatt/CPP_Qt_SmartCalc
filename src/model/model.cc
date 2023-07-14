@@ -1,10 +1,11 @@
 #include "model.h"
 
+namespace s21 {
 /*
   ============================ CALCULATOR ACCESSORS ===========================
 */
-double s21::model::get_res() const noexcept { return result_; }
-bool s21::model::get_error() const noexcept { return is_error_; }
+double Model::get_res() const noexcept { return result_; }
+bool Model::get_error() const noexcept { return is_error_; }
 /*
   ============================ CALCULATOR ACCESSORS ===========================
 */
@@ -12,8 +13,8 @@ bool s21::model::get_error() const noexcept { return is_error_; }
 /*
   ======================== CREDIT && DEPOSIT ACCESSORS ========================
 */
-std::vector<double> s21::model::get_cred() const noexcept { return cred_arr_; }
-std::array<double, 4> s21::model::get_depos() const noexcept { return depos_arr_; }
+std::vector<double> Model::get_cred() const noexcept { return cred_arr_; }
+std::array<double, 4> Model::get_depos() const noexcept { return depos_arr_; }
 /*
   ======================== CREDIT && DEPOSIT ACCESSORS ========================
 */
@@ -21,8 +22,8 @@ std::array<double, 4> s21::model::get_depos() const noexcept { return depos_arr_
 /*
   ============================ CALCULATOR MUTATORS ============================
 */
-void s21::model::set_x(const double &num) noexcept { x_value_ = num; }
-void s21::model::set_rad(const bool &graph) noexcept { is_rad_ = graph; }
+void Model::set_x(const double &num) noexcept { x_value_ = num; }
+void Model::set_rad(const bool &graph) noexcept { is_rad_ = graph; }
 /*
   ============================ CALCULATOR MUTATORS ============================
 */
@@ -30,12 +31,12 @@ void s21::model::set_rad(const bool &graph) noexcept { is_rad_ = graph; }
 /*
   ========================= CREDIT && DEPOSIT MUTATORS ========================
 */
-void s21::model::set_sum(const double &sum) noexcept { sum_ = sum; }
-void s21::model::set_tax(const double &tax) noexcept { tax_ = tax; }
-void s21::model::set_cap(const bool &cap) noexcept { is_cap_ = cap; }
-void s21::model::set_term(const double &term) noexcept { term_ = term; }
-void s21::model::set_period(const double &period) noexcept { period_ = period; }
-void s21::model::set_percent(const double &percent) noexcept { percent_ = percent; }
+void Model::set_sum(const double &sum) noexcept { sum_ = sum; }
+void Model::set_tax(const double &tax) noexcept { tax_ = tax; }
+void Model::set_cap(const bool &cap) noexcept { is_cap_ = cap; }
+void Model::set_term(const double &term) noexcept { term_ = term; }
+void Model::set_period(const double &period) noexcept { period_ = period; }
+void Model::set_percent(const double &percent) noexcept { percent_ = percent; }
 /*
   ========================= CREDIT && DEPOSIT MUTATORS ========================
 */
@@ -43,19 +44,19 @@ void s21::model::set_percent(const double &percent) noexcept { percent_ = percen
 /*
   ============================ C A L C U L A T O R ============================
 */
-void s21::model::GetNums(double &x) noexcept {
+void Model::GetNums(double &x) noexcept {
   x = num_buffer_.top();
   num_buffer_.pop();
 }
 
-void s21::model::GetNums(double &x, double &y) noexcept {
+void Model::GetNums(double &x, double &y) noexcept {
   x = num_buffer_.top();
   num_buffer_.pop();
   y = num_buffer_.top();
   num_buffer_.pop();
 }
 
-void s21::model::GetNums() noexcept {
+void Model::GetNums() noexcept {
   if (option_ == 1) {
     GetNums(x_);
   } else if (option_ == 2) {
@@ -70,31 +71,34 @@ void s21::model::GetNums() noexcept {
   }
 }
 
-void s21::model::InsertNumOutput(size_t &index) noexcept {
+void Model::InsertNumOutput(size_t &index) noexcept {
   if (isdigit(str_[index]) || str_[index] == 'x' || str_[index] == 'P') {
     int i = 0;
     bool is_negative_ = false;
     char char_str_[255] = {'\0'};
     if (str_[index - 1] == '-' && str_[index - 2] == '(') is_negative_ = true;
-    while (isdigit(str_[index]) || str_[index] == '.' || str_[index] == 'x' 
-    || str_[index] == 'P' || str_[index] == 'i') {
+    while (isdigit(str_[index]) || str_[index] == '.' || str_[index] == 'x' ||
+           str_[index] == 'P' || str_[index] == 'i') {
       char_str_[i++] = str_[index++];
     }
-    output_[pos_++] = is_negative_ ? std::string(char_str_) + "-" : std::string(char_str_);
+    output_[pos_++] =
+        is_negative_ ? std::string(char_str_) + "-" : std::string(char_str_);
   }
 }
 
-void s21::model::PushLogic(const std::string &str) noexcept {
+void Model::PushLogic(const std::string &str) noexcept {
   if (str == "mod" || str == "*" || str == "/") {
-    while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*" 
-    || stack_.top() == "/" || stack_.top() == "^" || stack_.top() == "!")) {
+    while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*" ||
+                               stack_.top() == "/" || stack_.top() == "^" ||
+                               stack_.top() == "!")) {
       output_[pos_++] = stack_.top();
       stack_.pop();
     }
   } else if (str == "+" || str == "-") {
-    while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*" 
-    || stack_.top() == "/" || stack_.top() == "+" || stack_.top() == "-" 
-    || stack_.top() == "^" || stack_.top() == "!")) {
+    while (!stack_.empty() &&
+           (stack_.top() == "mod" || stack_.top() == "*" ||
+            stack_.top() == "/" || stack_.top() == "+" || stack_.top() == "-" ||
+            stack_.top() == "^" || stack_.top() == "!")) {
       output_[pos_++] = stack_.top();
       stack_.pop();
     }
@@ -102,16 +106,14 @@ void s21::model::PushLogic(const std::string &str) noexcept {
   stack_.push(str);
 }
 
-void s21::model::PushFunctions(size_t &index) noexcept {
+void Model::PushFunctions(size_t &index) noexcept {
   if (option_ == 1) {
     if (str_[index] == '^') {
       stack_.push("^");
     } else {
       char buffer_[255] = {'\0'};
-      for (size_t i = 0; str_[index] != '('; i++)
-        buffer_[i] = str_[index++];
-      if (std::string(buffer_).size())
-        stack_.push(std::string(buffer_));
+      for (size_t i = 0; str_[index] != '('; i++) buffer_[i] = str_[index++];
+      if (std::string(buffer_).size()) stack_.push(std::string(buffer_));
       stack_.push("(");
     }
   } else if (option_ == 2) {
@@ -125,8 +127,8 @@ void s21::model::PushFunctions(size_t &index) noexcept {
     } else if (str_[index] == '+') {
       PushLogic("+");
     } else if (str_[index] == '-') {
-      if (str_[index - 1] == '(' && !isdigit(str_[index + 1])
-       && str_[index + 1] != 'P' && str_[index + 1] != 'x')
+      if (str_[index - 1] == '(' && !isdigit(str_[index + 1]) &&
+          str_[index + 1] != 'P' && str_[index + 1] != 'x')
         PushLogic("!");
       else if (str_[index - 1] != '(')
         PushLogic("-");
@@ -134,7 +136,7 @@ void s21::model::PushFunctions(size_t &index) noexcept {
   }
 }
 
-void s21::model::PopFunctions() noexcept {
+void Model::PopFunctions() noexcept {
   if (option_ == 1) {
     while (!stack_.empty() && stack_.top() != "(") {
       output_[pos_++] = stack_.top();
@@ -163,24 +165,24 @@ void s21::model::PopFunctions() noexcept {
   }
 }
 
-bool s21::model::ConvertNums(const size_t &i) noexcept {
+bool Model::ConvertNums(const size_t &i) noexcept {
   double num_ = 0.0;
-  if (isdigit(output_[i].front()) || output_[i].front() == 'x' || output_[i].front() == 'P') {
+  if (isdigit(output_[i].front()) || output_[i].front() == 'x' ||
+      output_[i].front() == 'P') {
     if (output_[i].front() == 'x')
       num_ = x_value_;
     else if (output_[i].front() == 'P')
       num_ = M_PI;
     else
       num_ = atof(output_[i].c_str());
-    if (output_[i].back() == '-')
-      num_ = -num_;
+    if (output_[i].back() == '-') num_ = -num_;
     num_buffer_.push(num_);
     return true;
   }
   return false;
 }
 
-void s21::model::Notation(const std::string &str) noexcept {
+void Model::Notation(const std::string &str) noexcept {
   str_ = str;
   for (size_t i = 0; i < str_.size() && !is_error_; i++) {
     InsertNumOutput(i);
@@ -215,7 +217,7 @@ void s21::model::Notation(const std::string &str) noexcept {
   }
 }
 
-void s21::model::DoCalculations() noexcept {
+void Model::DoCalculations() noexcept {
   if (func_ == "+")
     num_buffer_.push(y_ + x_);
   else if (func_ == "-")
@@ -250,7 +252,7 @@ void s21::model::DoCalculations() noexcept {
     num_buffer_.push(fmod(y_, x_));
 }
 
-void s21::model::Calculations() noexcept {
+void Model::Calculations() noexcept {
   for (int i = 0; i < pos_; i++) {
     if (!ConvertNums(i)) {
       switch (output_[i].front()) {
@@ -284,9 +286,7 @@ void s21::model::Calculations() noexcept {
   num_buffer_.pop();
 }
 
-void s21::model::ClearOutput() noexcept {
-  pos_ = 0;
-}
+void Model::ClearOutput() noexcept { pos_ = 0; }
 
 /*
   ============================ C A L C U L A T O R ============================
@@ -296,28 +296,32 @@ void s21::model::ClearOutput() noexcept {
   ===================== C R E D I T - C A L C U L A T O R =====================
 */
 
-void s21::model::AnnuCred() noexcept {
+void Model::AnnuCred() noexcept {
   cred_arr_.clear();
-  cred_arr_.push_back(sum_ * (percent_ / (100 * percent_)) / (1 - pow(1 + (percent_ / (100 * percent_)), -term_))); // MONTH PAY
-  cred_arr_.push_back(cred_arr_.back() * term_ - sum_); // OVERPAY
-  cred_arr_.push_back(sum_ + cred_arr_.back()); // RESULT SUM
+  cred_arr_.push_back(
+      std::round(sum_ *
+                 (((percent_ / (term_ * 100)) *
+                   pow(1 + (percent_ / (term_ * 100)), term_)) /
+                  (pow(1 + (percent_ / (term_ * 100)), term_) - 1)) *
+                 100) /
+      100);                                              // MONTH PAY
+  cred_arr_.push_back(cred_arr_.back() * term_ - sum_);  // OVERPAY
+  cred_arr_.push_back(sum_ + cred_arr_.back());          // RESULT SUM
 }
 
-void s21::model::DifferCred() noexcept {
+void Model::DifferCred() noexcept {
   cred_arr_.clear();
-  const double credit_body_ = sum_ / term_;
-  cred_arr_.push_back((sum_ * (percent_ / 100) * QDate::currentDate().daysInMonth()) / 365); // OVERPAY
-  cred_arr_.push_back(cred_arr_.back() + credit_body_); // FIRST PAYMENT
   double sum_copy_ = sum_;
-  double percent_month_ = 0.0;
-  for (int i = 0; i < term_ - 1; i++) {
-    sum_copy_ -= credit_body_;
-    percent_month_ = (sum_copy_ * (percent_ / 100) * QDate::currentDate().daysInMonth()) / 365;
-    cred_arr_[0] += percent_month_; // OVERPAY
-    cred_arr_.push_back(credit_body_ + percent_month_); // PAYMENTS
+  double term_copy_ = term_;
+  cred_arr_.push_back(0);  // RESULT SUM
+  while (term_copy_ != 0) {
+    cred_arr_.push_back((sum_ / term_) +
+                        (sum_copy_ * percent_ / (term_ * 100)));  // PAYMENTS
+    cred_arr_[0] += cred_arr_.back();
+    sum_copy_ -= (sum_ / term_);
+    term_copy_--;
   }
-  cred_arr_.push_back(sum_ + cred_arr_[0]); // RESULT SUM
-  cred_arr_.push_back(percent_month_ + credit_body_); // LAST PAYMENT
+  cred_arr_.push_back(cred_arr_[0] - sum_);  // OVERPAY
 }
 
 /*
@@ -328,7 +332,7 @@ void s21::model::DifferCred() noexcept {
   ==================== D E P O S I T - C A L C U L A T O R ====================
 */
 
-double s21::model::AddSum(const double &sum, const int &time) const noexcept {
+double Model::AddSum(const double &sum, const int &time) const noexcept {
   double sum_result_ = 0.0;
   for (int i = 0; i < time; i++) {
     sum_result_ += sum;
@@ -336,7 +340,7 @@ double s21::model::AddSum(const double &sum, const int &time) const noexcept {
   return sum_result_;
 }
 
-int s21::model::FormatTime() noexcept {
+int Model::FormatTime() noexcept {
   int time_ = 0;
   if (!is_cap_) {
     if (period_ == 1 || period_ == 7) {
@@ -358,34 +362,43 @@ int s21::model::FormatTime() noexcept {
       term_ = floor(term_ / 365);
     }
   } else {
-    if (period_ == 1) time_ = 365;
-    else if (period_ == 2) time_ = 52;
-    else if (period_ == 3) time_ = 12;
-    else if (period_ == 4) time_ = 4;
-    else if (period_ == 5) time_ = 2;
-    else if (period_ == 6 || period_ == 7) time_ = 1;
+    if (period_ == 1)
+      time_ = 365;
+    else if (period_ == 2)
+      time_ = 52;
+    else if (period_ == 3)
+      time_ = 12;
+    else if (period_ == 4)
+      time_ = 4;
+    else if (period_ == 5)
+      time_ = 2;
+    else if (period_ == 6 || period_ == 7)
+      time_ = 1;
   }
   return time_;
 }
 
-void s21::model::Deposit() noexcept {
+void Model::Deposit() noexcept {
   const int format_time_ = FormatTime();
   if (!is_cap_) {
-    depos_arr_[0] = sum_; // RESULT SUM
-    depos_arr_[1] = (sum_ * (percent_ / 100) / format_time_) * term_; // RESULT PERCENT
+    depos_arr_[0] = sum_;  // RESULT SUM
+    depos_arr_[1] =
+        (sum_ * (percent_ / 100) / format_time_) * term_;  // RESULT PERCENT
   } else {
-    depos_arr_[0] = sum_ * pow(1 + (percent_ / 100) / format_time_, term_ / 365 * format_time_);  // RESULT SUM
-    depos_arr_[1] = depos_arr_[0] - sum_; // RESULT PERCENT
+    depos_arr_[0] = sum_ * pow(1 + (percent_ / 100) / format_time_,
+                               term_ / 365 * format_time_);  // RESULT SUM
+    depos_arr_[1] = depos_arr_[0] - sum_;                    // RESULT PERCENT
   }
-  depos_arr_[2] = depos_arr_[1] - 1000000 * (7.5 / 100); // TAX RATE
+  depos_arr_[2] = depos_arr_[1] - 1000000 * (7.5 / 100);  // TAX RATE
   if (depos_arr_[2] > 0) {
-    depos_arr_[2] *= tax_ / 100; // TAX RATE
+    depos_arr_[2] *= tax_ / 100;  // TAX RATE
   } else {
-    depos_arr_[2] = 0; // TAX RATE
+    depos_arr_[2] = 0;  // TAX RATE
   }
-  depos_arr_[3] = depos_arr_[1] - depos_arr_[2]; // RESULT SUM WITH TAX
+  depos_arr_[3] = depos_arr_[1] - depos_arr_[2];  // RESULT SUM WITH TAX
 }
 
 /*
   ==================== D E P O S I T - C A L C U L A T O R ====================
 */
+}  // namespace s21

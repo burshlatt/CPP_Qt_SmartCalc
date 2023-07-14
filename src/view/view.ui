@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>view</class>
- <widget class="QMainWindow" name="view">
+ <class>View</class>
+ <widget class="QMainWindow" name="View">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -35,7 +35,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>SmartCalc (by Burshlat)</string>
+   <string>SmartCalc (by Stephank)</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QMainWindow {
@@ -1170,19 +1170,6 @@ QPushButton:pressed {
      <string>Deposit Calc</string>
     </property>
    </widget>
-   <widget class="QCustomPlot" name="functionGraph" native="true">
-    <property name="geometry">
-     <rect>
-      <x>480</x>
-      <y>0</y>
-      <width>480</width>
-      <height>290</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="xMinCord">
     <property name="geometry">
      <rect>
@@ -1253,24 +1240,6 @@ QPushButton:pressed {
     </property>
     <property name="text">
      <string>5</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="xValue">
-    <property name="geometry">
-     <rect>
-      <x>690</x>
-      <y>300</y>
-      <width>90</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>17</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>0</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton">
@@ -1502,24 +1471,6 @@ color: black;
      <string>X end:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_7">
-    <property name="geometry">
-     <rect>
-      <x>640</x>
-      <y>300</y>
-      <width>50</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QLabel {
-color: black;
-}</string>
-    </property>
-    <property name="text">
-     <string>X value:</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="rad">
     <property name="geometry">
      <rect>
@@ -1597,13 +1548,23 @@ background-color : gray;
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QCustomPlot" name="Graph" native="true">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>0</y>
+      <width>480</width>
+      <height>310</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
  </widget>
  <customwidgets>
   <customwidget>
    <class>QCustomPlot</class>
    <extends>QWidget</extends>
-   <header>qcustomplot.h</header>
+   <header>QCustomPlot/qcustomplot.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

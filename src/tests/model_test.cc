@@ -54,25 +54,28 @@ void s21::model::InsertNumOutput(size_t &index) noexcept {
     bool is_negative_ = false;
     char char_str_[255] = {'\0'};
     if (str_[index - 1] == '-' && str_[index - 2] == '(') is_negative_ = true;
-    while (isdigit(str_[index]) || str_[index] == '.' || str_[index] == 'x' 
-    || str_[index] == 'P' || str_[index] == 'i') {
+    while (isdigit(str_[index]) || str_[index] == '.' || str_[index] == 'x' ||
+           str_[index] == 'P' || str_[index] == 'i') {
       char_str_[i++] = str_[index++];
     }
-    output_[pos_++] = is_negative_ ? std::string(char_str_) + "-" : std::string(char_str_);
+    output_[pos_++] =
+        is_negative_ ? std::string(char_str_) + "-" : std::string(char_str_);
   }
 }
 
 void s21::model::PushLogic(const std::string &str) noexcept {
   if (str == "mod" || str == "*" || str == "/") {
-    while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*" 
-    || stack_.top() == "/" || stack_.top() == "^" || stack_.top() == "!")) {
+    while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*" ||
+                               stack_.top() == "/" || stack_.top() == "^" ||
+                               stack_.top() == "!")) {
       output_[pos_++] = stack_.top();
       stack_.pop();
     }
   } else if (str == "+" || str == "-") {
-    while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*" 
-    || stack_.top() == "/" || stack_.top() == "+" || stack_.top() == "-" 
-    || stack_.top() == "^" || stack_.top() == "!")) {
+    while (!stack_.empty() &&
+           (stack_.top() == "mod" || stack_.top() == "*" ||
+            stack_.top() == "/" || stack_.top() == "+" || stack_.top() == "-" ||
+            stack_.top() == "^" || stack_.top() == "!")) {
       output_[pos_++] = stack_.top();
       stack_.pop();
     }
@@ -86,10 +89,8 @@ void s21::model::PushFunctions(size_t &index) noexcept {
       stack_.push("^");
     } else {
       char buffer_[255] = {'\0'};
-      for (size_t i = 0; str_[index] != '('; i++)
-        buffer_[i] = str_[index++];
-      if (std::string(buffer_).size())
-        stack_.push(std::string(buffer_));
+      for (size_t i = 0; str_[index] != '('; i++) buffer_[i] = str_[index++];
+      if (std::string(buffer_).size()) stack_.push(std::string(buffer_));
       stack_.push("(");
     }
   } else if (option_ == 2) {
@@ -103,8 +104,8 @@ void s21::model::PushFunctions(size_t &index) noexcept {
     } else if (str_[index] == '+') {
       PushLogic("+");
     } else if (str_[index] == '-') {
-      if (str_[index - 1] == '(' && !isdigit(str_[index + 1])
-       && str_[index + 1] != 'P' && str_[index + 1] != 'x')
+      if (str_[index - 1] == '(' && !isdigit(str_[index + 1]) &&
+          str_[index + 1] != 'P' && str_[index + 1] != 'x')
         PushLogic("!");
       else if (str_[index - 1] != '(')
         PushLogic("-");
@@ -143,15 +144,15 @@ void s21::model::PopFunctions() noexcept {
 
 bool s21::model::ConvertNums(const size_t &i) noexcept {
   double num_ = 0.0;
-  if (isdigit(output_[i].front()) || output_[i].front() == 'x' || output_[i].front() == 'P') {
+  if (isdigit(output_[i].front()) || output_[i].front() == 'x' ||
+      output_[i].front() == 'P') {
     if (output_[i].front() == 'x')
       num_ = x_value_;
     else if (output_[i].front() == 'P')
       num_ = M_PI;
     else
       num_ = atof(output_[i].c_str());
-    if (output_[i].back() == '-')
-      num_ = -num_;
+    if (output_[i].back() == '-') num_ = -num_;
     num_buffer_.push(num_);
     return true;
   }
@@ -262,9 +263,7 @@ void s21::model::Calculations() noexcept {
   num_buffer_.pop();
 }
 
-void s21::model::ClearOutput() noexcept {
-  pos_ = 0;
-}
+void s21::model::ClearOutput() noexcept { pos_ = 0; }
 
 /*
   ============================ C A L C U L A T O R ============================

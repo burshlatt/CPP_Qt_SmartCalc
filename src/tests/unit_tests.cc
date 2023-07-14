@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+
 #include "model_test.h"
 
 TEST(SmartCalc, simple_operations) {

@@ -1,36 +1,40 @@
 #ifndef CREDITWINDOW_H
 #define CREDITWINDOW_H
 
+#include <QDateEdit>
+#include <QMessageBox>
+#include <QVBoxLayout>
+
 #include "../controller/controller.h"
 
 namespace Ui {
-class credit;
+class Credit;
 }
 
-class credit : public QDialog {
+class Credit : public QDialog {
   Q_OBJECT
 
-public:
-  explicit credit(QWidget *parent = nullptr);
-  ~credit();
+ public:
+  explicit Credit(QWidget *parent = nullptr);
+  ~Credit();
 
-private slots:
+ private slots:
   void DelRow() noexcept;
   bool DataIsCorrect() noexcept;
   void on_showResult_clicked() noexcept;
   void on_calculator_clicked() noexcept;
   void keyPressEvent(QKeyEvent *event) override;
-  void AddRow(const int &term, const QVector<QString> &res_arr, const bool &is_annu) noexcept;
+  void AddRow(const int &term, const QVector<QString> &res_arr,
+              const bool &is_annu) noexcept;
 
-
-signals:
+ signals:
   void firstWindow();
 
-private:
+ private:
   int count_ = 0;
-  Ui::credit *ui;
-  QVBoxLayout *addVbox;
-  s21::controller calc_;
+  Ui::Credit *ui_;
+  QVBoxLayout *addVbox_;
+  s21::Controller calc_;
 };
 
-#endif // CREDITWINDOW_H
+#endif  // CREDITWINDOW_H
