@@ -37,14 +37,14 @@ clean:
 	cd ./tests && rm -rf unit_tests
 	@echo -------------------- SUCCESS --------------------
 	
-#	== ОТКРЫТИЕ README ПРОЕКТА ==
+#	== ОТКРЫТЬ ИНФОРМАЦИЮ О ПРОЕКТЕ ==
 .PHONY: dvi
 dvi:
 	@echo --------------------- OPEN ----------------------
 	open info.html
 	@echo -------------------- SUCCESS --------------------
 
-#	== СОЗДАНИЕ АРХИВА ПРОЕКТА ==
+#	== СОЗДАТЬ АРХИВ С ПРОЕКТОМ ==
 .PHONY: dist
 dist:
 	@echo --------------------- START ---------------------
@@ -57,13 +57,4 @@ test:
 	@echo --------------------- START ---------------------
 	cd ./tests/ && $(CC) $(FLAGS) unit_tests.cc model_test.cc -o unit_tests $(TEST_FLAGS)
 	cd ./tests/ && ./unit_tests
-	@echo -------------------- SUCCESS --------------------
-
-#   === СТИЛЬ ===
-.PHONY: style
-style:
-	@echo --------------------- STYLE ---------------------
-	cp ../materials/linters/.clang-format ./
-	clang-format -n */*.cc */*.h
-	rm -rf .clang-format
 	@echo -------------------- SUCCESS --------------------
