@@ -18,7 +18,9 @@ install:
 #	== ЗАПУСК ПРОГРАММЫ ==
 .PHONY: open
 open:
+	@echo --------------------- OPEN ----------------------
 	cd build && open SmartCalc.app
+	@echo -------------------- SUCCESS --------------------
 	
 #	== УДАЛЕНИЕ ПРОГРАММЫ ==
 .PHONY: uninstall
@@ -38,7 +40,9 @@ clean:
 #	== ОТКРЫТИЕ README ПРОЕКТА ==
 .PHONY: dvi
 dvi:
+	@echo --------------------- OPEN ----------------------
 	open readme.html
+	@echo -------------------- SUCCESS --------------------
 
 #	== СОЗДАНИЕ АРХИВА ПРОЕКТА ==
 .PHONY: dist
