@@ -41,7 +41,7 @@ clean:
 .PHONY: dvi
 dvi:
 	@echo --------------------- OPEN ----------------------
-	open readme.html
+	open info.html
 	@echo -------------------- SUCCESS --------------------
 
 #	== СОЗДАНИЕ АРХИВА ПРОЕКТА ==
