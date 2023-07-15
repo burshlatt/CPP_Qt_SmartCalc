@@ -78,6 +78,38 @@ void Controller::set_tax(const QString &tax) noexcept {
 void Controller::set_percent(const QString &percent) noexcept {
   model_.set_percent(percent.toDouble());
 }
+
+void Controller::set_add(const QVector<QString> &add) noexcept {
+  std::vector<double> buffer_;
+  for (qsizetype i = 0; i < add.size(); i++) {
+    buffer_.push_back(add[i].toDouble());
+  }
+  model_.set_add(buffer_);
+}
+
+void Controller::set_waste(const QVector<QString> &waste) noexcept {
+  std::vector<double> buffer_;
+  for (qsizetype i = 0; i < waste.size(); i++) {
+    buffer_.push_back(waste[i].toDouble());
+  }
+  model_.set_waste(buffer_);
+}
+
+void Controller::set_add_days(const std::vector<int> &days) noexcept {
+  model_.set_add_days(days);
+}
+
+void Controller::set_waste_days(const std::vector<int> &days) noexcept {
+  model_.set_waste_days(days);
+}
+
+void Controller::set_period_add(const std::vector<int> &period) noexcept {
+  model_.set_period_add(period);
+}
+
+void Controller::set_period_waste(const std::vector<int> &period) noexcept {
+  model_.set_period_waste(period);
+}
 /*
   ============================== M U T A T O R S ==============================
 */
@@ -129,10 +161,6 @@ QVector<QString> Controller::DifferCred() noexcept {
     format_result_.push_back(QString::number(result_[i], 'f', 2));
   }
   return format_result_;
-}
-
-double Controller::AddSum(const double &sum, const int &time) const noexcept {
-  return model_.AddSum(sum, time);
 }
 /*
   ===================== C R E D I T - C A L C U L A T O R =====================

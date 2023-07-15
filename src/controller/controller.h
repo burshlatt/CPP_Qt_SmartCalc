@@ -23,6 +23,12 @@ class Controller {
   void set_term(const double &term) noexcept;
   void set_period(const int &period) noexcept;
   void set_percent(const QString &percent) noexcept;
+  void set_add(const QVector<QString> &add) noexcept;
+  void set_waste(const QVector<QString> &waste) noexcept;
+  void set_add_days(const std::vector<int> &count) noexcept;
+  void set_waste_days(const std::vector<int> &count) noexcept;
+  void set_period_add(const std::vector<int> &period) noexcept;
+  void set_period_waste(const std::vector<int> &period) noexcept;
 
   bool IsError() noexcept;
   bool IsInteger(const double &res) noexcept;
@@ -35,7 +41,6 @@ class Controller {
   void GraphStart(const std::string &str) noexcept;
 
   double Graph(const double &x) noexcept;
-  double AddSum(const double &sum, const int &time) const noexcept;
 
   QVector<QString> Deposit() noexcept;
   QVector<QString> AnnuCred() noexcept;

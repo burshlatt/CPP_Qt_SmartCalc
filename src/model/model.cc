@@ -37,6 +37,22 @@ void Model::set_cap(const bool &cap) noexcept { is_cap_ = cap; }
 void Model::set_term(const double &term) noexcept { term_ = term; }
 void Model::set_period(const double &period) noexcept { period_ = period; }
 void Model::set_percent(const double &percent) noexcept { percent_ = percent; }
+void Model::set_add(const std::vector<double> &add) noexcept { add_sum_ = add; }
+void Model::set_waste(const std::vector<double> &waste) noexcept {
+  waste_sum_ = waste;
+}
+void Model::set_add_days(const std::vector<int> &days) noexcept {
+  add_count_ = days;
+}
+void Model::set_waste_days(const std::vector<int> &days) noexcept {
+  waste_count_ = days;
+}
+void Model::set_period_add(const std::vector<int> &period) noexcept {
+  add_period_ = period;
+}
+void Model::set_period_waste(const std::vector<int> &period) noexcept {
+  waste_period_ = period;
+}
 /*
   ========================= CREDIT && DEPOSIT MUTATORS ========================
 */
@@ -332,70 +348,92 @@ void Model::DifferCred() noexcept {
   ==================== D E P O S I T - C A L C U L A T O R ====================
 */
 
-double Model::AddSum(const double &sum, const int &time) const noexcept {
-  double sum_result_ = 0.0;
-  for (int i = 0; i < time; i++) {
-    sum_result_ += sum;
-  }
-  return sum_result_;
+int Model::FormatTime() const noexcept {
+  if (period_ == 1)
+    return 1;
+  else if (period_ == 2)
+    return 7;
+  else if (period_ == 3)
+    return 30;
+  else if (period_ == 4)
+    return 91;
+  else if (period_ == 5)
+    return 183;
+  else if (period_ == 6)
+    return 365;
+  else if (period_ == 7)
+    return term_;
+  return 0;
 }
 
-int Model::FormatTime() noexcept {
-  int time_ = 0;
-  if (!is_cap_) {
-    if (period_ == 1 || period_ == 7) {
-      time_ = 365;
-    } else if (period_ == 2) {
-      time_ = 52;
-      term_ = floor(term_ / 7);
-    } else if (period_ == 3) {
-      time_ = 12;
-      term_ = floor(term_ / 30.5);
-    } else if (period_ == 4) {
-      time_ = 4;
-      term_ = floor(term_ / 91.25);
-    } else if (period_ == 5) {
-      time_ = 2;
-      term_ = floor(term_ / 182.5);
-    } else if (period_ == 6) {
-      time_ = 1;
-      term_ = floor(term_ / 365);
-    }
-  } else {
-    if (period_ == 1)
-      time_ = 365;
-    else if (period_ == 2)
-      time_ = 52;
-    else if (period_ == 3)
-      time_ = 12;
-    else if (period_ == 4)
-      time_ = 4;
-    else if (period_ == 5)
-      time_ = 2;
-    else if (period_ == 6 || period_ == 7)
-      time_ = 1;
-  }
-  return time_;
+int Model::FormatTimeAdd(const int &period) const noexcept {
+  if (period == 1)
+    return term_;
+  else if (period == 2)
+    return 30;
+  else if (period == 3)
+    return 60;
+  else if (period == 4)
+    return 91;
+  else if (period == 5)
+    return 183;
+  else if (period == 6)
+    return 365;
+  return 0;
+}
+
+int Model::FormatTimeWaste(const int &period) const noexcept {
+  if (period == 1)
+    return term_;
+  else if (period == 2)
+    return 30;
+  else if (period == 3)
+    return 60;
+  else if (period == 4)
+    return 91;
+  else if (period == 5)
+    return 183;
+  else if (period == 6)
+    return 365;
+  return 0;
 }
 
 void Model::Deposit() noexcept {
-  const int format_time_ = FormatTime();
-  if (!is_cap_) {
-    depos_arr_[0] = sum_;  // RESULT SUM
-    depos_arr_[1] =
-        (sum_ * (percent_ / 100) / format_time_) * term_;  // RESULT PERCENT
-  } else {
-    depos_arr_[0] = sum_ * pow(1 + (percent_ / 100) / format_time_,
-                               term_ / 365 * format_time_);  // RESULT SUM
-    depos_arr_[1] = depos_arr_[0] - sum_;                    // RESULT PERCENT
+  double total_ = sum_;
+  int payments_time_ = FormatTime();
+  double interest = 0.0;
+  percent_ = (percent_ / 365) / 100;
+  for (int i = 1; i <= term_; i++) {
+    if (is_cap_) {
+      interest += total_ * percent_;
+      if (i % payments_time_ == 0 && payments_time_) {
+        total_ += interest;
+        interest = 0.0;
+      }
+    } else {
+      interest += total_ * percent_;
+    }
+    for (size_t j = 0; j < add_count_.size(); j++) {
+      int add_time_ = FormatTimeAdd(add_period_[j]);
+      if (i % add_time_ == 0 && add_time_ && i >= add_count_[j])
+        total_ += add_sum_[j];
+    }
+    for (size_t k = 0; k < waste_count_.size(); k++) {
+      int waste_time_ = FormatTimeWaste(waste_period_[k]);
+      if (i % waste_time_ == 0 && waste_time_ && i >= waste_count_[k])
+        total_ -= waste_sum_[k];
+    }
   }
-  depos_arr_[2] = depos_arr_[1] - 1000000 * (7.5 / 100);  // TAX RATE
-  if (depos_arr_[2] > 0) {
-    depos_arr_[2] *= tax_ / 100;  // TAX RATE
+  if (is_cap_) {
+    depos_arr_[0] = total_ - sum_;  // RESULT PERCENT
   } else {
-    depos_arr_[2] = 0;  // TAX RATE
+    depos_arr_[0] = interest;  // RESULT PERCENT
   }
-  depos_arr_[3] = depos_arr_[1] - depos_arr_[2];  // RESULT SUM WITH TAX
+  depos_arr_[1] = (depos_arr_[0] - 7.5 / 100 * 1000000) > 0
+                      ? (depos_arr_[0] - 7.5 / 100 * 1000000) * 0.13
+                      : 0;                        // TAX RATE
+  depos_arr_[2] = depos_arr_[0] - depos_arr_[1];  // RESULT SUM WITH TAX
+  depos_arr_[3] = total_;                         // RESULT SUM
 }
 
 /*

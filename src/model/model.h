@@ -1,7 +1,6 @@
 #ifndef SRC_MODEL_MODEL_H_
 #define SRC_MODEL_MODEL_H_
 
-#include <QDateEdit>
 #include <array>
 #include <cmath>
 #include <iostream>
@@ -28,16 +27,22 @@ class Model {
   void set_term(const double &term) noexcept;
   void set_period(const double &period) noexcept;
   void set_percent(const double &percent) noexcept;
+  void set_add(const std::vector<double> &add) noexcept;
+  void set_add_days(const std::vector<int> &days) noexcept;
+  void set_waste(const std::vector<double> &waste) noexcept;
+  void set_waste_days(const std::vector<int> &days) noexcept;
+  void set_period_add(const std::vector<int> &period) noexcept;
+  void set_period_waste(const std::vector<int> &period) noexcept;
 
   void Deposit() noexcept;
   void GetNums() noexcept;
   void AnnuCred() noexcept;
-  int FormatTime() noexcept;
   void DifferCred() noexcept;
   void ClearOutput() noexcept;
   void Calculations() noexcept;
   void PopFunctions() noexcept;
   void DoCalculations() noexcept;
+  int FormatTime() const noexcept;
   void GetNums(double &x) noexcept;
   bool ConvertNums(const size_t &i) noexcept;
   void PushFunctions(size_t &index) noexcept;
@@ -45,7 +50,8 @@ class Model {
   void InsertNumOutput(size_t &index) noexcept;
   void Notation(const std::string &str) noexcept;
   void PushLogic(const std::string &str) noexcept;
-  double AddSum(const double &sum, const int &time) const noexcept;
+  int FormatTimeAdd(const int &period) const noexcept;
+  int FormatTimeWaste(const int &period) const noexcept;
 
  private:
   int pos_ = 0;
@@ -63,6 +69,12 @@ class Model {
   double percent_ = 0.0;
   double x_value_ = 0.0;
   double x_ = 0.0, y_ = 0.0;
+  std::vector<int> add_count_;
+  std::vector<int> waste_count_;
+  std::vector<int> add_period_;
+  std::vector<int> waste_period_;
+  std::vector<double> add_sum_;
+  std::vector<double> waste_sum_;
   std::vector<double> cred_arr_;
   std::array<double, 4> depos_arr_;
   std::stack<double> num_buffer_;

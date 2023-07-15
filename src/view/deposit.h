@@ -60,6 +60,13 @@ class Deposit : public QDialog {
   QVBoxLayout *add_box_;
   QVBoxLayout *waste_box_;
 
+  QVector<QString> add_;
+  QVector<QString> waste_;
+  std::vector<int> add_period_;
+  std::vector<int> waste_period_;
+  std::vector<int> add_days_;
+  std::vector<int> waste_days_;
+
   QVector<QDateEdit *> date_edits_add_;
   QVector<QLineEdit *> line_edits_add_;
   QVector<QComboBox *> combo_boxes_add_;
