@@ -33,14 +33,13 @@ class Controller {
   bool IsError() noexcept;
   bool IsInteger(const double &res) noexcept;
   bool IsGraph(const std::string &str) noexcept;
+  bool IsCorrect(const std::string &str) noexcept;
   bool IsCorrectInt(const QString &str) const noexcept;
   bool IsCorrectDec(const QString &str) const noexcept;
-  bool IsCorrect(const std::string &str) noexcept;
 
   void GraphEnd() noexcept;
-  void GraphStart(const std::string &str) noexcept;
-
   double Graph(const double &x) noexcept;
+  void GraphStart(const std::string &str) noexcept;
 
   QVector<QString> Deposit() noexcept;
   QVector<QString> AnnuCred() noexcept;

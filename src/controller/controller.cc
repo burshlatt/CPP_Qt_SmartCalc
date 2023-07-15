@@ -5,27 +5,25 @@ namespace s21 {
   ============================ V A L I D A T O R S ============================
 */
 bool Controller::IsGraph(const std::string &str) noexcept {
-  bool status_ = false;
   for (size_t i = 0; i < str.size(); i++) {
     if (str[i] == 'x') {
-      status_ = true;
+      return true;
     }
   }
-  return status_;
+  return false;
 }
 
 bool Controller::IsCorrect(const std::string &str) noexcept {
-  bool status_ = true;
   if (str.back() != ')' && (str.back() < '0' || str.back() > '9') &&
       str.back() != 'x' && str.back() != 'i')
-    status_ = false;
+    return false;
   int l_bracket = 0, r_bracket = 0;
   for (size_t i = 0; i < str.size(); i++) {
     if (str[i] == '(') l_bracket++;
     if (str[i] == ')') r_bracket++;
   }
-  if (l_bracket != r_bracket) status_ = false;
-  return status_;
+  if (l_bracket != r_bracket) return false;
+  return true;
 }
 
 bool Controller::IsError() noexcept { return model_.get_error(); }
@@ -63,21 +61,15 @@ bool Controller::IsCorrectDec(const QString &str) const noexcept {
 */
 void Controller::set_cap(const bool &cap) noexcept { model_.set_cap(cap); }
 void Controller::set_sum(const double &sum) noexcept { model_.set_sum(sum); }
-void Controller::set_term(const double &term) noexcept {
-  model_.set_term(term);
-}
-void Controller::set_rad(const bool &is_rad) noexcept {
-  model_.set_rad(is_rad);
-}
-void Controller::set_period(const int &period) noexcept {
-  model_.set_period(period);
-}
-void Controller::set_tax(const QString &tax) noexcept {
-  model_.set_tax(tax.toDouble());
-}
-void Controller::set_percent(const QString &percent) noexcept {
-  model_.set_percent(percent.toDouble());
-}
+void Controller::set_term(const double &term) noexcept { model_.set_term(term); }
+void Controller::set_rad(const bool &is_rad) noexcept { model_.set_rad(is_rad); }
+void Controller::set_period(const int &period) noexcept { model_.set_period(period); }
+void Controller::set_tax(const QString &tax) noexcept { model_.set_tax(tax.toDouble()); }
+void Controller::set_add_days(const std::vector<int> &days) noexcept { model_.set_add_days(days); }
+void Controller::set_waste_days(const std::vector<int> &days) noexcept { model_.set_waste_days(days); }
+void Controller::set_percent(const QString &percent) noexcept { model_.set_percent(percent.toDouble()); }
+void Controller::set_period_add(const std::vector<int> &period) noexcept { model_.set_period_add(period); }
+void Controller::set_period_waste(const std::vector<int> &period) noexcept { model_.set_period_waste(period); }
 
 void Controller::set_add(const QVector<QString> &add) noexcept {
   std::vector<double> buffer_;
@@ -93,22 +85,6 @@ void Controller::set_waste(const QVector<QString> &waste) noexcept {
     buffer_.push_back(waste[i].toDouble());
   }
   model_.set_waste(buffer_);
-}
-
-void Controller::set_add_days(const std::vector<int> &days) noexcept {
-  model_.set_add_days(days);
-}
-
-void Controller::set_waste_days(const std::vector<int> &days) noexcept {
-  model_.set_waste_days(days);
-}
-
-void Controller::set_period_add(const std::vector<int> &period) noexcept {
-  model_.set_period_add(period);
-}
-
-void Controller::set_period_waste(const std::vector<int> &period) noexcept {
-  model_.set_period_waste(period);
 }
 /*
   ============================== M U T A T O R S ==============================

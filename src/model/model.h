@@ -51,7 +51,6 @@ class Model {
   void Notation(const std::string &str) noexcept;
   void PushLogic(const std::string &str) noexcept;
   int FormatTimeAdd(const int &period) const noexcept;
-  int FormatTimeWaste(const int &period) const noexcept;
 
  private:
   int pos_ = 0;
