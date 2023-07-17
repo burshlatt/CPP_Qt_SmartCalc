@@ -6,6 +6,8 @@
 #include <stack>
 #include <string>
 #include <iostream>
+#include <functional>
+#include <unordered_map>
 
 namespace s21 {
 class ModelCalculator {
@@ -23,7 +25,6 @@ class ModelCalculator {
   void ClearOutput() noexcept;
   void Calculations() noexcept;
   void PopFunctions() noexcept;
-  void DoCalculations() noexcept;
   void GetNums(double &x) noexcept;
   bool ConvertNums(const size_t &i) noexcept;
   void PushFunctions(size_t &index) noexcept;
@@ -36,7 +37,6 @@ class ModelCalculator {
   int pos_ = 0;
   int option_ = 0;
   std::string str_;
-  std::string func_;
   bool is_rad_ = false;
   bool is_error_ = false;
   double result_ = 0.0;
@@ -45,9 +45,26 @@ class ModelCalculator {
   std::stack<double> num_buffer_;
   std::stack<std::string> stack_;
   std::array<std::string, 256> output_;
-  const std::array<std::string, 11> functions_ = {"cos",  "sin",  "tan", "acos",
-                                                  "asin", "atan", "ln",  "log",
-                                                  "sqrt", "abs",  "^"};
+  const std::unordered_map<std::string, std::function<double(double)>> func_map_ {
+    { "ln", [](double x){ return std::log(x); } },
+    { "cos", [](double x){ return std::cos(x); } },
+    { "sin", [](double x){ return std::sin(x); } },
+    { "tan", [](double x){ return std::tan(x); } },
+    { "abs", [](double x){ return std::fabs(x); } },
+    { "acos", [](double x){ return std::acos(x); } },
+    { "asin", [](double x){ return std::asin(x); } },
+    { "atan", [](double x){ return std::atan(x); } },
+    { "sqrt", [](double x){ return std::sqrt(x); } },
+    { "log", [](double x){ return std::log10(x); } }
+  };
+  const std::unordered_map<std::string, std::function<double(double, double)>> oper_map_ {
+    { "+", [](double x, double y){ return x + y; } },
+    { "-", [](double x, double y){ return x - y; } },
+    { "*", [](double x, double y){ return x * y; } },
+    { "/", [](double x, double y){ return x / y; } },
+    { "^", [](double x, double y){ return std::pow(y, x); } },
+    { "mod", [](double x, double y){ return std::fmod(y, x); } }
+  };
 };
 }  // namespace s21
 

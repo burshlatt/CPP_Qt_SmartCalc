@@ -120,11 +120,10 @@ void ModelCalculator::PopFunctions() noexcept {
       is_error_ = true;
     } else {
       stack_.pop();
-      for (size_t i = 0; i < functions_.size() && !stack_.empty(); i++) {
-        if (stack_.top() == functions_[i]) {
-          output_[pos_++] = stack_.top();
-          stack_.pop();
-        }
+      auto it_ = func_map_.find(stack_.top());
+      if ((it_ != func_map_.end() || stack_.top() == "^") && !stack_.empty()) {
+        output_[pos_++] = stack_.top();
+        stack_.pop();
       }
     }
   } else if (option_ == 2) {
@@ -191,41 +190,6 @@ void ModelCalculator::Notation(const std::string &str) noexcept {
   }
 }
 
-void ModelCalculator::DoCalculations() noexcept {
-  if (func_ == "+")
-    num_buffer_.push(y_ + x_);
-  else if (func_ == "-")
-    num_buffer_.push(y_ - x_);
-  else if (func_ == "*")
-    num_buffer_.push(y_ * x_);
-  else if (func_ == "/")
-    num_buffer_.push(y_ / x_);
-  else if (func_ == "ln")
-    num_buffer_.push(log(x_));
-  else if (func_ == "cos")
-    num_buffer_.push(cos(x_));
-  else if (func_ == "sin")
-    num_buffer_.push(sin(x_));
-  else if (func_ == "tan")
-    num_buffer_.push(tan(x_));
-  else if (func_ == "abs")
-    num_buffer_.push(fabs(x_));
-  else if (func_ == "acos")
-    num_buffer_.push(acos(x_));
-  else if (func_ == "asin")
-    num_buffer_.push(asin(x_));
-  else if (func_ == "atan")
-    num_buffer_.push(atan(x_));
-  else if (func_ == "sqrt")
-    num_buffer_.push(sqrt(x_));
-  else if (func_ == "log")
-    num_buffer_.push(log10(x_));
-  else if (func_ == "^")
-    num_buffer_.push(pow(y_, x_));
-  else if (func_ == "mod")
-    num_buffer_.push(fmod(y_, x_));
-}
-
 void ModelCalculator::Calculations() noexcept {
   for (int i = 0; i < pos_; i++) {
     if (!ConvertNums(i)) {
@@ -251,9 +215,13 @@ void ModelCalculator::Calculations() noexcept {
           option_ = 4;
           break;
       }
-      func_ = output_[i];
       GetNums();
-      DoCalculations();
+      auto o_it_ = oper_map_.find(output_[i]);
+      auto f_it_ = func_map_.find(output_[i]);
+      if (o_it_ != oper_map_.end())
+        num_buffer_.push(o_it_->second(x_, y_));
+      if (f_it_ != func_map_.end())
+        num_buffer_.push(f_it_->second(x_));
     }
   }
   result_ = num_buffer_.top();
