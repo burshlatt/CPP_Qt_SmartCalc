@@ -1,9 +1,9 @@
-#include "view/view.h"
+#include "view/view_calculator.h"
 #include <QApplication>
 
 int main(int argc, char *argv[]) {
-  QApplication a(argc, argv);
-  View w;
-  w.show();
-  return a.exec();
+  QApplication apl_(argc, argv);
+  ViewCalculator calc_;
+  calc_.show();
+  return apl_.exec();
 }

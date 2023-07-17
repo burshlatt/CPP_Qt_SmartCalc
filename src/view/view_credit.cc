@@ -1,8 +1,7 @@
-#include "credit.h"
+#include "view_credit.h"
+#include "ui_view_credit.h"
 
-#include "ui_credit.h"
-
-Credit::Credit(QWidget *parent) : QDialog(parent), ui_(new Ui::Credit) {
+ViewCredit::ViewCredit(QWidget *parent) : QDialog(parent), ui_(new Ui::ViewCredit) {
   ui_->setupUi(this);
 
   this->setFixedSize(480, 325);
@@ -18,22 +17,21 @@ Credit::Credit(QWidget *parent) : QDialog(parent), ui_(new Ui::Credit) {
   ui_->tableLayout->addWidget(ui_->tableScroll);
 }
 
-Credit::~Credit() { delete ui_; }
+ViewCredit::~ViewCredit() { delete ui_; }
 
-void Credit::on_calculator_clicked() noexcept {
+void ViewCredit::on_calculator_clicked() noexcept {
   this->close();
   emit firstWindow();
 }
 
-void Credit::keyPressEvent(QKeyEvent *event) {
+void ViewCredit::keyPressEvent(QKeyEvent *event) {
   if (event->key() == Qt::Key_Escape) {
     event->accept();
     on_calculator_clicked();
   }
 }
 
-void Credit::AddRow(const int &term, const QVector<QString> &res_arr,
-                    const bool &is_annu) noexcept {
+void ViewCredit::AddRow(const int &term, const QVector<QString> &res_arr, const bool &is_annu) noexcept {
   for (int i = 1; i <= term; i++) {
     QHBoxLayout *hboxLayout = new QHBoxLayout();
     QLabel *id_ = new QLabel(ui_->tableScroll->widget());
@@ -66,7 +64,7 @@ void Credit::AddRow(const int &term, const QVector<QString> &res_arr,
   }
 }
 
-void Credit::DelRow() noexcept {
+void ViewCredit::DelRow() noexcept {
   while (count_) {
     QLayout *layout_ = addVbox_->itemAt(count_ - 1)->layout();
     QWidget *widget_1_ = layout_->itemAt(0)->widget();
@@ -80,7 +78,7 @@ void Credit::DelRow() noexcept {
   }
 }
 
-bool Credit::DataIsCorrect() noexcept {
+bool ViewCredit::DataIsCorrect() noexcept {
   QString sum_ = ui_->creditSum->text();
   QString term_ = ui_->creditTerm->text();
   QString percent_ = ui_->percent->text();
@@ -91,11 +89,9 @@ bool Credit::DataIsCorrect() noexcept {
     return false;
 }
 
-void Credit::on_showResult_clicked() noexcept {
+void ViewCredit::on_showResult_clicked() noexcept {
   const double sum_ = ui_->creditSum->text().toDouble();
-  const int term_ = ui_->month->isChecked()
-                        ? ui_->creditTerm->text().toInt()
-                        : ui_->creditTerm->text().toInt() * 12;
+  const int term_ = ui_->month->isChecked() ? ui_->creditTerm->text().toInt() : ui_->creditTerm->text().toInt() * 12;
   if (term_ > 600) {
     QMessageBox msg_box_;
     msg_box_.setText("Срок должен быть не больше 50 лет (600 месяцев).");

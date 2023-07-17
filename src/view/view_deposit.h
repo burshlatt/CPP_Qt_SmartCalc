@@ -1,23 +1,23 @@
-#ifndef DEPOSIT_H
-#define DEPOSIT_H
+#ifndef VIEW_DEPOSIT_H
+#define VIEW_DEPOSIT_H
 
 #include <QComboBox>
 #include <QDateEdit>
 #include <QMessageBox>
 #include <QVBoxLayout>
 
-#include "../controller/controller.h"
+#include "../controller/controller_deposit.h"
 
 namespace Ui {
-class Deposit;
+class ViewDeposit;
 }
 
-class Deposit : public QDialog {
+class ViewDeposit : public QDialog {
   Q_OBJECT
 
  public:
-  explicit Deposit(QWidget *parent = nullptr);
-  ~Deposit();
+  explicit ViewDeposit(QWidget *parent = nullptr);
+  ~ViewDeposit();
 
  private slots:
   void add_waste() noexcept;
@@ -36,8 +36,8 @@ class Deposit : public QDialog {
   void firstWindow();
 
  private:
-  Ui::Deposit *ui_;
-  s21::Controller calc_;
+  Ui::ViewDeposit *ui_;
+  s21::ControllerDeposit calc_;
 
   int time_type_ = 0;
   int add_count_ = 0;
@@ -75,4 +75,4 @@ class Deposit : public QDialog {
   QVector<QComboBox *> combo_boxes_waste_;
 };
 
-#endif  // DEPOSIT_H
+#endif  // VIEW_DEPOSIT_H

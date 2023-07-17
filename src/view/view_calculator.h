@@ -1,24 +1,24 @@
-#ifndef VIEW_H
-#define VIEW_H
+#ifndef VIEW_CALCULATOR_H
+#define VIEW_CALCULATOR_H
 
 #include <QMainWindow>
 
-#include "../controller/controller.h"
-#include "credit.h"
-#include "deposit.h"
+#include "view_credit.h"
+#include "view_deposit.h"
+#include "../controller/controller_calculator.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class View;
+class ViewCalculator;
 }
 QT_END_NAMESPACE
 
-class View : public QMainWindow {
+class ViewCalculator : public QMainWindow {
   Q_OBJECT
 
  public:
-  View(QWidget *parent = nullptr);
-  ~View();
+  ViewCalculator(QWidget *parent = nullptr);
+  ~ViewCalculator();
 
  private slots:
   void GetInfo() noexcept;
@@ -40,18 +40,18 @@ class View : public QMainWindow {
   void on_resultFunc_clicked() noexcept;
 
  private:
-  Ui::View *ui_;
-  Credit *credit_;
-  Deposit *deposit_;
+  Ui::ViewCalculator *ui_;
+  ViewCredit *credit_;
+  ViewDeposit *deposit_;
 
   std::string str_;
   QPushButton *button_;
-  s21::Controller calc_;
+  s21::ControllerCalculator calc_;
 
   size_t size_ = 0;
   bool is_dot_ = false;
   bool graph_open_ = false;
-  const std::array<char, 7> operators_ = {'-', '+', '*', '/', '^', 'd', '('};
+  const std::array<char, 7> operators_skip_ = {'-', '+', '*', '/', '^', 'd', '('};
 };
 
-#endif  // VIEW_H
+#endif  // VIEW_CALCULATOR_H

@@ -1,15 +1,14 @@
-#include "view.h"
+#include "view_calculator.h"
+#include "ui_view_calculator.h"
 
-#include "ui_view.h"
-
-View::View(QWidget *parent) : QMainWindow(parent), ui_(new Ui::View) {
+ViewCalculator::ViewCalculator(QWidget *parent) : QMainWindow(parent), ui_(new Ui::ViewCalculator) {
   ui_->setupUi(this);
 
-  credit_ = new Credit();
-  connect(credit_, &Credit::firstWindow, this, &View::show);
+  credit_ = new ViewCredit();
+  connect(credit_, &ViewCredit::firstWindow, this, &ViewCalculator::show);
 
-  deposit_ = new Deposit();
-  connect(deposit_, &Deposit::firstWindow, this, &View::show);
+  deposit_ = new ViewDeposit();
+  connect(deposit_, &ViewDeposit::firstWindow, this, &ViewCalculator::show);
 
   this->setFixedSize(480, 380);
 
@@ -19,50 +18,34 @@ View::View(QWidget *parent) : QMainWindow(parent), ui_(new Ui::View) {
   const int y = (screenGeometry.height() - 380) / 2;
   move(x, y);
 
-  connect(ui_->lnFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
-  connect(ui_->logFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
-  connect(ui_->absFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
-  connect(ui_->cosFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
-  connect(ui_->sinFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
-  connect(ui_->tanFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
-  connect(ui_->acosFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
-  connect(ui_->asinFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
-  connect(ui_->atanFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
-  connect(ui_->sqrtFunc, SIGNAL(clicked()), this, SLOT(FuncClicked()));
-  connect(ui_->xSym, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
-  connect(ui_->num_0, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
-  connect(ui_->num_1, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
-  connect(ui_->num_2, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
-  connect(ui_->num_3, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
-  connect(ui_->num_4, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
-  connect(ui_->num_5, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
-  connect(ui_->num_6, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
-  connect(ui_->num_7, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
-  connect(ui_->num_8, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
-  connect(ui_->num_9, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
-  connect(ui_->num_pi, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
-  connect(ui_->addFunc, SIGNAL(clicked()), this, SLOT(OperatorsClicked()));
-  connect(ui_->mulFunc, SIGNAL(clicked()), this, SLOT(OperatorsClicked()));
-  connect(ui_->divFunc, SIGNAL(clicked()), this, SLOT(OperatorsClicked()));
-  connect(ui_->powFunc, SIGNAL(clicked()), this, SLOT(OperatorsClicked()));
-  connect(ui_->modFunc, SIGNAL(clicked()), this, SLOT(OperatorsClicked()));
-  connect(ui_->leftBracket, SIGNAL(clicked()), this, SLOT(BracketsClicked()));
-  connect(ui_->rightBracket, SIGNAL(clicked()), this, SLOT(BracketsClicked()));
+  QVector<QPushButton *> functions_ = {ui_->lnFunc, ui_->logFunc, ui_->absFunc, ui_->cosFunc, ui_->sinFunc, ui_->tanFunc, ui_->acosFunc, ui_->asinFunc, ui_->atanFunc, ui_->sqrtFunc};
+  QVector<QPushButton *> symbols_ = {ui_->xSym, ui_->num_0, ui_->num_1, ui_->num_2, ui_->num_3, ui_->num_4, ui_->num_5, ui_->num_6, ui_->num_7, ui_->num_8, ui_->num_9, ui_->num_pi};
+  QVector<QPushButton *> operators_ = {ui_->addFunc, ui_->mulFunc, ui_->divFunc, ui_->powFunc, ui_->modFunc};
+  QVector<QPushButton *> brackets_ = {ui_->leftBracket, ui_->rightBracket};
+
+  for (auto function_ : functions_)
+      connect(function_, SIGNAL(clicked()), this, SLOT(FuncClicked()));
+  for (auto symbol_ : symbols_)
+      connect(symbol_, SIGNAL(clicked()), this, SLOT(SymbolsClicked()));
+  for (auto operator_ : operators_)
+      connect(operator_, SIGNAL(clicked()), this, SLOT(OperatorsClicked()));
+  for (auto bracket_ : brackets_)
+      connect(bracket_, SIGNAL(clicked()), this, SLOT(BracketsClicked()));
 }
 
-View::~View() { delete ui_; }
+ViewCalculator::~ViewCalculator() { delete ui_; }
 
-void View::on_credCalc_clicked() noexcept {
+void ViewCalculator::on_credCalc_clicked() noexcept {
   credit_->show();
   this->close();
 }
 
-void View::on_deposCalc_clicked() noexcept {
+void ViewCalculator::on_deposCalc_clicked() noexcept {
   deposit_->show();
   this->close();
 }
 
-void View::GetInfo() noexcept {
+void ViewCalculator::GetInfo() noexcept {
   button_ = (QPushButton *)sender();
   str_ = ui_->input->text().toStdString();
   size_ = str_.size();
@@ -73,14 +56,14 @@ void View::GetInfo() noexcept {
   }
 }
 
-void View::OperatorsClicked() noexcept {
+void ViewCalculator::OperatorsClicked() noexcept {
   GetInfo();
   bool is_operator_ = false;
   if ((size_ && str_.back() != '(' && str_.back() != '.') &&
       ((str_.back() == '-' && str_[str_.size() - 2] != '(') ||
        str_.back() != '-')) {
-    for (size_t i = 0; i < operators_.size(); i++) {
-      if (str_.back() == operators_[i] &&
+    for (size_t i = 0; i < operators_skip_.size(); i++) {
+      if (str_.back() == operators_skip_[i] &&
           (str_.back() != '-' || str_[str_.size() - 2] != '(')) {
         is_operator_ = true;
         break;
@@ -96,7 +79,7 @@ void View::OperatorsClicked() noexcept {
   }
 }
 
-void View::SymbolsClicked() noexcept {
+void ViewCalculator::SymbolsClicked() noexcept {
   GetInfo();
   if (str_.back() == 'x' || str_.back() == ')' || str_.back() == 'i') {
     ui_->input->setText(ui_->input->text() + "*");
@@ -118,7 +101,7 @@ void View::SymbolsClicked() noexcept {
   }
 }
 
-void View::FuncClicked() noexcept {
+void ViewCalculator::FuncClicked() noexcept {
   GetInfo();
   if (size_ < 255 && str_.back() != '.') {
     if ((str_.back() >= '0' && str_.back() <= '9') || str_.back() == ')' ||
@@ -130,7 +113,7 @@ void View::FuncClicked() noexcept {
   }
 }
 
-void View::BracketsClicked() noexcept {
+void ViewCalculator::BracketsClicked() noexcept {
   GetInfo();
   int l_brackets_ = 0, r_brackets_ = 0;
   bool can_do_ = true;
@@ -153,8 +136,8 @@ void View::BracketsClicked() noexcept {
         is_dot_ = false;
       }
       if (button_->text() == ')' && r_brackets_ < l_brackets_) {
-        for (size_t i = 0; i < operators_.size(); i++) {
-          if (str_.back() == operators_[i]) {
+        for (size_t i = 0; i < operators_skip_.size(); i++) {
+          if (str_.back() == operators_skip_[i]) {
             can_do_ = false;
           }
         }
@@ -167,14 +150,14 @@ void View::BracketsClicked() noexcept {
   }
 }
 
-void View::on_subFunc_clicked() noexcept {
+void ViewCalculator::on_subFunc_clicked() noexcept {
   GetInfo();
   if (size_ < 255 && str_.back() != '.') {
     if (size_ == 0) {
       ui_->input->setText(ui_->input->text() + "(");
     } else {
-      for (size_t i = 0; i < operators_.size(); i++) {
-        if (str_.back() == operators_[i] && str_.back() != '(') {
+      for (size_t i = 0; i < operators_skip_.size(); i++) {
+        if (str_.back() == operators_skip_[i] && str_.back() != '(') {
           ui_->input->setText(ui_->input->text() + "(");
           break;
         }
@@ -185,7 +168,7 @@ void View::on_subFunc_clicked() noexcept {
   }
 }
 
-void View::on_dotSym_clicked() noexcept {
+void ViewCalculator::on_dotSym_clicked() noexcept {
   GetInfo();
   for (int i = str_.size() - 1; str_[i] >= '0' && str_[i] <= '9'; i--) {
     if (str_[i - 1] == '.') {
@@ -204,7 +187,7 @@ void View::on_dotSym_clicked() noexcept {
   }
 }
 
-void View::on_delElem_clicked() noexcept {
+void ViewCalculator::on_delElem_clicked() noexcept {
   GetInfo();
   if (str_.back() == '.') is_dot_ = false;
   if (size_ != 0) {
@@ -230,13 +213,13 @@ void View::on_delElem_clicked() noexcept {
   }
 }
 
-void View::on_delAll_clicked() noexcept {
+void ViewCalculator::on_delAll_clicked() noexcept {
   is_dot_ = false;
   ui_->input->clear();
   ui_->output->clear();
 }
 
-void View::CheckFields() noexcept {
+void ViewCalculator::CheckFields() noexcept {
   if (ui_->xMinCord->text().size() == 0) {
     ui_->xMinCord->setText("-5");
   } else if (ui_->xMinCord->text().toDouble() < -1000000) {
@@ -269,7 +252,7 @@ void View::CheckFields() noexcept {
   }
 }
 
-void View::on_resultFunc_clicked() noexcept {
+void ViewCalculator::on_resultFunc_clicked() noexcept {
   ui_->output->clear();
   str_ = ui_->input->text().toStdString();
   if (calc_.IsCorrect(str_) && str_.size()) {
@@ -297,7 +280,7 @@ void View::on_resultFunc_clicked() noexcept {
   }
 }
 
-void View::on_showGraph_clicked() noexcept {
+void ViewCalculator::on_showGraph_clicked() noexcept {
   const int xPos = this->geometry().x();
   const int yPos = this->geometry().y();
   if (!graph_open_) {
@@ -313,7 +296,7 @@ void View::on_showGraph_clicked() noexcept {
   }
 }
 
-void View::PrintGraph() noexcept {
+void ViewCalculator::PrintGraph() noexcept {
   CheckFields();
   ui_->output->setText("GRAPH");
   ui_->Graph->clearGraphs();
@@ -336,7 +319,7 @@ void View::PrintGraph() noexcept {
   ui_->Graph->replot();
 }
 
-void View::on_rad_clicked() noexcept {
+void ViewCalculator::on_rad_clicked() noexcept {
   ui_->rad->setStyleSheet(
       "background-color: rgb(255, 160, 122); color: black; border: 1px solid "
       "gray;");
@@ -347,7 +330,7 @@ void View::on_rad_clicked() noexcept {
   on_resultFunc_clicked();
 }
 
-void View::on_deg_clicked() noexcept {
+void ViewCalculator::on_deg_clicked() noexcept {
   ui_->deg->setStyleSheet(
       "background-color: rgb(255, 160, 122); color: black; border: 1px solid "
       "gray;");

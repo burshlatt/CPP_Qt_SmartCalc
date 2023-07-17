@@ -12,20 +12,28 @@ ICON = icon/smartcalc.png
 
 SOURCES += \
     QCustomPlot/qcustomplot.cc \
-    controller/controller.cc \
+    controller/controller_calculator.cc \
+    controller/controller_credit.cc \
+    controller/controller_deposit.cc \
     main.cc \
-    model/model.cc \
-    view/credit.cc \
-    view/deposit.cc \
-    view/view.cc
+    model/model_calculator.cc \
+    model/model_credit.cc \
+    model/model_deposit.cc \
+    view/view_calculator.cc \
+    view/view_credit.cc \
+    view/view_deposit.cc
 
 HEADERS += \
     QCustomPlot/qcustomplot.h \
-    controller/controller.h \
-    model/model.h \
-    view/credit.h \
-    view/deposit.h \
-    view/view.h
+    controller/controller_calculator.h \
+    controller/controller_credit.h \
+    controller/controller_deposit.h \
+    model/model_calculator.h \
+    model/model_credit.h \
+    model/model_deposit.h \
+    view/view_calculator.h \
+    view/view_credit.h \
+    view/view_deposit.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -33,6 +41,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 FORMS += \
-    view/credit.ui \
-    view/deposit.ui \
-    view/view.ui
+    view/view_calculator.ui \
+    view/view_credit.ui \
+    view/view_deposit.ui

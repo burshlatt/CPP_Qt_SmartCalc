@@ -1,8 +1,7 @@
-#include "deposit.h"
+#include "view_deposit.h"
+#include "ui_view_deposit.h"
 
-#include "ui_deposit.h"
-
-Deposit::Deposit(QWidget *parent) : QDialog(parent), ui_(new Ui::Deposit) {
+ViewDeposit::ViewDeposit(QWidget *parent) : QDialog(parent), ui_(new Ui::ViewDeposit) {
   ui_->setupUi(this);
 
   this->setFixedSize(1000, 425);
@@ -16,21 +15,21 @@ Deposit::Deposit(QWidget *parent) : QDialog(parent), ui_(new Ui::Deposit) {
   ui_->wasteLayout->addWidget(ui_->scrollWaste);
 }
 
-Deposit::~Deposit() { delete ui_; }
+ViewDeposit::~ViewDeposit() { delete ui_; }
 
-void Deposit::on_calculator_clicked() noexcept {
+void ViewDeposit::on_calculator_clicked() noexcept {
   this->close();
   emit firstWindow();
 }
 
-void Deposit::keyPressEvent(QKeyEvent *event) {
+void ViewDeposit::keyPressEvent(QKeyEvent *event) {
   if (event->key() == Qt::Key_Escape) {
     event->accept();
     on_calculator_clicked();
   }
 }
 
-void Deposit::on_addPayment_clicked() noexcept {
+void ViewDeposit::on_addPayment_clicked() noexcept {
   QHBoxLayout *hboxLayout = new QHBoxLayout();
   QComboBox *addComboBox = new QComboBox(ui_->scrollPayment->widget());
   addComboBox->addItem("Разовое");
@@ -63,7 +62,7 @@ void Deposit::on_addPayment_clicked() noexcept {
   add_count_++;
 }
 
-void Deposit::on_deletePayment_clicked() noexcept {
+void ViewDeposit::on_deletePayment_clicked() noexcept {
   if (add_count_) {
     QLayout *layout = add_box_->itemAt(add_count_ - 1)->layout();
     QWidget *widget1 = layout->itemAt(0)->widget();
@@ -80,7 +79,7 @@ void Deposit::on_deletePayment_clicked() noexcept {
   }
 }
 
-void Deposit::on_addWaste_clicked() noexcept {
+void ViewDeposit::on_addWaste_clicked() noexcept {
   QHBoxLayout *hboxLayout = new QHBoxLayout();
   QComboBox *delComboBox = new QComboBox(ui_->scrollWaste->widget());
   delComboBox->addItem("Разовое");
@@ -113,7 +112,7 @@ void Deposit::on_addWaste_clicked() noexcept {
   waste_count_++;
 }
 
-void Deposit::on_deleteWaste_clicked() noexcept {
+void ViewDeposit::on_deleteWaste_clicked() noexcept {
   if (waste_count_) {
     QLayout *layout = waste_box_->itemAt(waste_count_ - 1)->layout();
     QWidget *widget1 = layout->itemAt(0)->widget();
@@ -130,7 +129,7 @@ void Deposit::on_deleteWaste_clicked() noexcept {
   }
 }
 
-void Deposit::add_payment() noexcept {
+void ViewDeposit::add_payment() noexcept {
   add_sum_ = 0.0;
   for (int i = 0; i < add_count_; i++) {
     QDate date_add = date_edits_add_[i]->date();
@@ -160,7 +159,7 @@ void Deposit::add_payment() noexcept {
   }
 }
 
-void Deposit::add_waste() noexcept {
+void ViewDeposit::add_waste() noexcept {
   waste_sum_ = 0.0;
   for (int i = 0; i < waste_count_; i++) {
     QDate date_waste = date_edits_waste_[i]->date();
@@ -190,7 +189,7 @@ void Deposit::add_waste() noexcept {
   }
 }
 
-void Deposit::CheckTypes() noexcept {
+void ViewDeposit::CheckTypes() noexcept {
   if (ui_->yes->isChecked()) {
     is_cap_ = true;
   } else if (ui_->no->isChecked()) {
@@ -220,7 +219,7 @@ void Deposit::CheckTypes() noexcept {
   }
 }
 
-bool Deposit::DataIsCorrect() noexcept {
+bool ViewDeposit::DataIsCorrect() noexcept {
   if (calc_.IsCorrectDec(sum_) && calc_.IsCorrectDec(percent_) &&
       calc_.IsCorrectDec(tax_rate_) && calc_.IsCorrectInt(term_))
     return true;
@@ -228,7 +227,7 @@ bool Deposit::DataIsCorrect() noexcept {
     return false;
 }
 
-void Deposit::on_showResult_clicked() noexcept {
+void ViewDeposit::on_showResult_clicked() noexcept {
   term_ = ui_->time->text();
   percent_ = ui_->percent->text();
   tax_rate_ = ui_->taxRate->text();
@@ -265,6 +264,7 @@ void Deposit::on_showResult_clicked() noexcept {
     calc_.set_cap(is_cap_);
     calc_.set_period(period_);
     calc_.set_percent(percent_);
+    calc_.set_tax(tax_rate_);
     calc_.set_term(time_);
     calc_.set_add(add_);
     calc_.set_waste(waste_);
