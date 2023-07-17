@@ -4,8 +4,8 @@ namespace s21 {
 /*
   ================================= ACCESSORS =================================
 */
-double ModelCaclulator::get_res() const noexcept { return result_; }
-bool ModelCaclulator::get_error() const noexcept { return is_error_; }
+double ModelCalculator::get_res() const noexcept { return result_; }
+bool ModelCalculator::get_error() const noexcept { return is_error_; }
 /*
   ================================= ACCESSORS =================================
 */
@@ -13,8 +13,8 @@ bool ModelCaclulator::get_error() const noexcept { return is_error_; }
 /*
   ================================= MUTATORS ==================================
 */
-void ModelCaclulator::set_x(const double &num) noexcept { x_value_ = num; }
-void ModelCaclulator::set_rad(const bool &graph) noexcept { is_rad_ = graph; }
+void ModelCalculator::set_x(const double &num) noexcept { x_value_ = num; }
+void ModelCalculator::set_rad(const bool &graph) noexcept { is_rad_ = graph; }
 /*
   ================================= MUTATORS ==================================
 */
@@ -22,19 +22,19 @@ void ModelCaclulator::set_rad(const bool &graph) noexcept { is_rad_ = graph; }
 /*
   ============================ C A L C U L A T O R ============================
 */
-void ModelCaclulator::GetNums(double &x) noexcept {
+void ModelCalculator::GetNums(double &x) noexcept {
   x = num_buffer_.top();
   num_buffer_.pop();
 }
 
-void ModelCaclulator::GetNums(double &x, double &y) noexcept {
+void ModelCalculator::GetNums(double &x, double &y) noexcept {
   x = num_buffer_.top();
   num_buffer_.pop();
   y = num_buffer_.top();
   num_buffer_.pop();
 }
 
-void ModelCaclulator::GetNums() noexcept {
+void ModelCalculator::GetNums() noexcept {
   if (option_ == 1) {
     GetNums(x_);
   } else if (option_ == 2) {
@@ -49,7 +49,7 @@ void ModelCaclulator::GetNums() noexcept {
   }
 }
 
-void ModelCaclulator::InsertNumOutput(size_t &index) noexcept {
+void ModelCalculator::InsertNumOutput(size_t &index) noexcept {
   if (isdigit(str_[index]) || str_[index] == 'x' || str_[index] == 'P') {
     int i = 0;
     bool is_negative_ = false;
@@ -62,7 +62,7 @@ void ModelCaclulator::InsertNumOutput(size_t &index) noexcept {
   }
 }
 
-void ModelCaclulator::PushLogic(const std::string &str) noexcept {
+void ModelCalculator::PushLogic(const std::string &str) noexcept {
   if (str == "mod" || str == "*" || str == "/") {
     while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*"
     || stack_.top() == "/" || stack_.top() == "^" || stack_.top() == "!")) {
@@ -80,7 +80,7 @@ void ModelCaclulator::PushLogic(const std::string &str) noexcept {
   stack_.push(str);
 }
 
-void ModelCaclulator::PushFunctions(size_t &index) noexcept {
+void ModelCalculator::PushFunctions(size_t &index) noexcept {
   if (option_ == 1) {
     if (str_[index] == '^') {
       stack_.push("^");
@@ -110,7 +110,7 @@ void ModelCaclulator::PushFunctions(size_t &index) noexcept {
   }
 }
 
-void ModelCaclulator::PopFunctions() noexcept {
+void ModelCalculator::PopFunctions() noexcept {
   if (option_ == 1) {
     while (!stack_.empty() && stack_.top() != "(") {
       output_[pos_++] = stack_.top();
@@ -139,7 +139,7 @@ void ModelCaclulator::PopFunctions() noexcept {
   }
 }
 
-bool ModelCaclulator::ConvertNums(const size_t &i) noexcept {
+bool ModelCalculator::ConvertNums(const size_t &i) noexcept {
   double num_ = 0.0;
   if (isdigit(output_[i].front()) || output_[i].front() == 'x' ||
       output_[i].front() == 'P') {
@@ -156,7 +156,7 @@ bool ModelCaclulator::ConvertNums(const size_t &i) noexcept {
   return false;
 }
 
-void ModelCaclulator::Notation(const std::string &str) noexcept {
+void ModelCalculator::Notation(const std::string &str) noexcept {
   str_ = str;
   for (size_t i = 0; i < str_.size() && !is_error_; i++) {
     InsertNumOutput(i);
@@ -191,7 +191,7 @@ void ModelCaclulator::Notation(const std::string &str) noexcept {
   }
 }
 
-void ModelCaclulator::DoCalculations() noexcept {
+void ModelCalculator::DoCalculations() noexcept {
   if (func_ == "+")
     num_buffer_.push(y_ + x_);
   else if (func_ == "-")
@@ -226,7 +226,7 @@ void ModelCaclulator::DoCalculations() noexcept {
     num_buffer_.push(fmod(y_, x_));
 }
 
-void ModelCaclulator::Calculations() noexcept {
+void ModelCalculator::Calculations() noexcept {
   for (int i = 0; i < pos_; i++) {
     if (!ConvertNums(i)) {
       switch (output_[i].front()) {
@@ -260,7 +260,7 @@ void ModelCaclulator::Calculations() noexcept {
   num_buffer_.pop();
 }
 
-void ModelCaclulator::ClearOutput() noexcept { pos_ = 0; }
+void ModelCalculator::ClearOutput() noexcept { pos_ = 0; }
 
 /*
   ============================ C A L C U L A T O R ============================

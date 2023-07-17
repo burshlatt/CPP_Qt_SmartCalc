@@ -8,10 +8,10 @@
 #include <iostream>
 
 namespace s21 {
-class ModelCaclulator {
+class ModelCalculator {
  public:
-  ModelCaclulator() {}
-  ~ModelCaclulator() {}
+  ModelCalculator() {}
+  ~ModelCalculator() {}
 
   bool get_error() const noexcept;
   double get_res() const noexcept;

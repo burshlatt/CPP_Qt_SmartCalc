@@ -55,6 +55,6 @@ dist:
 .PHONY: test
 test:
 	@echo --------------------- START ---------------------
-	cd ./tests/ && $(CC) $(FLAGS) unit_tests.cc model_test.cc -o unit_tests $(TEST_FLAGS)
+	cd ./tests/ && $(CC) $(FLAGS) unit_tests.cc ../model/model_calculator.cc -o unit_tests $(TEST_FLAGS)
 	cd ./tests/ && ./unit_tests
 	@echo -------------------- SUCCESS --------------------

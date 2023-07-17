@@ -28,7 +28,7 @@ class ControllerCalculator {
   QString Calculator(const std::string &str) noexcept;
 
  private:
-  s21::ModelCaclulator model_;
+  s21::ModelCalculator model_;
 };
 }  // namespace s21
 

@@ -1,9 +1,8 @@
 #include <gtest/gtest.h>
-
-#include "model_test.h"
+#include "../model/model_calculator.h"
 
 TEST(SmartCalc, simple_operations) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.Notation("((4-9)/(7+9)*3)^6=");
   calc_.Calculations();
   calc_.ClearOutput();
@@ -11,7 +10,7 @@ TEST(SmartCalc, simple_operations) {
 }
 
 TEST(SmartCalc, cos_rad) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.set_rad(true);
   calc_.Notation("4^cos(2/4)=");
   calc_.Calculations();
@@ -20,7 +19,7 @@ TEST(SmartCalc, cos_rad) {
 }
 
 TEST(SmartCalc, cos_deg) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.set_rad(false);
   calc_.Notation("4^cos(2/4)=");
   calc_.Calculations();
@@ -29,7 +28,7 @@ TEST(SmartCalc, cos_deg) {
 }
 
 TEST(SmartCalc, sin_rad) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.set_rad(true);
   calc_.Notation("4^sin(2/4)=");
   calc_.Calculations();
@@ -38,7 +37,7 @@ TEST(SmartCalc, sin_rad) {
 }
 
 TEST(SmartCalc, sin_deg) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.set_rad(false);
   calc_.Notation("4^sin(2/4)=");
   calc_.Calculations();
@@ -47,7 +46,7 @@ TEST(SmartCalc, sin_deg) {
 }
 
 TEST(SmartCalc, tan_rad) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.set_rad(true);
   calc_.Notation("4^tan(2/4)=");
   calc_.Calculations();
@@ -56,7 +55,7 @@ TEST(SmartCalc, tan_rad) {
 }
 
 TEST(SmartCalc, tan_deg) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.set_rad(false);
   calc_.Notation("4^tan(2/4)=");
   calc_.Calculations();
@@ -65,7 +64,7 @@ TEST(SmartCalc, tan_deg) {
 }
 
 TEST(SmartCalc, acos_rad) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.set_rad(true);
   calc_.Notation("4^acos(2/4)=");
   calc_.Calculations();
@@ -74,7 +73,7 @@ TEST(SmartCalc, acos_rad) {
 }
 
 TEST(SmartCalc, acos_deg) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.set_rad(false);
   calc_.Notation("4^acos(2/4)=");
   calc_.Calculations();
@@ -83,7 +82,7 @@ TEST(SmartCalc, acos_deg) {
 }
 
 TEST(SmartCalc, asin_rad) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.set_rad(true);
   calc_.Notation("4^asin(2/4)=");
   calc_.Calculations();
@@ -92,7 +91,7 @@ TEST(SmartCalc, asin_rad) {
 }
 
 TEST(SmartCalc, asin_deg) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.set_rad(false);
   calc_.Notation("4^asin(2/4)=");
   calc_.Calculations();
@@ -101,7 +100,7 @@ TEST(SmartCalc, asin_deg) {
 }
 
 TEST(SmartCalc, atan_rad) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.set_rad(true);
   calc_.Notation("4^atan(2/4)=");
   calc_.Calculations();
@@ -110,7 +109,7 @@ TEST(SmartCalc, atan_rad) {
 }
 
 TEST(SmartCalc, atan_deg) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.set_rad(false);
   calc_.Notation("4^atan(2/4)=");
   calc_.Calculations();
@@ -119,7 +118,7 @@ TEST(SmartCalc, atan_deg) {
 }
 
 TEST(SmartCalc, abs_test) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.Notation("4^abs(-3)=");
   calc_.Calculations();
   calc_.ClearOutput();
@@ -127,7 +126,7 @@ TEST(SmartCalc, abs_test) {
 }
 
 TEST(SmartCalc, sqrt_test) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.Notation("4^sqrt(9)=");
   calc_.Calculations();
   calc_.ClearOutput();
@@ -135,7 +134,7 @@ TEST(SmartCalc, sqrt_test) {
 }
 
 TEST(SmartCalc, log_test) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.Notation("4^log(9)=");
   calc_.Calculations();
   calc_.ClearOutput();
@@ -143,7 +142,7 @@ TEST(SmartCalc, log_test) {
 }
 
 TEST(SmartCalc, ln_test) {
-  s21::model calc_;
+  s21::ModelCalculator calc_;
   calc_.Notation("4^ln(9)=");
   calc_.Calculations();
   calc_.ClearOutput();
