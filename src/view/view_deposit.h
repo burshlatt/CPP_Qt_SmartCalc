@@ -20,16 +20,16 @@ class ViewDeposit : public QDialog {
   ~ViewDeposit();
 
  private slots:
-  void add_waste() noexcept;
+  void AddWaste() noexcept;
   void CheckTypes() noexcept;
-  void add_payment() noexcept;
+  void AddPayment() noexcept;
   bool DataIsCorrect() noexcept;
-  void on_addWaste_clicked() noexcept;
-  void on_calculator_clicked() noexcept;
-  void on_showResult_clicked() noexcept;
-  void on_addPayment_clicked() noexcept;
-  void on_deleteWaste_clicked() noexcept;
-  void on_deletePayment_clicked() noexcept;
+  void AddWasteClicked() noexcept;
+  void CalculatorClicked() noexcept;
+  void ShowResultClicked() noexcept;
+  void AddPaymentClicked() noexcept;
+  void DeleteWasteClicked() noexcept;
+  void DeletePaymentClicked() noexcept;
   void keyPressEvent(QKeyEvent *event) override;
 
  signals:

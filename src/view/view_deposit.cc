@@ -13,11 +13,18 @@ ViewDeposit::ViewDeposit(QWidget *parent) : QDialog(parent), ui_(new Ui::ViewDep
   waste_box_ = new QVBoxLayout();
   ui_->scrollWaste->widget()->setLayout(waste_box_);
   ui_->wasteLayout->addWidget(ui_->scrollWaste);
+
+  connect(ui_->addWaste, SIGNAL(clicked()), this, SLOT(AddWasteClicked()));
+  connect(ui_->calculator, SIGNAL(clicked()), this, SLOT(CalculatorClicked()));
+  connect(ui_->showResult, SIGNAL(clicked()), this, SLOT(ShowResultClicked()));
+  connect(ui_->addPayment, SIGNAL(clicked()), this, SLOT(AddPaymentClicked()));
+  connect(ui_->deleteWaste, SIGNAL(clicked()), this, SLOT(DeleteWasteClicked()));
+  connect(ui_->deletePayment, SIGNAL(clicked()), this, SLOT(DeletePaymentClicked()));
 }
 
 ViewDeposit::~ViewDeposit() { delete ui_; }
 
-void ViewDeposit::on_calculator_clicked() noexcept {
+void ViewDeposit::CalculatorClicked() noexcept {
   this->close();
   emit firstWindow();
 }
@@ -25,11 +32,11 @@ void ViewDeposit::on_calculator_clicked() noexcept {
 void ViewDeposit::keyPressEvent(QKeyEvent *event) {
   if (event->key() == Qt::Key_Escape) {
     event->accept();
-    on_calculator_clicked();
+    CalculatorClicked();
   }
 }
 
-void ViewDeposit::on_addPayment_clicked() noexcept {
+void ViewDeposit::AddPaymentClicked() noexcept {
   QHBoxLayout *hboxLayout = new QHBoxLayout();
   QComboBox *addComboBox = new QComboBox(ui_->scrollPayment->widget());
   addComboBox->addItem("Разовое");
@@ -62,7 +69,7 @@ void ViewDeposit::on_addPayment_clicked() noexcept {
   add_count_++;
 }
 
-void ViewDeposit::on_deletePayment_clicked() noexcept {
+void ViewDeposit::DeletePaymentClicked() noexcept {
   if (add_count_) {
     QLayout *layout = add_box_->itemAt(add_count_ - 1)->layout();
     QWidget *widget1 = layout->itemAt(0)->widget();
@@ -79,7 +86,7 @@ void ViewDeposit::on_deletePayment_clicked() noexcept {
   }
 }
 
-void ViewDeposit::on_addWaste_clicked() noexcept {
+void ViewDeposit::AddWasteClicked() noexcept {
   QHBoxLayout *hboxLayout = new QHBoxLayout();
   QComboBox *delComboBox = new QComboBox(ui_->scrollWaste->widget());
   delComboBox->addItem("Разовое");
@@ -112,7 +119,7 @@ void ViewDeposit::on_addWaste_clicked() noexcept {
   waste_count_++;
 }
 
-void ViewDeposit::on_deleteWaste_clicked() noexcept {
+void ViewDeposit::DeleteWasteClicked() noexcept {
   if (waste_count_) {
     QLayout *layout = waste_box_->itemAt(waste_count_ - 1)->layout();
     QWidget *widget1 = layout->itemAt(0)->widget();
@@ -129,7 +136,7 @@ void ViewDeposit::on_deleteWaste_clicked() noexcept {
   }
 }
 
-void ViewDeposit::add_payment() noexcept {
+void ViewDeposit::AddPayment() noexcept {
   add_sum_ = 0.0;
   for (int i = 0; i < add_count_; i++) {
     QDate date_add = date_edits_add_[i]->date();
@@ -159,7 +166,7 @@ void ViewDeposit::add_payment() noexcept {
   }
 }
 
-void ViewDeposit::add_waste() noexcept {
+void ViewDeposit::AddWaste() noexcept {
   waste_sum_ = 0.0;
   for (int i = 0; i < waste_count_; i++) {
     QDate date_waste = date_edits_waste_[i]->date();
@@ -227,7 +234,7 @@ bool ViewDeposit::DataIsCorrect() noexcept {
     return false;
 }
 
-void ViewDeposit::on_showResult_clicked() noexcept {
+void ViewDeposit::ShowResultClicked() noexcept {
   term_ = ui_->time->text();
   percent_ = ui_->percent->text();
   tax_rate_ = ui_->taxRate->text();
@@ -257,8 +264,8 @@ void ViewDeposit::on_showResult_clicked() noexcept {
       time_ *= 365;
     }
 
-    add_payment();
-    add_waste();
+    AddPayment();
+    AddWaste();
 
     calc_.set_sum(sum_.toDouble());
     calc_.set_cap(is_cap_);

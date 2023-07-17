@@ -15,11 +15,14 @@ ViewCredit::ViewCredit(QWidget *parent) : QDialog(parent), ui_(new Ui::ViewCredi
   addVbox_ = new QVBoxLayout();
   ui_->tableScroll->widget()->setLayout(addVbox_);
   ui_->tableLayout->addWidget(ui_->tableScroll);
+
+  connect(ui_->calculator, SIGNAL(clicked()), this, SLOT(CalculatorClicked()));
+  connect(ui_->showResult, SIGNAL(clicked()), this, SLOT(ShowResultClicked()));
 }
 
 ViewCredit::~ViewCredit() { delete ui_; }
 
-void ViewCredit::on_calculator_clicked() noexcept {
+void ViewCredit::CalculatorClicked() noexcept {
   this->close();
   emit firstWindow();
 }
@@ -27,7 +30,7 @@ void ViewCredit::on_calculator_clicked() noexcept {
 void ViewCredit::keyPressEvent(QKeyEvent *event) {
   if (event->key() == Qt::Key_Escape) {
     event->accept();
-    on_calculator_clicked();
+    CalculatorClicked();
   }
 }
 
@@ -89,7 +92,7 @@ bool ViewCredit::DataIsCorrect() noexcept {
     return false;
 }
 
-void ViewCredit::on_showResult_clicked() noexcept {
+void ViewCredit::ShowResultClicked() noexcept {
   const double sum_ = ui_->creditSum->text().toDouble();
   const int term_ = ui_->month->isChecked() ? ui_->creditTerm->text().toInt() : ui_->creditTerm->text().toInt() * 12;
   if (term_ > 600) {

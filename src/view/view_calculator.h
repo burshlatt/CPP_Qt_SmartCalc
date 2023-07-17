@@ -23,21 +23,21 @@ class ViewCalculator : public QMainWindow {
  private slots:
   void GetInfo() noexcept;
   void PrintGraph() noexcept;
+  void RadClicked() noexcept;
+  void DegClicked() noexcept;
+  void DotClicked() noexcept;
+  void SubClicked() noexcept;
   void CheckFields() noexcept;
   void FuncClicked() noexcept;
-  void on_rad_clicked() noexcept;
-  void on_deg_clicked() noexcept;
+  void ResultClicked() noexcept;
+  void DelAllClicked() noexcept;
+  void DelElemClicked() noexcept;
   void SymbolsClicked() noexcept;
+  void CredCalcClicked() noexcept;
   void BracketsClicked() noexcept;
   void OperatorsClicked() noexcept;
-  void on_dotSym_clicked() noexcept;
-  void on_delAll_clicked() noexcept;
-  void on_subFunc_clicked() noexcept;
-  void on_delElem_clicked() noexcept;
-  void on_credCalc_clicked() noexcept;
-  void on_deposCalc_clicked() noexcept;
-  void on_showGraph_clicked() noexcept;
-  void on_resultFunc_clicked() noexcept;
+  void DeposCalcClicked() noexcept;
+  void ShowGraphClicked() noexcept;
 
  private:
   Ui::ViewCalculator *ui_;

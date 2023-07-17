@@ -21,8 +21,8 @@ class ViewCredit : public QDialog {
  private slots:
   void DelRow() noexcept;
   bool DataIsCorrect() noexcept;
-  void on_showResult_clicked() noexcept;
-  void on_calculator_clicked() noexcept;
+  void ShowResultClicked() noexcept;
+  void CalculatorClicked() noexcept;
   void keyPressEvent(QKeyEvent *event) override;
   void AddRow(const int &term, const QVector<QString> &res_arr, const bool &is_annu) noexcept;
 

@@ -70,7 +70,7 @@ background-color : gray;
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="cosFunc">
+   <widget class="QPushButton" name="cos">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -106,7 +106,7 @@ QPushButton:pressed {
      <string>cos</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="sinFunc">
+   <widget class="QPushButton" name="sin">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -142,7 +142,7 @@ QPushButton:pressed {
      <string>sin</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="tanFunc">
+   <widget class="QPushButton" name="tan">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -178,7 +178,7 @@ QPushButton:pressed {
      <string>tan</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="sqrtFunc">
+   <widget class="QPushButton" name="sqrt">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -214,7 +214,7 @@ QPushButton:pressed {
      <string>sqrt</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="lnFunc">
+   <widget class="QPushButton" name="ln">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -250,7 +250,7 @@ QPushButton:pressed {
      <string>ln</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="acosFunc">
+   <widget class="QPushButton" name="acos">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -286,7 +286,7 @@ QPushButton:pressed {
      <string>acos</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="powFunc">
+   <widget class="QPushButton" name="pow">
     <property name="geometry">
      <rect>
       <x>160</x>
@@ -322,7 +322,7 @@ QPushButton:pressed {
      <string>^</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="asinFunc">
+   <widget class="QPushButton" name="asin">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -358,7 +358,7 @@ QPushButton:pressed {
      <string>asin</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="atanFunc">
+   <widget class="QPushButton" name="atan">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -394,7 +394,7 @@ QPushButton:pressed {
      <string>atan</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="logFunc">
+   <widget class="QPushButton" name="log">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -430,7 +430,7 @@ QPushButton:pressed {
      <string>log</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="modFunc">
+   <widget class="QPushButton" name="mod">
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -549,7 +549,7 @@ QPushButton:pressed {
      <string>1</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="xSym">
+   <widget class="QPushButton" name="num_x">
     <property name="geometry">
      <rect>
       <x>160</x>
@@ -759,7 +759,7 @@ QPushButton:pressed {
      <string>3</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="dotSym">
+   <widget class="QPushButton" name="dot">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -879,7 +879,7 @@ QPushButton:pressed {
      <string>9</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="addFunc">
+   <widget class="QPushButton" name="add">
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -909,7 +909,7 @@ QPushButton:pressed {
      <string>+</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="divFunc">
+   <widget class="QPushButton" name="div">
     <property name="geometry">
      <rect>
       <x>400</x>
@@ -939,7 +939,7 @@ QPushButton:pressed {
      <string>/</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="subFunc">
+   <widget class="QPushButton" name="sub">
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -969,7 +969,7 @@ QPushButton:pressed {
      <string>-</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="mulFunc">
+   <widget class="QPushButton" name="mul">
     <property name="geometry">
      <rect>
       <x>400</x>
@@ -1059,7 +1059,7 @@ QPushButton:pressed {
      <string>AC</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="resultFunc">
+   <widget class="QPushButton" name="result">
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -1297,7 +1297,7 @@ QPushButton:pressed {
      <string>Pi</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="absFunc">
+   <widget class="QPushButton" name="abs">
     <property name="geometry">
      <rect>
       <x>0</x>
