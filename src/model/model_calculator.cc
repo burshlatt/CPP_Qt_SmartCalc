@@ -22,7 +22,7 @@ void ModelCalculator::set_rad(const bool &graph) noexcept { is_rad_ = graph; }
 /*
   ============================ C A L C U L A T O R ============================
 */
-void ModelCalculator::GetNums(double &x) noexcept {
+void ModelCalculator::GetNum(double &x) noexcept {
   x = num_buffer_.top();
   num_buffer_.pop();
 }
@@ -34,15 +34,15 @@ void ModelCalculator::GetNums(double &x, double &y) noexcept {
   num_buffer_.pop();
 }
 
-void ModelCalculator::GetNums() noexcept {
-  if (option_ == 1) {
-    GetNums(x_);
-  } else if (option_ == 2) {
+void ModelCalculator::GetNums(const int &opt) noexcept {
+  if (opt == 1) {
+    GetNum(x_);
+  } else if (opt == 2) {
     GetNums(x_, y_);
-  } else if (option_ == 3) {
-    GetNums(x_);
+  } else if (opt == 3) {
+    GetNum(x_);
     x_ = is_rad_ ? x_ : x_ * M_PI / 180;
-  } else if (option_ == 4) {
+  } else if (opt == 4) {
     const double n_num_ = num_buffer_.top();
     num_buffer_.pop();
     num_buffer_.push(-n_num_);
@@ -51,14 +51,14 @@ void ModelCalculator::GetNums() noexcept {
 
 void ModelCalculator::InsertNumOutput(size_t &index) noexcept {
   if (isdigit(str_[index]) || str_[index] == 'x' || str_[index] == 'P') {
-    int i = 0;
+    std::string str_t;
     bool is_negative_ = false;
-    char char_str_[255] = {'\0'};
-    if (str_[index - 1] == '-' && str_[index - 2] == '(') is_negative_ = true;
+    if (str_[index - 1] == '-' && str_[index - 2] == '(')
+      is_negative_ = true;
     while (isdigit(str_[index]) || str_[index] == '.' || str_[index] == 'x' || str_[index] == 'P' || str_[index] == 'i') {
-      char_str_[i++] = str_[index++];
+      str_t += str_[index++];
     }
-    output_[pos_++] = is_negative_ ? std::string(char_str_) + "-" : std::string(char_str_);
+    output_[pos_++] = is_negative_ ? str_t + "-" : str_t;
   }
 }
 
@@ -80,17 +80,19 @@ void ModelCalculator::PushLogic(const std::string &str) noexcept {
   stack_.push(str);
 }
 
-void ModelCalculator::PushFunctions(size_t &index) noexcept {
-  if (option_ == 1) {
+void ModelCalculator::PushFunctions(size_t &index, const int &opt) noexcept {
+  if (opt == 1) {
     if (str_[index] == '^') {
       stack_.push("^");
     } else {
-      char buffer_[255] = {'\0'};
-      for (size_t i = 0; str_[index] != '('; i++) buffer_[i] = str_[index++];
-      if (std::string(buffer_).size()) stack_.push(std::string(buffer_));
+      std::string buffer_;
+      while (str_[index] != '(')
+        buffer_ += str_[index++];
+      if (buffer_.size())
+        stack_.push(buffer_);
       stack_.push("(");
     }
-  } else if (option_ == 2) {
+  } else if (opt == 2) {
     if (str_[index] == 'm') {
       PushLogic("mod");
       index += 2;
@@ -110,8 +112,8 @@ void ModelCalculator::PushFunctions(size_t &index) noexcept {
   }
 }
 
-void ModelCalculator::PopFunctions() noexcept {
-  if (option_ == 1) {
+void ModelCalculator::PopFunctions(const int &opt) noexcept {
+  if (opt == 1) {
     while (!stack_.empty() && stack_.top() != "(") {
       output_[pos_++] = stack_.top();
       stack_.pop();
@@ -120,13 +122,17 @@ void ModelCalculator::PopFunctions() noexcept {
       is_error_ = true;
     } else {
       stack_.pop();
-      auto it_ = func_map_.find(stack_.top());
-      if ((it_ != func_map_.end() || stack_.top() == "^") && !stack_.empty()) {
-        output_[pos_++] = stack_.top();
-        stack_.pop();
+      while (!stack_.empty()) {
+        auto it_ = func_map_.find(stack_.top());
+        if ((it_ != func_map_.end() || stack_.top() == "^")) {
+          output_[pos_++] = stack_.top();
+          stack_.pop();
+        } else {
+          break;
+        }
       }
     }
-  } else if (option_ == 2) {
+  } else if (opt == 2) {
     while (!stack_.empty() && !is_error_) {
       if (stack_.top() == "(") {
         is_error_ = true;
@@ -140,15 +146,15 @@ void ModelCalculator::PopFunctions() noexcept {
 
 bool ModelCalculator::ConvertNums(const size_t &i) noexcept {
   double num_ = 0.0;
-  if (isdigit(output_[i].front()) || output_[i].front() == 'x' ||
-      output_[i].front() == 'P') {
+  if (isdigit(output_[i].front()) || output_[i].front() == 'x' || output_[i].front() == 'P') {
     if (output_[i].front() == 'x')
       num_ = x_value_;
     else if (output_[i].front() == 'P')
       num_ = M_PI;
     else
-      num_ = atof(output_[i].c_str());
-    if (output_[i].back() == '-') num_ = -num_;
+      num_ = std::stod(output_[i]);
+    if (output_[i].back() == '-')
+      num_ = -num_;
     num_buffer_.push(num_);
     return true;
   }
@@ -167,24 +173,20 @@ void ModelCalculator::Notation(const std::string &str) noexcept {
       case 'l':
       case '^':
       case '(':
-        option_ = 1;
-        PushFunctions(i);
+        PushFunctions(i, 1);
         break;
       case 'm':
       case '*':
       case '/':
       case '+':
       case '-':
-        option_ = 2;
-        PushFunctions(i);
+        PushFunctions(i, 2);
         break;
       case ')':
-        option_ = 1;
-        PopFunctions();
+        PopFunctions(1);
         break;
       case '=':
-        option_ = 2;
-        PopFunctions();
+        PopFunctions(2);
         break;
     }
   }
@@ -200,26 +202,25 @@ void ModelCalculator::Calculations() noexcept {
         case '/':
         case '^':
         case 'm':
-          option_ = 2;
+          GetNums(2);
           break;
         case 'c':
         case 's':
         case 't':
         case 'a':
-          option_ = output_[i] == "sqrt" || output_[i] == "abs" ? 1 : 3;
+          GetNums(output_[i] == "sqrt" || output_[i] == "abs" ? 1 : 3);
           break;
         case 'l':
-          option_ = 1;
+          GetNums(1);
           break;
         case '!':
-          option_ = 4;
+          GetNums(4);
           break;
       }
-      GetNums();
       auto o_it_ = oper_map_.find(output_[i]);
       auto f_it_ = func_map_.find(output_[i]);
       if (o_it_ != oper_map_.end())
-        num_buffer_.push(o_it_->second(x_, y_));
+        num_buffer_.push(o_it_->second(y_, x_));
       if (f_it_ != func_map_.end())
         num_buffer_.push(f_it_->second(x_));
     }

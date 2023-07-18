@@ -21,21 +21,20 @@ class ModelCalculator {
   void set_x(const double &num) noexcept;
   void set_rad(const bool &graph) noexcept;
 
-  void GetNums() noexcept;
   void ClearOutput() noexcept;
   void Calculations() noexcept;
-  void PopFunctions() noexcept;
-  void GetNums(double &x) noexcept;
+  void GetNum(double &x) noexcept;
+  void GetNums(const int &opt) noexcept;
+  void PopFunctions(const int &opt) noexcept;
   bool ConvertNums(const size_t &i) noexcept;
-  void PushFunctions(size_t &index) noexcept;
   void GetNums(double &x, double &y) noexcept;
   void InsertNumOutput(size_t &index) noexcept;
   void Notation(const std::string &str) noexcept;
   void PushLogic(const std::string &str) noexcept;
+  void PushFunctions(size_t &index, const int &opt) noexcept;
 
  private:
   int pos_ = 0;
-  int option_ = 0;
   std::string str_;
   bool is_rad_ = false;
   bool is_error_ = false;
