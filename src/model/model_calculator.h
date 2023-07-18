@@ -61,8 +61,8 @@ class ModelCalculator {
     { "-", [](double x, double y){ return x - y; } },
     { "*", [](double x, double y){ return x * y; } },
     { "/", [](double x, double y){ return x / y; } },
-    { "^", [](double x, double y){ return std::pow(y, x); } },
-    { "mod", [](double x, double y){ return std::fmod(y, x); } }
+    { "^", [](double x, double y){ return std::pow(x, y); } },
+    { "mod", [](double x, double y){ return std::fmod(x, y); } }
   };
 };
 }  // namespace s21
