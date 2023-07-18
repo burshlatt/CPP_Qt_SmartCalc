@@ -26,6 +26,22 @@ bool ControllerCalculator::IsCorrect(const std::string &str) noexcept {
   return true;
 }
 
+bool ControllerCalculator::IsCorrectDec(const QString &str) const noexcept {
+  if (str.toDouble() > 1000000 || str.toDouble() < -1000000) {
+    return false;
+  }
+  if (str.size() && (str[0] == '-' || (str[0] >= '0' && str[0] <= '9'))) {
+    for (int i = 1; i < str.size(); i++) {
+      if (((str[i] < '0' || str[i] > '9') && str[i] != '.') || str.back() == '.' || (str[i] == '.' && str[i - 1] == '-')) {
+        return false;
+      }
+    }
+  } else {
+    return false;
+  }
+  return true;
+}
+
 bool ControllerCalculator::IsError() noexcept { return model_.get_error(); }
 
 bool ControllerCalculator::IsInteger(const double &res) noexcept {

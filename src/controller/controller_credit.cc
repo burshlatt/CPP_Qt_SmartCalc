@@ -15,7 +15,7 @@ bool ControllerCredit::IsCorrectInt(const QString &str) const noexcept {
 
 bool ControllerCredit::IsCorrectDec(const QString &str) const noexcept {
   for (int i = 0; i < str.size(); i++) {
-    if ((str[i] < '0' || str[i] > '9') && str[i] != '.') {
+    if (((str[i] < '0' || str[i] > '9') && str[i] != '.') || str.front() == '.' || str.back() == '.') {
       return false;
     }
   }

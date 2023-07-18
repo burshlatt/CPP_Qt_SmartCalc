@@ -230,37 +230,16 @@ void ViewCalculator::DelAllClicked() noexcept {
   ui_->output->clear();
 }
 
-void ViewCalculator::CheckFields() noexcept {
-  if (ui_->xMinCord->text().size() == 0) {
-    ui_->xMinCord->setText("-5");
-  } else if (ui_->xMinCord->text().toDouble() < -1000000) {
-    ui_->xMinCord->setText("-1000000");
-  }
-  if (ui_->xMaxCord->text().size() == 0) {
-    ui_->xMaxCord->setText("5");
-  } else if (ui_->xMaxCord->text().toDouble() > 1000000) {
-    ui_->xMaxCord->setText("1000000");
-  }
-  if (ui_->yMinCord->text().size() == 0) {
-    ui_->yMinCord->setText("-5");
-  } else if (ui_->yMinCord->text().toDouble() < -1000000) {
-    ui_->yMinCord->setText("-1000000");
-  }
-  if (ui_->yMaxCord->text().size() == 0) {
-    ui_->yMaxCord->setText("5");
-  } else if (ui_->yMaxCord->text().toDouble() > 1000000) {
-    ui_->yMaxCord->setText("1000000");
-  }
-  if (ui_->xStart->text().size() == 0) {
-    ui_->xStart->setText("-200");
-  } else if (ui_->xStart->text().toDouble() < -1000000) {
-    ui_->xStart->setText("-1000000");
-  }
-  if (ui_->xEnd->text().size() == 0) {
-    ui_->xEnd->setText("200");
-  } else if (ui_->xEnd->text().toDouble() > 1000000) {
-    ui_->xEnd->setText("1000000");
-  }
+bool ViewCalculator::IsCorrectGraph() noexcept {
+  bool field_1_ = calc_.IsCorrectDec(ui_->xMinCord->text());
+  bool field_2_ = calc_.IsCorrectDec(ui_->xMaxCord->text());
+  bool field_3_ = calc_.IsCorrectDec(ui_->yMinCord->text());
+  bool field_4_ = calc_.IsCorrectDec(ui_->yMaxCord->text());
+  bool field_5_ = calc_.IsCorrectDec(ui_->xStart->text());
+  bool field_6_ = calc_.IsCorrectDec(ui_->xEnd->text());
+  if (field_1_ && field_2_ && field_3_ && field_4_ && field_5_ && field_6_)
+    return true;
+  return false;
 }
 
 void ViewCalculator::ResultClicked() noexcept {
@@ -308,26 +287,29 @@ void ViewCalculator::ShowGraphClicked() noexcept {
 }
 
 void ViewCalculator::PrintGraph() noexcept {
-  CheckFields();
-  ui_->output->setText("GRAPH");
-  ui_->Graph->clearGraphs();
-  ui_->Graph->xAxis->setRange(ui_->xMinCord->text().toDouble(),
-                              ui_->xMaxCord->text().toDouble());
-  ui_->Graph->yAxis->setRange(ui_->yMinCord->text().toDouble(),
-                              ui_->yMaxCord->text().toDouble());
-  QVector<double> xCord, yCord;
-  double X = ui_->xStart->text().toDouble();
-  const double xEnd = ui_->xEnd->text().toDouble() + 0.1;
-  calc_.GraphStart(str_ + "=");
-  while (X <= xEnd) {
-    xCord.push_back(X);
-    yCord.push_back(calc_.Graph(X));
-    X += 0.1;
+  if (!IsCorrectGraph()) {
+      QMessageBox msg_box_;
+      msg_box_.setText("Значения полей графика должны быть от -1000000 до 1000000");
+      msg_box_.exec();
+  } else {
+      ui_->output->setText("GRAPH");
+      ui_->Graph->clearGraphs();
+      ui_->Graph->xAxis->setRange(ui_->xMinCord->text().toDouble(), ui_->xMaxCord->text().toDouble());
+      ui_->Graph->yAxis->setRange(ui_->yMinCord->text().toDouble(), ui_->yMaxCord->text().toDouble());
+      QVector<double> xCord, yCord;
+      double X = ui_->xStart->text().toDouble();
+      const double xEnd = ui_->xEnd->text().toDouble() + 0.1;
+      calc_.GraphStart(str_ + "=");
+      while (X <= xEnd) {
+        xCord.push_back(X);
+        yCord.push_back(calc_.Graph(X));
+        X += 0.1;
+      }
+      calc_.GraphEnd();
+      ui_->Graph->addGraph();
+      ui_->Graph->graph(0)->addData(xCord, yCord);
+      ui_->Graph->replot();
   }
-  calc_.GraphEnd();
-  ui_->Graph->addGraph();
-  ui_->Graph->graph(0)->addData(xCord, yCord);
-  ui_->Graph->replot();
 }
 
 void ViewCalculator::RadClicked() noexcept {

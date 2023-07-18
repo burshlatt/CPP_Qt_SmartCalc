@@ -23,11 +23,9 @@ class ModelCalculator {
 
   void ClearOutput() noexcept;
   void Calculations() noexcept;
-  void GetNum(double &x) noexcept;
   void GetNums(const int &opt) noexcept;
   void PopFunctions(const int &opt) noexcept;
   bool ConvertNums(const size_t &i) noexcept;
-  void GetNums(double &x, double &y) noexcept;
   void InsertNumOutput(size_t &index) noexcept;
   void Notation(const std::string &str) noexcept;
   void PushLogic(const std::string &str) noexcept;

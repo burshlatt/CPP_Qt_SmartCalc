@@ -22,30 +22,35 @@ void ModelCalculator::set_rad(const bool &graph) noexcept { is_rad_ = graph; }
 /*
   ============================ C A L C U L A T O R ============================
 */
-void ModelCalculator::GetNum(double &x) noexcept {
-  x = num_buffer_.top();
-  num_buffer_.pop();
-}
 
-void ModelCalculator::GetNums(double &x, double &y) noexcept {
-  x = num_buffer_.top();
-  num_buffer_.pop();
-  y = num_buffer_.top();
-  num_buffer_.pop();
-}
-
-void ModelCalculator::GetNums(const int &opt) noexcept {
-  if (opt == 1) {
-    GetNum(x_);
-  } else if (opt == 2) {
-    GetNums(x_, y_);
-  } else if (opt == 3) {
-    GetNum(x_);
-    x_ = is_rad_ ? x_ : x_ * M_PI / 180;
-  } else if (opt == 4) {
-    const double n_num_ = num_buffer_.top();
-    num_buffer_.pop();
-    num_buffer_.push(-n_num_);
+void ModelCalculator::Notation(const std::string &str) noexcept {
+  str_ = str;
+  for (size_t i = 0; i < str_.size() && !is_error_; i++) {
+    InsertNumOutput(i);
+    switch (str_[i]) {
+      case 'c':
+      case 's':
+      case 't':
+      case 'a':
+      case 'l':
+      case '^':
+      case '(':
+        PushFunctions(i, 1);
+        break;
+      case 'm':
+      case '*':
+      case '/':
+      case '+':
+      case '-':
+        PushFunctions(i, 2);
+        break;
+      case ')':
+        PopFunctions(1);
+        break;
+      case '=':
+        PopFunctions(2);
+        break;
+    }
   }
 }
 
@@ -60,24 +65,6 @@ void ModelCalculator::InsertNumOutput(size_t &index) noexcept {
     }
     output_[pos_++] = is_negative_ ? str_t + "-" : str_t;
   }
-}
-
-void ModelCalculator::PushLogic(const std::string &str) noexcept {
-  if (str == "mod" || str == "*" || str == "/") {
-    while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*"
-    || stack_.top() == "/" || stack_.top() == "^" || stack_.top() == "!")) {
-      output_[pos_++] = stack_.top();
-      stack_.pop();
-    }
-  } else if (str == "+" || str == "-") {
-    while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*"
-    || stack_.top() == "/" || stack_.top() == "+" || stack_.top() == "-"
-    || stack_.top() == "^" || stack_.top() == "!")) {
-      output_[pos_++] = stack_.top();
-      stack_.pop();
-    }
-  }
-  stack_.push(str);
 }
 
 void ModelCalculator::PushFunctions(size_t &index, const int &opt) noexcept {
@@ -112,6 +99,24 @@ void ModelCalculator::PushFunctions(size_t &index, const int &opt) noexcept {
   }
 }
 
+void ModelCalculator::PushLogic(const std::string &str) noexcept {
+  if (str == "mod" || str == "*" || str == "/") {
+    while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*"
+    || stack_.top() == "/" || stack_.top() == "^" || stack_.top() == "!")) {
+      output_[pos_++] = stack_.top();
+      stack_.pop();
+    }
+  } else if (str == "+" || str == "-") {
+    while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*"
+    || stack_.top() == "/" || stack_.top() == "+" || stack_.top() == "-"
+    || stack_.top() == "^" || stack_.top() == "!")) {
+      output_[pos_++] = stack_.top();
+      stack_.pop();
+    }
+  }
+  stack_.push(str);
+}
+
 void ModelCalculator::PopFunctions(const int &opt) noexcept {
   if (opt == 1) {
     while (!stack_.empty() && stack_.top() != "(") {
@@ -140,54 +145,6 @@ void ModelCalculator::PopFunctions(const int &opt) noexcept {
         output_[pos_++] = stack_.top();
         stack_.pop();
       }
-    }
-  }
-}
-
-bool ModelCalculator::ConvertNums(const size_t &i) noexcept {
-  double num_ = 0.0;
-  if (isdigit(output_[i].front()) || output_[i].front() == 'x' || output_[i].front() == 'P') {
-    if (output_[i].front() == 'x')
-      num_ = x_value_;
-    else if (output_[i].front() == 'P')
-      num_ = M_PI;
-    else
-      num_ = std::stod(output_[i]);
-    if (output_[i].back() == '-')
-      num_ = -num_;
-    num_buffer_.push(num_);
-    return true;
-  }
-  return false;
-}
-
-void ModelCalculator::Notation(const std::string &str) noexcept {
-  str_ = str;
-  for (size_t i = 0; i < str_.size() && !is_error_; i++) {
-    InsertNumOutput(i);
-    switch (str_[i]) {
-      case 'c':
-      case 's':
-      case 't':
-      case 'a':
-      case 'l':
-      case '^':
-      case '(':
-        PushFunctions(i, 1);
-        break;
-      case 'm':
-      case '*':
-      case '/':
-      case '+':
-      case '-':
-        PushFunctions(i, 2);
-        break;
-      case ')':
-        PopFunctions(1);
-        break;
-      case '=':
-        PopFunctions(2);
-        break;
     }
   }
 }
@@ -227,6 +184,43 @@ void ModelCalculator::Calculations() noexcept {
   }
   result_ = num_buffer_.top();
   num_buffer_.pop();
+}
+
+bool ModelCalculator::ConvertNums(const size_t &i) noexcept {
+  double num_ = 0.0;
+  if (isdigit(output_[i].front()) || output_[i].front() == 'x' || output_[i].front() == 'P') {
+    if (output_[i].front() == 'x')
+      num_ = x_value_;
+    else if (output_[i].front() == 'P')
+      num_ = M_PI;
+    else
+      num_ = std::stod(output_[i]);
+    if (output_[i].back() == '-')
+      num_ = -num_;
+    num_buffer_.push(num_);
+    return true;
+  }
+  return false;
+}
+
+void ModelCalculator::GetNums(const int &opt) noexcept {
+  if (opt == 1) {
+    x_ = num_buffer_.top();
+    num_buffer_.pop();
+  } else if (opt == 2) {
+    x_ = num_buffer_.top();
+    num_buffer_.pop();
+    y_ = num_buffer_.top();
+    num_buffer_.pop();
+  } else if (opt == 3) {
+    x_ = num_buffer_.top();
+    num_buffer_.pop();
+    x_ = is_rad_ ? x_ : x_ * M_PI / 180;
+  } else if (opt == 4) {
+    const double n_num_ = num_buffer_.top();
+    num_buffer_.pop();
+    num_buffer_.push(-n_num_);
+  }
 }
 
 void ModelCalculator::ClearOutput() noexcept { pos_ = 0; }

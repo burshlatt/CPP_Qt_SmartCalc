@@ -27,10 +27,10 @@ class ViewCalculator : public QMainWindow {
   void DegClicked() noexcept;
   void DotClicked() noexcept;
   void SubClicked() noexcept;
-  void CheckFields() noexcept;
   void FuncClicked() noexcept;
   void ResultClicked() noexcept;
   void DelAllClicked() noexcept;
+  bool IsCorrectGraph() noexcept;
   void DelElemClicked() noexcept;
   void SymbolsClicked() noexcept;
   void CredCalcClicked() noexcept;

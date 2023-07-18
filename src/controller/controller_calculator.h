@@ -20,6 +20,7 @@ class ControllerCalculator {
   bool IsInteger(const double &res) noexcept;
   bool IsGraph(const std::string &str) noexcept;
   bool IsCorrect(const std::string &str) noexcept;
+  bool IsCorrectDec(const QString &str) const noexcept;
 
   void GraphEnd() noexcept;
   double Graph(const double &x) noexcept;

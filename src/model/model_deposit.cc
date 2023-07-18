@@ -32,40 +32,6 @@ void ModelDeposit::set_period_waste(const std::vector<int> &period) noexcept { w
   ==================== D E P O S I T - C A L C U L A T O R ====================
 */
 
-int ModelDeposit::FormatTime() const noexcept {
-  if (period_ == 1)
-    return 1;
-  else if (period_ == 2)
-    return 7;
-  else if (period_ == 3)
-    return 30;
-  else if (period_ == 4)
-    return 91;
-  else if (period_ == 5)
-    return 183;
-  else if (period_ == 6)
-    return 365;
-  else if (period_ == 7)
-    return term_;
-  return 0;
-}
-
-int ModelDeposit::FormatTimeAdd(const int &period) const noexcept {
-  if (period == 1)
-    return term_;
-  else if (period == 2)
-    return 30;
-  else if (period == 3)
-    return 60;
-  else if (period == 4)
-    return 91;
-  else if (period == 5)
-    return 183;
-  else if (period == 6)
-    return 365;
-  return 0;
-}
-
 void ModelDeposit::Deposit() noexcept {
   double total_ = sum_;
   int payments_time_ = FormatTime();
@@ -110,6 +76,40 @@ void ModelDeposit::Deposit() noexcept {
                       : 0;                        // TAX RATE
   depos_arr_[2] = depos_arr_[0] - depos_arr_[1];  // RESULT SUM WITH TAX
   depos_arr_[3] = total_;                         // RESULT SUM
+}
+
+int ModelDeposit::FormatTime() const noexcept {
+  if (period_ == 1)
+    return 1;
+  else if (period_ == 2)
+    return 7;
+  else if (period_ == 3)
+    return 30;
+  else if (period_ == 4)
+    return 91;
+  else if (period_ == 5)
+    return 183;
+  else if (period_ == 6)
+    return 365;
+  else if (period_ == 7)
+    return term_;
+  return 0;
+}
+
+int ModelDeposit::FormatTimeAdd(const int &period) const noexcept {
+  if (period == 1)
+    return term_;
+  else if (period == 2)
+    return 30;
+  else if (period == 3)
+    return 60;
+  else if (period == 4)
+    return 91;
+  else if (period == 5)
+    return 183;
+  else if (period == 6)
+    return 365;
+  return 0;
 }
 
 /*
