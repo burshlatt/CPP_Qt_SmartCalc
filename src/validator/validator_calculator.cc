@@ -87,7 +87,7 @@ QString ValidatorCalculator::FormatSymbols(const char &last, const QPushButton *
   return result_;
 }
 
-QString ValidatorCalculator::FormatFunc(const std::string &str, const QPushButton *btn, bool &is_dot_) const noexcept {
+QString ValidatorCalculator::FormatFunctions(const std::string &str, const QPushButton *btn, bool &is_dot_) const noexcept {
   QString result_;
   char last_ = str.back();
   QString btn_text_ = btn->text();
@@ -124,6 +124,74 @@ QString ValidatorCalculator::FormatBrackets(const std::string &str, const QPushB
         }
       }
     }
+  }
+  return result_;
+}
+
+QString ValidatorCalculator::FormatSubtract(const std::string &str, bool &is_dot_) const noexcept {
+  QString result_;
+  char last_ = str.back();
+  size_t size_ = str.size();
+  if (size_ < 255 && last_ != '.') {
+    if (size_ == 0) {
+      result_ += "(";
+    } else {
+      auto it_ = oper_skip_.find(last_);
+      if (it_ != oper_skip_.end() && last_ != '(') {
+        result_ += "(";
+      }
+    }
+    result_ += "-";
+    is_dot_ = false;
+  }
+  return result_;
+}
+
+QString ValidatorCalculator::FormatDot(const std::string &str, bool &is_dot_) const noexcept {
+  QString result_;
+  char last_ = str.back();
+  size_t size_ = str.size();
+  for (int i = size_ - 1; str[i] >= '0' && str[i] <= '9'; i--) {
+    if (str[i - 1] == '.') {
+      is_dot_ = true;
+    }
+  }
+  if (size_ < 255 && last_ != '.' && !is_dot_) {
+    if (last_ < '0' || last_ > '9') {
+      if (last_ == ')' || last_ == 'i' || last_ == 'x') {
+        result_ += "*";
+      }
+      result_ += "0";
+    }
+    result_ += ".";
+    is_dot_ = true;
+  }
+  return result_;
+}
+
+QString ValidatorCalculator::FormatDel(const std::string &str, bool &is_dot_) const noexcept {
+  QString result_ = QString::fromStdString(str);
+  char last_ = str.back();
+  size_t size_ = str.size();
+  if (last_ == '.') is_dot_ = false;
+  if (size_ != 0) {
+    const char m_five = str[size_ - 5];
+    const char m_four = str[size_ - 4];
+    const char m_three = str[size_ - 3];
+    const char m_two = str[size_ - 2];
+    if (last_ == '(' && (m_five == 'a' || m_five == 's'))
+      result_.chop(5);
+    else if (last_ == '(' && m_five != 'a' &&
+             (m_four == 'c' || m_four == 's' || m_four == 't' ||
+              m_four == 'a' || m_four == 'l'))
+      result_.chop(4);
+    else if ((last_ == '(' && m_three == 'l') ||
+             (last_ == 'd' && m_three == 'm'))
+      result_.chop(3);
+    else if (last_ == 'i' && m_two == 'P')
+      result_.chop(2);
+    else
+      result_.chop(1);
   }
   return result_;
 }

@@ -85,7 +85,7 @@ void ViewCalculator::SymbolsClicked() noexcept {
 
 void ViewCalculator::FuncClicked() noexcept {
   GetInfo();
-  QString format_str_ = valid_.FormatFunc(str_, button_, is_dot_);
+  QString format_str_ = valid_.FormatFunctions(str_, button_, is_dot_);
   ui_->input->setText(ui_->input->text() + format_str_);
 }
 
@@ -97,65 +97,20 @@ void ViewCalculator::BracketsClicked() noexcept {
 
 void ViewCalculator::SubClicked() noexcept {
   GetInfo();
-  if (size_ < 255 && str_.back() != '.') {
-    if (size_ == 0) {
-      ui_->input->setText(ui_->input->text() + "(");
-    } else {
-      for (size_t i = 0; i < operators_skip_.size(); i++) {
-        if (str_.back() == operators_skip_[i] && str_.back() != '(') {
-          ui_->input->setText(ui_->input->text() + "(");
-          break;
-        }
-      }
-    }
-    ui_->input->setText(ui_->input->text() + "-");
-    is_dot_ = false;
-  }
+  QString format_str_ = valid_.FormatSubtract(str_, is_dot_);
+  ui_->input->setText(ui_->input->text() + format_str_);
 }
 
 void ViewCalculator::DotClicked() noexcept {
   GetInfo();
-  for (int i = str_.size() - 1; str_[i] >= '0' && str_[i] <= '9'; i--) {
-    if (str_[i - 1] == '.') {
-      is_dot_ = true;
-    }
-  }
-  if (size_ < 255 && str_.back() != '.' && !is_dot_) {
-    if (str_.back() < '0' || str_.back() > '9') {
-      if (str_.back() == ')' || str_.back() == 'i' || str_.back() == 'x') {
-        ui_->input->setText(ui_->input->text() + "*");
-      }
-      ui_->input->setText(ui_->input->text() + "0");
-    }
-    ui_->input->setText(ui_->input->text() + ".");
-    is_dot_ = true;
-  }
+  QString format_str_ = valid_.FormatDot(str_, is_dot_);
+  ui_->input->setText(ui_->input->text() + format_str_);
 }
 
 void ViewCalculator::DelElemClicked() noexcept {
   GetInfo();
-  if (str_.back() == '.') is_dot_ = false;
-  if (size_ != 0) {
-    const char m_five = str_[str_.size() - 5];
-    const char m_four = str_[str_.size() - 4];
-    const char m_three = str_[str_.size() - 3];
-    const char m_two = str_[str_.size() - 2];
-    QString text = ui_->input->text();
-    if (str_.back() == '(' && (m_five == 'a' || m_five == 's'))
-      text.chop(5);
-    else if (str_.back() == '(' && m_five != 'a' &&
-             (m_four == 'c' || m_four == 's' || m_four == 't' ||
-              m_four == 'a' || m_four == 'l'))
-      text.chop(4);
-    else if ((str_.back() == '(' && m_three == 'l') ||
-             (str_.back() == 'd' && m_three == 'm'))
-      text.chop(3);
-    else if (str_.back() == 'i' && m_two == 'P')
-      text.chop(2);
-    else
-      text.chop(1);
-    ui_->input->setText(text);
-  }
+  QString format_str_ = valid_.FormatDel(str_, is_dot_);
+  ui_->input->setText(format_str_);
 }
 
 void ViewCalculator::DelAllClicked() noexcept {

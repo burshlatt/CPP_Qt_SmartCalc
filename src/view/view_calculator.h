@@ -53,7 +53,6 @@ class ViewCalculator : public QMainWindow {
   size_t size_ = 0;
   bool is_dot_ = false;
   bool graph_open_ = false;
-  const std::array<char, 7> operators_skip_ = {'-', '+', '*', '/', '^', 'd', '('};
 };
 
 #endif  // VIEW_CALCULATOR_H

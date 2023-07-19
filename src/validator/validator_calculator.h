@@ -19,9 +19,14 @@ class ValidatorCalculator {
   bool IsCorrectDec(const QString &str) const noexcept;
   bool IsOperator(const std::string &str) const noexcept;
   bool IsCorrectOperator(const std::string &str) const noexcept;
+
   void GetBrackets(const std::string &str, int &l_br, int &r_br) const noexcept;
+
+  QString FormatDel(const std::string &str, bool &is_dot_) const noexcept;
+  QString FormatDot(const std::string &str, bool &is_dot_) const noexcept;
+  QString FormatSubtract(const std::string &str, bool &is_dot_) const noexcept;
   QString FormatSymbols(const char &last, const QPushButton *btn, bool &is_dot_) const noexcept;
-  QString FormatFunc(const std::string &str, const QPushButton *btn, bool &is_dot_) const noexcept;
+  QString FormatFunctions(const std::string &str, const QPushButton *btn, bool &is_dot_) const noexcept;
   QString FormatBrackets(const std::string &str, const QPushButton *btn, bool &is_dot_) const noexcept;
 
  private:
