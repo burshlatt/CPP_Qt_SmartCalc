@@ -19,6 +19,9 @@ SOURCES += \
     model/model_calculator.cc \
     model/model_credit.cc \
     model/model_deposit.cc \
+    validator/validator_calculator.cc \
+    validator/validator_credit.cc \
+    validator/validator_deposit.cc \
     view/view_calculator.cc \
     view/view_credit.cc \
     view/view_deposit.cc
@@ -31,6 +34,9 @@ HEADERS += \
     model/model_calculator.h \
     model/model_credit.h \
     model/model_deposit.h \
+    validator/validator_calculator.h \
+    validator/validator_credit.h \
+    validator/validator_deposit.h \
     view/view_calculator.h \
     view/view_credit.h \
     view/view_deposit.h

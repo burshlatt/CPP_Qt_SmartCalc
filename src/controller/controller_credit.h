@@ -17,9 +17,6 @@ class ControllerCredit {
   void set_term(const double &term) noexcept;
   void set_percent(const QString &percent) noexcept;
 
-  bool IsCorrectInt(const QString &str) const noexcept;
-  bool IsCorrectDec(const QString &str) const noexcept;
-
   QVector<QString> AnnuCred() noexcept;
   QVector<QString> DifferCred() noexcept;
 

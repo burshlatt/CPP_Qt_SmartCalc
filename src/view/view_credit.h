@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QVBoxLayout>
 
+#include "../validator/validator_credit.h"
 #include "../controller/controller_credit.h"
 
 namespace Ui {
@@ -33,6 +34,7 @@ class ViewCredit : public QDialog {
   int count_ = 0;
   Ui::ViewCredit *ui_;
   QVBoxLayout *addVbox_;
+  s21::ValidatorCredit valid_;
   s21::ControllerCredit calc_;
 };
 

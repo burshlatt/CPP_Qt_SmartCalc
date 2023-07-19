@@ -85,8 +85,7 @@ bool ViewCredit::DataIsCorrect() noexcept {
   QString sum_ = ui_->creditSum->text();
   QString term_ = ui_->creditTerm->text();
   QString percent_ = ui_->percent->text();
-  if (calc_.IsCorrectInt(term_) && calc_.IsCorrectDec(sum_) &&
-      calc_.IsCorrectDec(percent_))
+  if (valid_.IsCorrectInt(term_) && valid_.IsCorrectDec(sum_) && valid_.IsCorrectDec(percent_))
     return true;
   else
     return false;

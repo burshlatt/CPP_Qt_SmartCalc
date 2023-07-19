@@ -2,31 +2,7 @@
 
 namespace s21 {
 /*
-  ============================ V A L I D A T O R S ============================
-*/
-bool ControllerDeposit::IsCorrectInt(const QString &str) const noexcept {
-  for (int i = 0; i < str.size(); i++) {
-    if (str[i] < '0' || str[i] > '9') {
-      return false;
-    }
-  }
-  return true;
-}
-
-bool ControllerDeposit::IsCorrectDec(const QString &str) const noexcept {
-  for (int i = 0; i < str.size(); i++) {
-    if (((str[i] < '0' || str[i] > '9') && str[i] != '.') || str.front() == '.' || str.back() == '.') {
-      return false;
-    }
-  }
-  return true;
-}
-/*
-  ============================ V A L I D A T O R S ============================
-*/
-
-/*
-  ============================== M U T A T O R S ==============================
+  ==================== D E P O S I T - C A L C U L A T O R ====================
 */
 void ControllerDeposit::set_cap(const bool &cap) noexcept { model_.set_cap(cap); }
 void ControllerDeposit::set_sum(const double &sum) noexcept { model_.set_sum(sum); }
@@ -54,13 +30,7 @@ void ControllerDeposit::set_waste(const QVector<QString> &waste) noexcept {
   }
   model_.set_waste(buffer_);
 }
-/*
-  ============================== M U T A T O R S ==============================
-*/
 
-/*
-  ==================== D E P O S I T - C A L C U L A T O R ====================
-*/
 QVector<QString> ControllerDeposit::Deposit() noexcept {
   model_.Deposit();
   std::array<double, 4> result_ = model_.get_depos();

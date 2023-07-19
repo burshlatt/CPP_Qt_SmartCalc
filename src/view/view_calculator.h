@@ -5,6 +5,7 @@
 
 #include "view_credit.h"
 #include "view_deposit.h"
+#include "../validator/validator_calculator.h"
 #include "../controller/controller_calculator.h"
 
 QT_BEGIN_NAMESPACE
@@ -46,6 +47,7 @@ class ViewCalculator : public QMainWindow {
 
   std::string str_;
   QPushButton *button_;
+  s21::ValidatorCalculator valid_;
   s21::ControllerCalculator calc_;
 
   size_t size_ = 0;

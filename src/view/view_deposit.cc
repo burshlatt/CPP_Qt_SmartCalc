@@ -142,7 +142,7 @@ void ViewDeposit::AddPayment() noexcept {
     QDate date_add = date_edits_add_[i]->date();
     QString text_add = line_edits_add_[i]->text();
     QString combobox_add = combo_boxes_add_[i]->currentText();
-    if (calc_.IsCorrectDec(text_add)) {
+    if (valid_.IsCorrectDec(text_add)) {
       if (date_add <= last_date_) {
         add_.push_back(text_add);
         add_days_.push_back(QDate::currentDate().daysTo(date_add));
@@ -172,7 +172,7 @@ void ViewDeposit::AddWaste() noexcept {
     QDate date_waste = date_edits_waste_[i]->date();
     QString text_waste = line_edits_waste_[i]->text();
     QString combobox_waste = combo_boxes_waste_[i]->currentText();
-    if (calc_.IsCorrectDec(text_waste)) {
+    if (valid_.IsCorrectDec(text_waste)) {
       if (date_waste <= last_date_) {
         waste_.push_back(text_waste);
         waste_days_.push_back(QDate::currentDate().daysTo(date_waste));
@@ -227,8 +227,8 @@ void ViewDeposit::CheckTypes() noexcept {
 }
 
 bool ViewDeposit::DataIsCorrect() noexcept {
-  if (calc_.IsCorrectDec(sum_) && calc_.IsCorrectDec(percent_) &&
-      calc_.IsCorrectDec(tax_rate_) && calc_.IsCorrectInt(term_))
+  if (valid_.IsCorrectDec(sum_) && valid_.IsCorrectDec(percent_) &&
+      valid_.IsCorrectDec(tax_rate_) && valid_.IsCorrectInt(term_))
     return true;
   else
     return false;

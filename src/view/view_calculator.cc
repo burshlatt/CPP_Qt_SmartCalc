@@ -69,96 +69,30 @@ void ViewCalculator::GetInfo() noexcept {
 
 void ViewCalculator::OperatorsClicked() noexcept {
   GetInfo();
-  bool is_operator_ = false;
-  if ((size_ && str_.back() != '(' && str_.back() != '.') &&
-      ((str_.back() == '-' && str_[str_.size() - 2] != '(') ||
-       str_.back() != '-')) {
-    for (size_t i = 0; i < operators_skip_.size(); i++) {
-      if (str_.back() == operators_skip_[i] &&
-          (str_.back() != '-' || str_[str_.size() - 2] != '(')) {
-        is_operator_ = true;
-        break;
-      }
-    }
-    if (is_operator_) {
+  if (valid_.IsCorrectOperator(str_)) {
+    if (valid_.IsOperator(str_))
       DelElemClicked();
-    }
-    if (size_ < 255) {
-      ui_->input->setText(ui_->input->text() + button_->text());
-      is_dot_ = false;
-    }
+    ui_->input->setText(ui_->input->text() + button_->text());
+    is_dot_ = false;
   }
 }
 
 void ViewCalculator::SymbolsClicked() noexcept {
   GetInfo();
-  if (str_.back() == 'x' || str_.back() == ')' || str_.back() == 'i') {
-    ui_->input->setText(ui_->input->text() + "*");
-  }
-  if (button_->text() == "Pi" && str_.back() != '.') {
-    if (str_.back() >= '0' && str_.back() <= '9') {
-      ui_->input->setText(ui_->input->text() + "*");
-    }
-    ui_->input->setText(ui_->input->text() + button_->text());
-    is_dot_ = false;
-  } else if (button_->text() == 'x' && str_.back() != '.') {
-    if (str_.back() >= '0' && str_.back() <= '9') {
-      ui_->input->setText(ui_->input->text() + "*");
-    }
-    ui_->input->setText(ui_->input->text() + "x");
-    is_dot_ = false;
-  } else if (button_->text() >= '0' && button_->text() <= '9') {
-    ui_->input->setText(ui_->input->text() + button_->text());
-  }
+  QString format_str_ = valid_.FormatSymbols(str_.back(), button_, is_dot_);
+  ui_->input->setText(ui_->input->text() + format_str_);
 }
 
 void ViewCalculator::FuncClicked() noexcept {
   GetInfo();
-  if (size_ < 255 && str_.back() != '.') {
-    if ((str_.back() >= '0' && str_.back() <= '9') || str_.back() == ')' ||
-        str_.back() == 'i') {
-      ui_->input->setText(ui_->input->text() + "*");
-    }
-    ui_->input->setText(ui_->input->text() + button_->text() + "(");
-    is_dot_ = false;
-  }
+  QString format_str_ = valid_.FormatFunc(str_, button_, is_dot_);
+  ui_->input->setText(ui_->input->text() + format_str_);
 }
 
 void ViewCalculator::BracketsClicked() noexcept {
   GetInfo();
-  int l_brackets_ = 0, r_brackets_ = 0;
-  bool can_do_ = true;
-  if (str_.back() != '.') {
-    for (size_t i = 0; i < size_; i++) {
-      if (str_[i] == '(') {
-        l_brackets_++;
-      }
-      if (str_[i] == ')') {
-        r_brackets_++;
-      }
-    }
-    if (size_ < 255) {
-      if (button_->text() == '(') {
-        if ((str_.back() >= '0' && str_.back() <= '9') || str_.back() == 'x' ||
-            str_.back() == ')') {
-          ui_->input->setText(ui_->input->text() + "*");
-        }
-        ui_->input->setText(ui_->input->text() + "(");
-        is_dot_ = false;
-      }
-      if (button_->text() == ')' && r_brackets_ < l_brackets_) {
-        for (size_t i = 0; i < operators_skip_.size(); i++) {
-          if (str_.back() == operators_skip_[i]) {
-            can_do_ = false;
-          }
-        }
-        if (can_do_) {
-          ui_->input->setText(ui_->input->text() + ")");
-          is_dot_ = false;
-        }
-      }
-    }
-  }
+  QString format_str_ = valid_.FormatBrackets(str_, button_, is_dot_);
+  ui_->input->setText(ui_->input->text() + format_str_);
 }
 
 void ViewCalculator::SubClicked() noexcept {
@@ -231,12 +165,12 @@ void ViewCalculator::DelAllClicked() noexcept {
 }
 
 bool ViewCalculator::IsCorrectGraph() noexcept {
-  bool field_1_ = calc_.IsCorrectDec(ui_->xMinCord->text());
-  bool field_2_ = calc_.IsCorrectDec(ui_->xMaxCord->text());
-  bool field_3_ = calc_.IsCorrectDec(ui_->yMinCord->text());
-  bool field_4_ = calc_.IsCorrectDec(ui_->yMaxCord->text());
-  bool field_5_ = calc_.IsCorrectDec(ui_->xStart->text());
-  bool field_6_ = calc_.IsCorrectDec(ui_->xEnd->text());
+  bool field_1_ = valid_.IsCorrectDec(ui_->xMinCord->text());
+  bool field_2_ = valid_.IsCorrectDec(ui_->xMaxCord->text());
+  bool field_3_ = valid_.IsCorrectDec(ui_->yMinCord->text());
+  bool field_4_ = valid_.IsCorrectDec(ui_->yMaxCord->text());
+  bool field_5_ = valid_.IsCorrectDec(ui_->xStart->text());
+  bool field_6_ = valid_.IsCorrectDec(ui_->xEnd->text());
   if (field_1_ && field_2_ && field_3_ && field_4_ && field_5_ && field_6_)
     return true;
   return false;
@@ -245,10 +179,10 @@ bool ViewCalculator::IsCorrectGraph() noexcept {
 void ViewCalculator::ResultClicked() noexcept {
   ui_->output->clear();
   str_ = ui_->input->text().toStdString();
-  if (calc_.IsCorrect(str_) && str_.size()) {
-    if (!calc_.IsGraph(str_)) {
+  if (valid_.IsCorrect(str_) && str_.size()) {
+    if (!valid_.IsGraph(str_)) {
       QString result_ = calc_.Calculator(str_ + "=");
-      if (!calc_.IsError()) {
+      if (!calc_.get_error()) {
         ui_->output->clear();
         ui_->output->setText(result_);
       } else {
@@ -265,7 +199,7 @@ void ViewCalculator::ResultClicked() noexcept {
       }
       PrintGraph();
     }
-  } else if (!calc_.IsCorrect(str_) && str_.size()) {
+  } else if (!valid_.IsCorrect(str_) && str_.size()) {
     ui_->output->setText("ERROR: Incorrect data!");
   }
 }

@@ -27,9 +27,6 @@ class ControllerDeposit {
   void set_period_add(const std::vector<int> &period) noexcept;
   void set_period_waste(const std::vector<int> &period) noexcept;
 
-  bool IsCorrectInt(const QString &str) const noexcept;
-  bool IsCorrectDec(const QString &str) const noexcept;
-
   QVector<QString> Deposit() noexcept;
 
  private:
