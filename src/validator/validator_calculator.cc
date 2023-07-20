@@ -4,7 +4,6 @@ namespace s21 {
 /*
   ============================ V A L I D A T O R S ============================
 */
-
 void ValidatorCalculator::GetBrackets(const std::string &str, int &l_br, int &r_br) const noexcept {
   for (size_t i = 0; i < str.size(); i++) {
     if (str[i] == '(') l_br++;
