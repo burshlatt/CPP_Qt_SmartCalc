@@ -23,6 +23,7 @@ class ViewCalculator : public QMainWindow {
 
  private slots:
   void GetInfo() noexcept;
+  void OpenGraph() noexcept;
   void PrintGraph() noexcept;
   void RadClicked() noexcept;
   void DegClicked() noexcept;

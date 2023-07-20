@@ -4,7 +4,6 @@ namespace s21 {
 /*
   ============================ C A L C U L A T O R ============================
 */
-bool ControllerCalculator::get_error() noexcept { return model_.get_error(); }
 void ControllerCalculator::set_rad(const bool &is_rad) noexcept { model_.set_rad(is_rad); }
 
 bool ControllerCalculator::IsInteger(const double &res) noexcept {
@@ -19,7 +18,8 @@ QString ControllerCalculator::Calculator(const std::string &str) noexcept {
   model_.Calculations();
   model_.ClearOutput();
   double res_ = model_.get_res();
-  return QString::number(res_, 'f', IsInteger(res_) ? 0 : 7);
+  QString err_ = "ERROR: Incorrect data!";
+  return !model_.get_error() ? QString::number(res_, 'f', IsInteger(res_) ? 0 : 7) : err_;
 }
 
 void ControllerCalculator::GraphStart(const std::string &str) noexcept {

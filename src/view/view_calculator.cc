@@ -4,13 +4,12 @@
 ViewCalculator::ViewCalculator(QWidget *parent) : QMainWindow(parent), ui_(new Ui::ViewCalculator) {
   ui_->setupUi(this);
 
-  credit_ = new ViewCredit();
-  connect(credit_, &ViewCredit::firstWindow, this, &ViewCalculator::show);
-
-  deposit_ = new ViewDeposit();
-  connect(deposit_, &ViewDeposit::firstWindow, this, &ViewCalculator::show);
-
   this->setFixedSize(480, 380);
+
+  credit_ = new ViewCredit();
+  deposit_ = new ViewDeposit();
+  connect(credit_, &ViewCredit::firstWindow, this, &ViewCalculator::show);
+  connect(deposit_, &ViewDeposit::firstWindow, this, &ViewCalculator::show);
 
   QScreen *screen = QGuiApplication::primaryScreen();
   QRect screenGeometry = screen->geometry();
@@ -69,12 +68,8 @@ void ViewCalculator::GetInfo() noexcept {
 
 void ViewCalculator::OperatorsClicked() noexcept {
   GetInfo();
-  if (valid_.IsCorrectOperator(str_)) {
-    if (valid_.IsOperator(str_))
-      DelElemClicked();
-    ui_->input->setText(ui_->input->text() + button_->text());
-    is_dot_ = false;
-  }
+  QString format_str_ = valid_.FormatOperators(str_, button_, is_dot_);
+  ui_->input->setText(format_str_);
 }
 
 void ViewCalculator::SymbolsClicked() noexcept {
@@ -132,50 +127,41 @@ bool ViewCalculator::IsCorrectGraph() noexcept {
 }
 
 void ViewCalculator::ResultClicked() noexcept {
-  ui_->output->clear();
-  str_ = ui_->input->text().toStdString();
+  GetInfo();
   if (valid_.IsCorrect(str_) && str_.size()) {
-    if (!valid_.IsGraph(str_)) {
-      QString result_ = calc_.Calculator(str_ + "=");
-      if (!calc_.get_error()) {
-        ui_->output->clear();
-        ui_->output->setText(result_);
-      } else {
-        ui_->output->setText("ERROR: Incorrect data!");
-      }
-    } else {
-      if (!graph_open_) {
-        const int xPos = this->geometry().x();
-        const int yPos = this->geometry().y();
-        this->setFixedSize(960, 380);
-        ui_->showGraph->setText("<");
-        setGeometry(xPos, yPos, width() + 480, height());
-        graph_open_ = true;
-      }
+    if (!valid_.IsGraph(str_))
+      ui_->output->setText(calc_.Calculator(str_ + "="));
+    else
       PrintGraph();
-    }
   } else if (!valid_.IsCorrect(str_) && str_.size()) {
     ui_->output->setText("ERROR: Incorrect data!");
   }
 }
 
-void ViewCalculator::ShowGraphClicked() noexcept {
-  const int xPos = this->geometry().x();
-  const int yPos = this->geometry().y();
-  if (!graph_open_) {
+void ViewCalculator::OpenGraph() noexcept {
+    const int x_pos_ = this->geometry().x();
+    const int y_pos_ = this->geometry().y();
     this->setFixedSize(960, 380);
     ui_->showGraph->setText("<");
-    setGeometry(xPos, yPos, width() + 480, height());
+    setGeometry(x_pos_, y_pos_, width() + 480, height());
     graph_open_ = true;
+}
+
+void ViewCalculator::ShowGraphClicked() noexcept {
+  const int x_pos_ = this->geometry().x();
+  const int y_pos_ = this->geometry().y();
+  if (!graph_open_) {
+    OpenGraph();
   } else {
     this->setFixedSize(480, 380);
     ui_->showGraph->setText(">");
-    setGeometry(xPos, yPos, width() - 480, height());
+    setGeometry(x_pos_, y_pos_, width() - 480, height());
     graph_open_ = false;
   }
 }
 
 void ViewCalculator::PrintGraph() noexcept {
+  OpenGraph();
   if (!IsCorrectGraph()) {
       QMessageBox msg_box_;
       msg_box_.setText("Значения полей графика должны быть от -1000000 до 1000000");
@@ -185,18 +171,18 @@ void ViewCalculator::PrintGraph() noexcept {
       ui_->Graph->clearGraphs();
       ui_->Graph->xAxis->setRange(ui_->xMinCord->text().toDouble(), ui_->xMaxCord->text().toDouble());
       ui_->Graph->yAxis->setRange(ui_->yMinCord->text().toDouble(), ui_->yMaxCord->text().toDouble());
-      QVector<double> xCord, yCord;
-      double X = ui_->xStart->text().toDouble();
-      const double xEnd = ui_->xEnd->text().toDouble() + 0.1;
+      QVector<double> x_cord_, y_cord_;
+      double x_ = ui_->xStart->text().toDouble();
+      const double x_end_ = ui_->xEnd->text().toDouble() + 0.1;
       calc_.GraphStart(str_ + "=");
-      while (X <= xEnd) {
-        xCord.push_back(X);
-        yCord.push_back(calc_.Graph(X));
-        X += 0.1;
+      while (x_ <= x_end_) {
+        x_cord_.push_back(x_);
+        y_cord_.push_back(calc_.Graph(x_));
+        x_ += 0.1;
       }
       calc_.GraphEnd();
       ui_->Graph->addGraph();
-      ui_->Graph->graph(0)->addData(xCord, yCord);
+      ui_->Graph->graph(0)->addData(x_cord_, y_cord_);
       ui_->Graph->replot();
   }
 }

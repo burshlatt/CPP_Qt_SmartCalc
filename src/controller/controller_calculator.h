@@ -14,7 +14,6 @@ class ControllerCalculator {
   ControllerCalculator() {}
   ~ControllerCalculator() {}
 
-  bool get_error() noexcept;
   void set_rad(const bool &is_rad) noexcept;
 
   bool IsInteger(const double &res) noexcept;

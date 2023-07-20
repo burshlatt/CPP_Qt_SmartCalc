@@ -26,8 +26,9 @@ class ValidatorCalculator {
   QString FormatDot(const std::string &str, bool &is_dot_) const noexcept;
   QString FormatSubtract(const std::string &str, bool &is_dot_) const noexcept;
   QString FormatSymbols(const char &last, const QPushButton *btn, bool &is_dot_) const noexcept;
-  QString FormatFunctions(const std::string &str, const QPushButton *btn, bool &is_dot_) const noexcept;
+  QString FormatOperators(std::string &str, const QPushButton *btn, bool &is_dot_) const noexcept;
   QString FormatBrackets(const std::string &str, const QPushButton *btn, bool &is_dot_) const noexcept;
+  QString FormatFunctions(const std::string &str, const QPushButton *btn, bool &is_dot_) const noexcept;
 
  private:
   const std::unordered_map<char, bool> oper_skip_ {

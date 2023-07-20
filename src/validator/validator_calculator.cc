@@ -47,22 +47,6 @@ bool ValidatorCalculator::IsCorrectDec(const QString &str) const noexcept {
   return true;
 }
 
-bool ValidatorCalculator::IsCorrectOperator(const std::string &str) const noexcept {
-  size_t size_ = str.size();
-  char last_ = str.back();
-  if ((size_ > 0 && size_ < 255 && last_ != '(' && last_ != '.') && ((last_ == '-' && str[size_ - 2] != '(') || last_ != '-'))
-    return true;
-  return false;
-}
-
-bool ValidatorCalculator::IsOperator(const std::string &str) const noexcept {
-  char last_ = str.back();
-  auto it_ = oper_skip_.find(last_);
-  if (it_ != oper_skip_.end() && (last_ != '-' || str[str.size() - 2] != '('))
-    return it_->second;
-  return false;
-}
-
 QString ValidatorCalculator::FormatSymbols(const char &last, const QPushButton *btn, bool &is_dot_) const noexcept {
   QString result_;
   QString btn_text_ = btn->text();
@@ -192,6 +176,33 @@ QString ValidatorCalculator::FormatDel(const std::string &str, bool &is_dot_) co
       result_.chop(2);
     else
       result_.chop(1);
+  }
+  return result_;
+}
+
+bool ValidatorCalculator::IsCorrectOperator(const std::string &str) const noexcept {
+  size_t size_ = str.size();
+  char last_ = str.back();
+  if ((size_ > 0 && size_ < 255 && last_ != '(' && last_ != '.') && ((last_ == '-' && str[size_ - 2] != '(') || last_ != '-'))
+    return true;
+  return false;
+}
+
+bool ValidatorCalculator::IsOperator(const std::string &str) const noexcept {
+  char last_ = str.back();
+  auto it_ = oper_skip_.find(last_);
+  if (it_ != oper_skip_.end() && (last_ != '-' || str[str.size() - 2] != '('))
+    return it_->second;
+  return false;
+}
+
+QString ValidatorCalculator::FormatOperators(std::string &str, const QPushButton *btn, bool &is_dot_) const noexcept {
+  QString result_ = QString::fromStdString(str);
+  if (IsCorrectOperator(str)) {
+    if (IsOperator(str))
+      str[str.size() - 3] == 'm' ? result_.chop(3) : result_.chop(1);
+    result_ += btn->text();
+    is_dot_ = false;
   }
   return result_;
 }
