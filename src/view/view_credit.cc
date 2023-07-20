@@ -119,8 +119,7 @@ void ViewCredit::ShowResultClicked() noexcept {
         result_ = calc_.DifferCred();
         ui_->overPay->setText(result_.back());
         ui_->resultSum->setText(result_.front());
-        ui_->monthRes->setText(result_[1] + " ... " +
-                               result_[result_.size() - 2]);
+        ui_->monthRes->setText(result_[1] + " ... " + result_[result_.size() - 2]);
         AddRow(term_, result_, false);
       }
     } else {
