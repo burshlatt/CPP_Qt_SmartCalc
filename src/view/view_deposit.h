@@ -21,16 +21,16 @@ class ViewDeposit : public QDialog {
   ~ViewDeposit();
 
  private slots:
+  void GetTypes() noexcept;
   void AddWaste() noexcept;
-  void CheckTypes() noexcept;
   void AddPayment() noexcept;
-  bool DataIsCorrect() noexcept;
   void AddWasteClicked() noexcept;
   void CalculatorClicked() noexcept;
   void ShowResultClicked() noexcept;
   void AddPaymentClicked() noexcept;
   void DeleteWasteClicked() noexcept;
   void DeletePaymentClicked() noexcept;
+  void Add(const bool &is_waste) noexcept;
   void keyPressEvent(QKeyEvent *event) override;
 
  signals:
@@ -41,34 +41,28 @@ class ViewDeposit : public QDialog {
   s21::ValidatorDeposit valid_;
   s21::ControllerDeposit calc_;
 
+  int period_ = 0;
   int time_type_ = 0;
   int add_count_ = 0;
-  int period_ = 0;
   int waste_count_ = 0;
-
-  double add_sum_ = 0.0;
-  double waste_sum_ = 0.0;
-
   bool is_cap_ = false;
-  bool is_error_ = false;
 
   QString sum_;
   QString term_;
   QString percent_;
   QString tax_rate_;
-
   QDate last_date_;
-
+  QDateEdit *date_;
+  QLineEdit *line_;
+  QComboBox *combo_box_;
   QVBoxLayout *add_box_;
   QVBoxLayout *waste_box_;
-
   QVector<QString> add_;
   QVector<QString> waste_;
-  std::vector<int> add_period_;
-  std::vector<int> waste_period_;
   std::vector<int> add_days_;
   std::vector<int> waste_days_;
-
+  std::vector<int> add_period_;
+  std::vector<int> waste_period_;
   QVector<QDateEdit *> date_edits_add_;
   QVector<QLineEdit *> line_edits_add_;
   QVector<QComboBox *> combo_boxes_add_;
