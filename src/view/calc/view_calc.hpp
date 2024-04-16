@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 
-#include <optional>
 #include <memory>
 #include <stack>
 
@@ -23,10 +22,10 @@ public:
     ~CalcView();
 
 private:
+    void NumsClicked();
     void btnRadClicked();
     void btnDegClicked();
     void btnDelClicked();
-    void btnNumsClicked();
     void btnDelAllClicked();
     void btnResultClicked();
     void btnShowGraphClicked();

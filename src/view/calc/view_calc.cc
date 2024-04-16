@@ -1,3 +1,5 @@
+#include <optional>
+
 #include "view_calc.hpp"
 #include "./ui_view_calc.h"
 
@@ -20,7 +22,7 @@ CalcView::CalcView(CalcController* controller, QWidget *parent) :
     };
 
     for (auto button : buttons)
-        connect(button, &QPushButton::clicked, this, &CalcView::btnNumsClicked);
+        connect(button, &QPushButton::clicked, this, &CalcView::NumsClicked);
 
     connect(ui_->btnRad, &QPushButton::clicked, this, &CalcView::btnRadClicked);
     connect(ui_->btnDeg, &QPushButton::clicked, this, &CalcView::btnDegClicked);
@@ -43,7 +45,7 @@ void CalcView::btnResultClicked() {
     }
 }
 
-void CalcView::btnNumsClicked() {
+void CalcView::NumsClicked() {
     QPushButton* button{static_cast<QPushButton*>(sender())};
     QString button_text{button->text()};
     QString current_text{ui_->leInput->text()};
