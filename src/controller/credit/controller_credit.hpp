@@ -2,10 +2,8 @@
 #define SRC_CONTROLLER_CONTROLLER_CREDIT_H_
 
 #include <QtGui>
-#include <vector>
-#include <iostream>
 
-#include "../model/model_credit.h"
+#include "model_credit.hpp"
 
 namespace s21 {
 class ControllerCredit {

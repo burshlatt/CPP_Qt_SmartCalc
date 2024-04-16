@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ViewCalculator</class>
- <widget class="QMainWindow" name="ViewCalculator">
+ <class>CalcView</class>
+ <widget class="QMainWindow" name="CalcView">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -35,7 +35,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>SmartCalc (by Stephank)</string>
+   <string>SmartCalc (by Burshlat)</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QMainWindow {
@@ -43,34 +43,34 @@
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLineEdit" name="input">
+   <widget class="QLineEdit" name="leInput">
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>1</y>
+      <y>0</y>
       <width>460</width>
       <height>30</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>15</pointsize>
      </font>
     </property>
     <property name="styleSheet">
      <string notr="true">QLineEdit{
 	qproperty-alignment: 'AlignVCenter | AlignRight';
 	border: 1px solid gray;
+	background-color : #464746;
+	color: white;
 }
-
-background-color : gray;
 </string>
     </property>
     <property name="readOnly">
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="cos">
+   <widget class="QPushButton" name="btnCos">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -87,7 +87,7 @@ background-color : gray;
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -103,10 +103,10 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>cos</string>
+     <string>cos(</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="sin">
+   <widget class="QPushButton" name="btnSin">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -123,7 +123,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -139,10 +139,10 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>sin</string>
+     <string>sin(</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="tan">
+   <widget class="QPushButton" name="btnTan">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -159,7 +159,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -175,10 +175,10 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>tan</string>
+     <string>tan(</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="sqrt">
+   <widget class="QPushButton" name="btnSqrt">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -195,7 +195,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -211,10 +211,10 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>sqrt</string>
+     <string>sqrt(</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="ln">
+   <widget class="QPushButton" name="btnLn">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -231,7 +231,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -247,10 +247,10 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>ln</string>
+     <string>ln(</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="acos">
+   <widget class="QPushButton" name="btnAcos">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -267,7 +267,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -283,10 +283,10 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>acos</string>
+     <string>acos(</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pow">
+   <widget class="QPushButton" name="btnPow">
     <property name="geometry">
      <rect>
       <x>160</x>
@@ -303,7 +303,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>15</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -322,7 +322,7 @@ QPushButton:pressed {
      <string>^</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="asin">
+   <widget class="QPushButton" name="btnAsin">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -339,7 +339,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -355,10 +355,10 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>asin</string>
+     <string>asin(</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="atan">
+   <widget class="QPushButton" name="btnAtan">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -375,7 +375,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -391,10 +391,10 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>atan</string>
+     <string>atan(</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="log">
+   <widget class="QPushButton" name="btnLog">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -411,7 +411,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -427,10 +427,10 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>log</string>
+     <string>log(</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="mod">
+   <widget class="QPushButton" name="btnMod">
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -441,7 +441,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -460,7 +460,7 @@ QPushButton:pressed {
      <string>mod</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="num_7">
+   <widget class="QPushButton" name="btnSeven">
     <property name="geometry">
      <rect>
       <x>160</x>
@@ -471,7 +471,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -489,7 +489,7 @@ QPushButton:pressed {
      <string>7</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="num_4">
+   <widget class="QPushButton" name="btnFour">
     <property name="geometry">
      <rect>
       <x>160</x>
@@ -500,7 +500,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -519,7 +519,7 @@ QPushButton:pressed {
      <string>4</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="num_1">
+   <widget class="QPushButton" name="btnOne">
     <property name="geometry">
      <rect>
       <x>160</x>
@@ -530,7 +530,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -549,7 +549,7 @@ QPushButton:pressed {
      <string>1</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="num_x">
+   <widget class="QPushButton" name="btnX">
     <property name="geometry">
      <rect>
       <x>160</x>
@@ -560,7 +560,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -579,7 +579,7 @@ QPushButton:pressed {
      <string>x</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="num_2">
+   <widget class="QPushButton" name="btnTwo">
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -590,7 +590,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -609,7 +609,7 @@ QPushButton:pressed {
      <string>2</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="num_0">
+   <widget class="QPushButton" name="btnZero">
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -620,7 +620,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -639,7 +639,7 @@ QPushButton:pressed {
      <string>0</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="leftBracket">
+   <widget class="QPushButton" name="btnLB">
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -650,7 +650,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>15</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -669,7 +669,7 @@ QPushButton:pressed {
      <string>(</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="num_5">
+   <widget class="QPushButton" name="btnFive">
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -680,7 +680,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -699,7 +699,7 @@ QPushButton:pressed {
      <string>5</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="num_8">
+   <widget class="QPushButton" name="btnEight">
     <property name="geometry">
      <rect>
       <x>220</x>
@@ -710,7 +710,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -729,7 +729,7 @@ QPushButton:pressed {
      <string>8</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="num_3">
+   <widget class="QPushButton" name="btnThree">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -740,7 +740,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -759,7 +759,7 @@ QPushButton:pressed {
      <string>3</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="dot">
+   <widget class="QPushButton" name="btnDot">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -770,7 +770,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -789,7 +789,7 @@ QPushButton:pressed {
      <string>.</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="rightBracket">
+   <widget class="QPushButton" name="btnRB">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -800,7 +800,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>15</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -819,7 +819,7 @@ QPushButton:pressed {
      <string>)</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="num_6">
+   <widget class="QPushButton" name="btnSix">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -830,7 +830,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -849,7 +849,7 @@ QPushButton:pressed {
      <string>6</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="num_9">
+   <widget class="QPushButton" name="btnNine">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -860,7 +860,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -879,7 +879,7 @@ QPushButton:pressed {
      <string>9</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="add">
+   <widget class="QPushButton" name="btnPlus">
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -890,7 +890,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>15</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -909,7 +909,7 @@ QPushButton:pressed {
      <string>+</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="div">
+   <widget class="QPushButton" name="btnDiv">
     <property name="geometry">
      <rect>
       <x>400</x>
@@ -920,7 +920,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>15</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -939,7 +939,7 @@ QPushButton:pressed {
      <string>/</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="sub">
+   <widget class="QPushButton" name="btnMinus">
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -950,7 +950,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>15</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -969,7 +969,7 @@ QPushButton:pressed {
      <string>-</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="mul">
+   <widget class="QPushButton" name="btnMul">
     <property name="geometry">
      <rect>
       <x>400</x>
@@ -980,7 +980,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>15</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -999,7 +999,7 @@ QPushButton:pressed {
      <string>*</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="delElem">
+   <widget class="QPushButton" name="btnDel">
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -1010,7 +1010,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1029,7 +1029,7 @@ QPushButton:pressed {
      <string>del</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="delAll">
+   <widget class="QPushButton" name="btnDelAll">
     <property name="geometry">
      <rect>
       <x>400</x>
@@ -1040,7 +1040,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1059,7 +1059,7 @@ QPushButton:pressed {
      <string>AC</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="result">
+   <widget class="QPushButton" name="btnResult">
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -1076,7 +1076,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>15</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1095,7 +1095,7 @@ QPushButton:pressed {
      <string>=</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="showGraph">
+   <widget class="QPushButton" name="btnShowGraph">
     <property name="geometry">
      <rect>
       <x>460</x>
@@ -1120,7 +1120,7 @@ QPushButton:pressed {
      <string>&gt;</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="credCalc">
+   <widget class="QPushButton" name="btnShowCredit">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -1128,6 +1128,11 @@ QPushButton:pressed {
       <width>230</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
@@ -1145,7 +1150,7 @@ QPushButton:pressed {
      <string>Credit Calc</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="deposCalc">
+   <widget class="QPushButton" name="btnShowDeposit">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -1153,6 +1158,11 @@ QPushButton:pressed {
       <width>230</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
@@ -1181,7 +1191,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="text">
@@ -1199,7 +1209,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="text">
@@ -1217,7 +1227,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="text">
@@ -1235,7 +1245,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="text">
@@ -1267,7 +1277,7 @@ QPushButton:pressed {
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="num_pi">
+   <widget class="QPushButton" name="btnPi">
     <property name="geometry">
      <rect>
       <x>400</x>
@@ -1278,7 +1288,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1297,7 +1307,7 @@ QPushButton:pressed {
      <string>Pi</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="abs">
+   <widget class="QPushButton" name="btnAbs">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -1308,7 +1318,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1324,7 +1334,7 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>abs</string>
+     <string>abs(</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="xStart">
@@ -1338,7 +1348,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="text">
@@ -1356,7 +1366,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="text">
@@ -1371,6 +1381,11 @@ QPushButton:pressed {
       <width>40</width>
       <height>25</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
     </property>
     <property name="styleSheet">
      <string notr="true">QLabel {
@@ -1390,6 +1405,11 @@ color: black;
       <height>25</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <property name="styleSheet">
      <string notr="true">QLabel {
 color: black;
@@ -1407,6 +1427,11 @@ color: black;
       <width>40</width>
       <height>25</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
     </property>
     <property name="styleSheet">
      <string notr="true">QLabel {
@@ -1426,6 +1451,11 @@ color: black;
       <height>25</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <property name="styleSheet">
      <string notr="true">QLabel {
 color: black;
@@ -1443,6 +1473,11 @@ color: black;
       <width>45</width>
       <height>25</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
     </property>
     <property name="styleSheet">
      <string notr="true">QLabel {
@@ -1462,6 +1497,11 @@ color: black;
       <height>25</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <property name="styleSheet">
      <string notr="true">QLabel {
 color: black;
@@ -1471,7 +1511,7 @@ color: black;
      <string>X end:</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="rad">
+   <widget class="QPushButton" name="btnRad">
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -1482,7 +1522,7 @@ color: black;
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1496,7 +1536,7 @@ color: black;
      <string>Rad</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="deg">
+   <widget class="QPushButton" name="btnDeg">
     <property name="geometry">
      <rect>
       <x>400</x>
@@ -1507,7 +1547,7 @@ color: black;
     </property>
     <property name="font">
      <font>
-      <pointsize>17</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1521,7 +1561,7 @@ color: black;
      <string>Deg</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="output">
+   <widget class="QLineEdit" name="leOutput">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -1532,42 +1572,24 @@ color: black;
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>15</pointsize>
      </font>
     </property>
     <property name="styleSheet">
      <string notr="true">QLineEdit{
 	qproperty-alignment: 'AlignVCenter | AlignRight';
 	border: 1px solid gray;
+	background-color : #464746;
+	color: white;
 }
-
-background-color : gray;
 </string>
     </property>
     <property name="readOnly">
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QCustomPlot" name="Graph" native="true">
-    <property name="geometry">
-     <rect>
-      <x>480</x>
-      <y>0</y>
-      <width>480</width>
-      <height>310</height>
-     </rect>
-    </property>
-   </widget>
   </widget>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QCustomPlot</class>
-   <extends>QWidget</extends>
-   <header>QCustomPlot/qcustomplot.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

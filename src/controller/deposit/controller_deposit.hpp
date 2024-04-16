@@ -2,11 +2,9 @@
 #define SRC_CONTROLLER_CONTROLLER_DEPOSIT_H_
 
 #include <QtGui>
-#include <array>
 #include <vector>
-#include <iostream>
 
-#include "../model/model_deposit.h"
+#include "model_deposit.hpp"
 
 namespace s21 {
 class ControllerDeposit {

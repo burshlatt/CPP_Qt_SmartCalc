@@ -1,29 +1,9 @@
-#include "model_calculator.h"
+#include "model_calc.hpp"
 
-namespace s21 {
-/*
-  ================================= ACCESSORS =================================
-*/
-double ModelCalculator::get_res() const noexcept { return result_; }
-bool ModelCalculator::get_error() const noexcept { return is_error_; }
-/*
-  ================================= ACCESSORS =================================
-*/
+void CalcModel::set_x(const double &num) noexcept { x_value_ = num; }
+void CalcModel::set_rad(const bool &graph) noexcept { is_rad_ = graph; }
 
-/*
-  ================================= MUTATORS ==================================
-*/
-void ModelCalculator::set_x(const double &num) noexcept { x_value_ = num; }
-void ModelCalculator::set_rad(const bool &graph) noexcept { is_rad_ = graph; }
-/*
-  ================================= MUTATORS ==================================
-*/
-
-/*
-  ============================ C A L C U L A T O R ============================
-*/
-
-void ModelCalculator::Notation(const std::string &str) noexcept {
+std::optional<double> CalcModel::Calculate(std::string_view str) noexcept {
   str_ = str;
   for (size_t i = 0; i < str_.size() && !is_error_; i++) {
     InsertNumOutput(i);
@@ -52,9 +32,11 @@ void ModelCalculator::Notation(const std::string &str) noexcept {
         break;
     }
   }
+
+  return std::nullopt;
 }
 
-void ModelCalculator::InsertNumOutput(size_t &index) noexcept {
+void CalcModel::InsertNumOutput(size_t &index) noexcept {
   if (isdigit(str_[index]) || str_[index] == 'x' || str_[index] == 'P') {
     std::string str_t;
     bool is_negative_ = false;
@@ -67,7 +49,7 @@ void ModelCalculator::InsertNumOutput(size_t &index) noexcept {
   }
 }
 
-void ModelCalculator::PushFunctions(size_t &index, const int &opt) noexcept {
+void CalcModel::PushFunctions(size_t &index, const int &opt) noexcept {
   if (opt == 1) {
     if (str_[index] == '^') {
       stack_.push("^");
@@ -99,7 +81,7 @@ void ModelCalculator::PushFunctions(size_t &index, const int &opt) noexcept {
   }
 }
 
-void ModelCalculator::PushLogic(const std::string &str) noexcept {
+void CalcModel::PushLogic(const std::string &str) noexcept {
   if (str == "mod" || str == "*" || str == "/") {
     while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*"
     || stack_.top() == "/" || stack_.top() == "^" || stack_.top() == "!")) {
@@ -117,7 +99,7 @@ void ModelCalculator::PushLogic(const std::string &str) noexcept {
   stack_.push(str);
 }
 
-void ModelCalculator::PopFunctions(const int &opt) noexcept {
+void CalcModel::PopFunctions(const int &opt) noexcept {
   if (opt == 1) {
     while (!stack_.empty() && stack_.top() != "(") {
       output_[pos_++] = stack_.top();
@@ -149,7 +131,7 @@ void ModelCalculator::PopFunctions(const int &opt) noexcept {
   }
 }
 
-void ModelCalculator::Calculations() noexcept {
+void CalcModel::Calculations() noexcept {
   for (int i = 0; i < pos_; i++) {
     if (!ConvertNums(i)) {
       switch (output_[i].front()) {
@@ -186,7 +168,7 @@ void ModelCalculator::Calculations() noexcept {
   num_buffer_.pop();
 }
 
-bool ModelCalculator::ConvertNums(const size_t &i) noexcept {
+bool CalcModel::ConvertNums(const size_t &i) noexcept {
   double num_ = 0.0;
   if (isdigit(output_[i].front()) || output_[i].front() == 'x' || output_[i].front() == 'P') {
     if (output_[i].front() == 'x')
@@ -203,7 +185,7 @@ bool ModelCalculator::ConvertNums(const size_t &i) noexcept {
   return false;
 }
 
-void ModelCalculator::GetNums(const int &opt) noexcept {
+void CalcModel::GetNums(const int &opt) noexcept {
   if (opt == 1) {
     x_ = num_buffer_.top();
     num_buffer_.pop();
@@ -223,9 +205,4 @@ void ModelCalculator::GetNums(const int &opt) noexcept {
   }
 }
 
-void ModelCalculator::ClearOutput() noexcept { pos_ = 0; }
-
-/*
-  ============================ C A L C U L A T O R ============================
-*/
-}  // namespace s21
+void CalcModel::ClearOutput() noexcept { pos_ = 0; }

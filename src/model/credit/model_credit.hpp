@@ -1,9 +1,7 @@
 #ifndef SRC_MODEL_MODEL_CREDIT_H_
 #define SRC_MODEL_MODEL_CREDIT_H_
 
-#include <cmath>
 #include <vector>
-#include <iostream>
 
 namespace s21 {
 class ModelCredit {

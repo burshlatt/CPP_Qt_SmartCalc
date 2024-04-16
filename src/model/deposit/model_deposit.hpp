@@ -2,7 +2,6 @@
 #define SRC_MODEL_MODEL_DEPOSIT_H_
 
 #include <array>
-#include <iostream>
 #include <vector>
 
 namespace s21 {

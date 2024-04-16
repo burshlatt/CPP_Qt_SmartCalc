@@ -6,8 +6,7 @@
 #include <QMessageBox>
 #include <QVBoxLayout>
 
-#include "../validator/validator_deposit.h"
-#include "../controller/controller_deposit.h"
+#include "controller_deposit.hpp"
 
 namespace Ui {
 class ViewDeposit;
@@ -38,7 +37,6 @@ class ViewDeposit : public QDialog {
 
  private:
   Ui::ViewDeposit *ui_;
-  s21::ValidatorDeposit valid_;
   s21::ControllerDeposit calc_;
 
   int period_ = 0;
