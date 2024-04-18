@@ -1,63 +1,87 @@
-#ifndef SRC_MODEL_MODEL_CALCULATOR_H_
-#define SRC_MODEL_MODEL_CALCULATOR_H_
+#ifndef SMARTCALC_MODEL_CALC_MODEL_CALC_HPP
+#define SMARTCALC_MODEL_CALC_MODEL_CALC_HPP
 
-#include <cmath>
-#include <array>
 #include <stack>
+#include <vector>
 #include <string>
+#include <variant>
 #include <optional>
-#include <functional>
 #include <unordered_map>
 
-class CalcModel {
+class CalcModel { 
+public:
+    struct Ln {};
+    struct Log {};
+    struct Abs {};
+    struct Mod {};
+    struct Pow {};
+    struct Div {};
+    struct Mul {};
+    struct Sqrt {};
+    struct Plus {};
+    struct Minus {};
+    struct BracketOpen {};
+    struct BracketClose {};
+    struct Trigonometry {};
+
+    struct Number {
+        double value{};
+    };
+
+public:
+    using Token = std::variant<
+        Ln,
+        Log,
+        Abs,
+        Mod,
+        Pow,
+        Div,
+        Mul,
+        Sqrt,
+        Plus,
+        Minus,
+        BracketOpen,
+        BracketClose,
+        Trigonometry
+    >;
+
 public:
     CalcModel() = default;
     ~CalcModel() = default;
 
-    void set_x(const double &num) noexcept;
-    void set_rad(const bool &graph) noexcept;
-
-    void ClearOutput() noexcept;
-    void Calculations() noexcept;
-    void GetNums(const int &opt) noexcept;
-    void PopFunctions(const int &opt) noexcept;
-    bool ConvertNums(const size_t &i) noexcept;
-    void InsertNumOutput(size_t &index) noexcept;
-    std::optional<double> Calculate(std::string_view str) noexcept;
-    void PushLogic(const std::string &str) noexcept;
-    void PushFunctions(size_t &index, const int &opt) noexcept;
+public:
+    std::optional<double> Calculate(const std::string& str);
 
 private:
-    int pos_ = 0;
-    std::string str_;
-    bool is_rad_ = false;
-    bool is_error_ = false;
-    double result_ = 0.0;
-    double x_value_ = 0.0;
-    double x_ = 0.0, y_ = 0.0;
-    std::stack<double> num_buffer_;
+    std::vector<Token> Tokenize(const std::string& input);
+    Number ParseNumber(const std::string& input, std::size_t& pos);
+
+private:
+    const std::unordered_map<std::string, Token> tokens_map_ {
+        { "ln", Ln{} },
+        { "*", Mul{} },
+        { "/", Div{} },
+        { "^", Pow{} },
+        { "+", Plus{} },
+        { "-", Minus{} },
+        { "log", Log{} },
+        { "mod", Mod{} },
+        { "abs", Abs{} },
+        { "sqrt", Sqrt{} },
+        { "(", BracketOpen{} },
+        { ")", BracketClose{} },
+        { "cos", Trigonometry{} },
+        { "sin", Trigonometry{} },
+        { "tan", Trigonometry{} },
+        { "acos", Trigonometry{} },
+        { "asin", Trigonometry{} },
+        { "atan", Trigonometry{} }
+    };
+
     std::stack<std::string> stack_;
-    std::array<std::string, 256> output_;
-    const std::unordered_map<std::string, std::function<double(double)>> func_map_ {
-        { "ln", [](double x){ return std::log(x); } },
-        { "cos", [](double x){ return std::cos(x); } },
-        { "sin", [](double x){ return std::sin(x); } },
-        { "tan", [](double x){ return std::tan(x); } },
-        { "abs", [](double x){ return std::fabs(x); } },
-        { "acos", [](double x){ return std::acos(x); } },
-        { "asin", [](double x){ return std::asin(x); } },
-        { "atan", [](double x){ return std::atan(x); } },
-        { "sqrt", [](double x){ return std::sqrt(x); } },
-        { "log", [](double x){ return std::log10(x); } }
-    };
-    const std::unordered_map<std::string, std::function<double(double, double)>> oper_map_ {
-        { "+", [](double x, double y){ return x + y; } },
-        { "-", [](double x, double y){ return x - y; } },
-        { "*", [](double x, double y){ return x * y; } },
-        { "/", [](double x, double y){ return x / y; } },
-        { "^", [](double x, double y){ return std::pow(x, y); } },
-        { "mod", [](double x, double y){ return std::fmod(x, y); } }
-    };
+    std::vector<std::string> output_;
+
+    bool is_rad_{false};
 };
 
-#endif  // SRC_MODEL_MODEL_CALCULATOR_H_
+#endif  // SMARTCALC_MODEL_CALC_MODEL_CALC_HPP
