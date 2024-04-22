@@ -1,248 +1,310 @@
 #include "model_calc.hpp"
 
-CalcModel::Number CalcModel::ParseNumber(const std::string& input, std::size_t& pos) {
-    double value{};
-    auto symbol{static_cast<unsigned char>(input[pos])};
+const std::unordered_map<char, CalcModel::Token> CalcModel::operators_{
+    {'%', Mod{}},   {'^', Pow{}},         {'*', Mul{}},
+    {'/', Div{}},   {'+', Plus{}},        {'-', Minus{}},
+    {',', Comma{}}, {'(', BracketOpen{}}, {')', BracketClose{}}
+};
 
-    while (std::isdigit(symbol)) {
-        value = value * 10 + (symbol - '0');
+const std::unordered_map<std::string, CalcModel::Token> CalcModel::functions_{
+    {"ln", Ln{}},     {"log", Log{}},   {"abs", Abs{}},   {"cos", Cos{}},
+    {"sin", Sin{}},   {"tan", Tan{}},   {"max", Max{}},   {"min", Min{}},
+    {"acos", Acos{}}, {"asin", Asin{}}, {"atan", Atan{}}, {"sqrt", Sqrt{}}
+};
 
-        if (pos == input.size() - 1)
-            break;
+const std::unordered_map<std::string, std::function<double(double)>> CalcModel::func_operations_{
+    {"Ln", [](double x) { return std::log(x); }},
+    {"Cos", [](double x) { return std::cos(x); }},
+    {"Sin", [](double x) { return std::sin(x); }},
+    {"Tan", [](double x) { return std::tan(x); }},
+    {"Abs", [](double x) { return std::fabs(x); }},
+    {"Acos", [](double x) { return std::acos(x); }},
+    {"Asin", [](double x) { return std::asin(x); }},
+    {"Atan", [](double x) { return std::atan(x); }},
+    {"Sqrt", [](double x) { return std::sqrt(x); }},
+    {"Log", [](double x) { return std::log10(x); }}
+};
 
-        symbol = static_cast<unsigned char>(input[++pos]);
+const std::unordered_map<std::string, std::function<double(double, double)>> CalcModel::op_operations_{
+    {"Plus", [](double x, double y) { return x + y; }},
+    {"Minus", [](double x, double y) { return x - y; }},
+    {"Mul", [](double x, double y) { return x * y; }},
+    {"Div", [](double x, double y) { return x / y; }},
+    {"Pow", [](double x, double y) { return std::pow(x, y); }},
+    {"Mod", [](double x, double y) { return std::fmod(x, y); }},
+    {"Max", [](double x, double y) { return std::max(x, y); }},
+    {"Min", [](double x, double y) { return std::min(x, y); }}
+};
+
+std::optional<double> CalcModel::Calculate(std::string_view input) {
+    Clear();
+
+    std::vector<Token> tokens{Tokenize(input)};
+
+    for (const auto& token : tokens) {
+        if (std::holds_alternative<UnknownToken>(token)) {
+            return std::nullopt;
+        } else if (!DistributeTokens(token)) {
+            return std::nullopt;
+        }
     }
 
-    return CalcModel::Number{value};
+    if (!DistributeTail()) {
+        return std::nullopt;
+    }
+
+    return CalculateOperation();
 }
 
-std::vector<CalcModel::Token> CalcModel::Tokenize(const std::string& input) {
+void CalcModel::Clear() {
+    while (!stack_.empty()) {
+        stack_.pop();
+    }
+
+    while (!buffer_.empty()) {
+        buffer_.pop();
+    }
+
+    output_.clear();
+}
+
+std::vector<CalcModel::Token> CalcModel::Tokenize(std::string_view input) {
+    std::string tmp_str;
+
+    for (auto ch : input) {
+        auto symbol{static_cast<unsigned char>(ch)};
+
+        if (!std::isspace(symbol)) {
+            tmp_str.push_back(symbol);
+        }
+    }
+
     std::vector<Token> tokens;
-    const size_t size{input.size()};
-    size_t pos{};
+    std::size_t pos{};
+    const std::size_t size{tmp_str.size()};
 
     while (pos < size) {
-        auto symbol{static_cast<unsigned char>(input[pos])};
+        auto symbol{static_cast<unsigned char>(tmp_str[pos])};
 
-        if (std::isspace(symbol)) {
+        if (std::isdigit(symbol)) {
+            tokens.emplace_back(ParseNumber(tmp_str, pos));
+        } else if (std::isalpha(symbol)) {
+            tokens.emplace_back(ParseName(tmp_str, pos));
+        } else if (symbol == '-' && tmp_str[pos - 1] == '(') {
             ++pos;
-        } else if (std::isdigit(symbol)) {
-            tokens.emplace_back(ParseNumber(input, pos));
-        } else {
-            // auto it{tokens_map_.find(symbol)};
-            // it != tokens_map_.end();
-            // tokens.emplace_back(it->second);
+        } else if (auto it{operators_.find(symbol)}; it != operators_.end()) {
+            tokens.emplace_back(it->second);
+            ++pos;
         }
     }
 
     return tokens;
 }
 
-///////////////////////////////////////////////////////////////////////////////
+CalcModel::Number CalcModel::ParseNumber(std::string_view input, std::size_t& pos) {
+    std::size_t first{pos};
+    auto symbol{static_cast<unsigned char>(input[pos])};
 
-// void CalcModel::set_x(const double &num) noexcept { x_value_ = num; }
-// void CalcModel::set_rad(const bool &graph) noexcept { is_rad_ = graph; }
+    bool is_negative{false};
 
-// std::optional<double> CalcModel::Calculate(std::string_view str) noexcept {
-//   str_ = str;
-//   for (size_t i = 0; i < str_.size() && !is_error_; i++) {
-//     InsertNumOutput(i);
-//     switch (str_[i]) {
-//       case 'c':
-//       case 's':
-//       case 't':
-//       case 'a':
-//       case 'l':
-//       case '^':
-//       case '(':
-//         PushFunctions(i, 1);
-//         break;
-//       case 'm':
-//       case '*':
-//       case '/':
-//       case '+':
-//       case '-':
-//         PushFunctions(i, 2);
-//         break;
-//       case ')':
-//         PopFunctions(1);
-//         break;
-//       case '=':
-//         PopFunctions(2);
-//         break;
-//     }
-//   }
+    if (input[pos - 1] == '-' && input[pos - 2] == '(') {
+        is_negative = true;
+    }
 
-//   return std::nullopt;
-// }
+    while (std::isdigit(symbol) || symbol == '.') {
+        symbol = static_cast<unsigned char>(input[++pos]);
+    }
 
-// void CalcModel::InsertNumOutput(size_t &index) noexcept {
-//   if (isdigit(str_[index]) || str_[index] == 'x' || str_[index] == 'P') {
-//     std::string str_t;
-//     bool is_negative_ = false;
-//     if (str_[index - 1] == '-' && str_[index - 2] == '(')
-//       is_negative_ = true;
-//     while (isdigit(str_[index]) || str_[index] == '.' || str_[index] == 'x' || str_[index] == 'P' || str_[index] == 'i') {
-//       str_t += str_[index++];
-//     }
-//     output_[pos_++] = is_negative_ ? str_t + "-" : str_t;
-//   }
-// }
+    std::string num{input.substr(first, pos - first)};
 
-// void CalcModel::PushFunctions(size_t &index, const int &opt) noexcept {
-//   if (opt == 1) {
-//     if (str_[index] == '^') {
-//       stack_.push("^");
-//     } else {
-//       std::string buffer_;
-//       while (str_[index] != '(')
-//         buffer_ += str_[index++];
-//       if (buffer_.size())
-//         stack_.push(buffer_);
-//       stack_.push("(");
-//     }
-//   } else if (opt == 2) {
-//     if (str_[index] == 'm') {
-//       PushLogic("mod");
-//       index += 2;
-//     } else if (str_[index] == '*') {
-//       PushLogic("*");
-//     } else if (str_[index] == '/') {
-//       PushLogic("/");
-//     } else if (str_[index] == '+') {
-//       PushLogic("+");
-//     } else if (str_[index] == '-') {
-//       if (str_[index - 1] == '(' && !isdigit(str_[index + 1]) &&
-//           str_[index + 1] != 'P' && str_[index + 1] != 'x')
-//         PushLogic("!");
-//       else if (str_[index - 1] != '(')
-//         PushLogic("-");
-//     }
-//   }
-// }
+    double res{std::stod(num)};
 
-// void CalcModel::PushLogic(const std::string &str) noexcept {
-//   if (str == "mod" || str == "*" || str == "/") {
-//     while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*"
-//     || stack_.top() == "/" || stack_.top() == "^" || stack_.top() == "!")) {
-//       output_[pos_++] = stack_.top();
-//       stack_.pop();
-//     }
-//   } else if (str == "+" || str == "-") {
-//     while (!stack_.empty() && (stack_.top() == "mod" || stack_.top() == "*"
-//     || stack_.top() == "/" || stack_.top() == "+" || stack_.top() == "-"
-//     || stack_.top() == "^" || stack_.top() == "!")) {
-//       output_[pos_++] = stack_.top();
-//       stack_.pop();
-//     }
-//   }
-//   stack_.push(str);
-// }
+    if (is_negative) {
+        res = -res;
+    }
 
-// void CalcModel::PopFunctions(const int &opt) noexcept {
-//   if (opt == 1) {
-//     while (!stack_.empty() && stack_.top() != "(") {
-//       output_[pos_++] = stack_.top();
-//       stack_.pop();
-//     }
-//     if (stack_.empty()) {
-//       is_error_ = true;
-//     } else {
-//       stack_.pop();
-//       while (!stack_.empty()) {
-//         auto it_ = func_map_.find(stack_.top());
-//         if ((it_ != func_map_.end() || stack_.top() == "^")) {
-//           output_[pos_++] = stack_.top();
-//           stack_.pop();
-//         } else {
-//           break;
-//         }
-//       }
-//     }
-//   } else if (opt == 2) {
-//     while (!stack_.empty() && !is_error_) {
-//       if (stack_.top() == "(") {
-//         is_error_ = true;
-//       } else {
-//         output_[pos_++] = stack_.top();
-//         stack_.pop();
-//       }
-//     }
-//   }
-// }
+    return Number{res};
+}
 
-// void CalcModel::Calculations() noexcept {
-//   for (int i = 0; i < pos_; i++) {
-//     if (!ConvertNums(i)) {
-//       switch (output_[i].front()) {
-//         case '+':
-//         case '-':
-//         case '*':
-//         case '/':
-//         case '^':
-//         case 'm':
-//           GetNums(2);
-//           break;
-//         case 'c':
-//         case 's':
-//         case 't':
-//         case 'a':
-//           GetNums(output_[i] == "sqrt" || output_[i] == "abs" ? 1 : 3);
-//           break;
-//         case 'l':
-//           GetNums(1);
-//           break;
-//         case '!':
-//           GetNums(4);
-//           break;
-//       }
-//       auto o_it_ = oper_map_.find(output_[i]);
-//       auto f_it_ = func_map_.find(output_[i]);
-//       if (o_it_ != oper_map_.end())
-//         num_buffer_.push(o_it_->second(y_, x_));
-//       if (f_it_ != func_map_.end())
-//         num_buffer_.push(f_it_->second(x_));
-//     }
-//   }
-//   result_ = num_buffer_.top();
-//   num_buffer_.pop();
-// }
+CalcModel::Token CalcModel::ParseName(std::string_view input, std::size_t& pos) {
+    std::string name;
+    auto symbol{static_cast<unsigned char>(input[pos])};
 
-// bool CalcModel::ConvertNums(const size_t &i) noexcept {
-//   double num_ = 0.0;
-//   if (isdigit(output_[i].front()) || output_[i].front() == 'x' || output_[i].front() == 'P') {
-//     if (output_[i].front() == 'x')
-//       num_ = x_value_;
-//     else if (output_[i].front() == 'P')
-//       num_ = M_PI;
-//     else
-//       num_ = std::stod(output_[i]);
-//     if (output_[i].back() == '-')
-//       num_ = -num_;
-//     num_buffer_.push(num_);
-//     return true;
-//   }
-//   return false;
-// }
+    while (std::isalpha(symbol)) {
+        name.push_back(input[pos]);
+        symbol = static_cast<unsigned char>(input[++pos]);
+    }
 
-// void CalcModel::GetNums(const int &opt) noexcept {
-//   if (opt == 1) {
-//     x_ = num_buffer_.top();
-//     num_buffer_.pop();
-//   } else if (opt == 2) {
-//     x_ = num_buffer_.top();
-//     num_buffer_.pop();
-//     y_ = num_buffer_.top();
-//     num_buffer_.pop();
-//   } else if (opt == 3) {
-//     x_ = num_buffer_.top();
-//     num_buffer_.pop();
-//     x_ = is_rad_ ? x_ : x_ * M_PI / 180;
-//   } else if (opt == 4) {
-//     const double n_num_ = num_buffer_.top();
-//     num_buffer_.pop();
-//     num_buffer_.push(-n_num_);
-//   }
-// }
+    if (functions_.find(name) != functions_.end()) {
+        return functions_.at(name);
+    }
 
-// void CalcModel::ClearOutput() noexcept { pos_ = 0; }
+    return UnknownToken{};
+}
+
+void CalcModel::ProcessOperator(const Token& data) {
+    bool is_swap{true};
+
+    while (!stack_.empty() && is_swap) {
+        std::visit([this, &is_swap](auto&& stack_top, auto&& token_data) {
+            if (stack_top.type == OPERATOR && stack_top.priority >= token_data.priority) {
+                output_.push_back(stack_.top());
+                stack_.pop();
+            } else {
+                stack_.push(token_data);
+                is_swap = false;
+            }
+        }, stack_.top(), data);
+    }
+
+    if (stack_.empty()) {
+        stack_.push(data);
+    }
+}
+
+bool CalcModel::ProcessClosingBracket() {
+    bool is_swap{true};
+
+    while (!stack_.empty() && is_swap) {
+        std::visit([this, &is_swap](auto&& stack_top) {
+            if (stack_top.type != OPEN_BR) {
+                output_.push_back(stack_.top());
+            } else {
+                is_swap = false;
+            }
+            stack_.pop();
+        }, stack_.top());
+    }
+
+    if (stack_.empty() && is_swap) {
+        return false;
+    }
+
+    is_swap = true;
+
+    while (!stack_.empty() && is_swap) {
+        std::visit([this, &is_swap](auto&& stack_top) {
+            if (stack_top.type == FUNCTION) {
+                output_.push_back(stack_.top());
+                stack_.pop();
+            } else {
+                is_swap = false;
+            }
+        }, stack_.top());
+    }
+
+    return true;
+}
+
+bool CalcModel::ProcessComma() {
+    bool is_swap{true};
+    bool is_correct{true};
+
+    while (!stack_.empty() && is_swap) {
+        std::visit([this, &is_swap, &is_correct](auto&& stack_top) {
+            if (stack_top.type == OPERATOR) {
+                output_.push_back(stack_.top());
+                stack_.pop();
+            } else {
+                if (stack_top.type != OPEN_BR) {
+                    is_correct = false;
+                }
+
+                is_swap = false;
+            }
+        }, stack_.top());
+    }
+
+    return is_correct;
+}
+
+bool CalcModel::DistributeTokens(const Token& token) {
+    bool is_correct{true};
+
+    std::visit([this, &is_correct](auto&& data) {
+        if (data.type == NUMBER) {
+            output_.push_back(data);
+        } else if (data.type == FUNCTION || data.type == OPEN_BR) {
+            stack_.push(data);
+        } else if (data.type == OPERATOR) {
+            ProcessOperator(data);
+        } else if (data.type == CLOSE_BR) {
+            is_correct = ProcessClosingBracket();
+        } else if (data.type == COMMA) {
+            is_correct = ProcessComma();
+        }
+    }, token);
+
+    return is_correct;
+}
+
+bool CalcModel::DistributeTail() {
+    bool is_correct{true};
+
+    while (!stack_.empty() && is_correct) {
+        std::visit([this, &is_correct](auto&& stack_top) {
+            if (stack_top.type == OPEN_BR || stack_top.type == CLOSE_BR) {
+                is_correct = false;
+                return;
+            } else if (stack_top.type == OPERATOR || stack_top.type == FUNCTION) {
+                output_.push_back(stack_.top());
+                stack_.pop();
+            }
+        }, stack_.top());
+    }
+
+    return is_correct;
+}
+
+std::optional<double> CalcModel::GetNum() {
+    if (!buffer_.empty()) {
+        double num{buffer_.top()};
+        buffer_.pop();
+        return num;
+    }
+
+    return std::nullopt;
+}
+
+std::optional<double> CalcModel::CalculateOperation() {
+    bool is_correct{true};
+
+    for (const auto& token : output_) {
+        std::visit([this, &is_correct](auto&& data) {
+            if (data.type == NUMBER) {
+                buffer_.push(data.value);
+            }
+
+            if (auto it{func_operations_.find(data.name)}; it != func_operations_.end()) {
+                auto x{GetNum()};
+
+                if (x.has_value()) {
+                    buffer_.push(it->second(*x));
+                } else {
+                    is_correct = false;
+                    return;
+                }
+            } else if (auto it{op_operations_.find(data.name)}; it != op_operations_.end()) {
+                auto x{GetNum()};
+                auto y{GetNum()};
+
+                if (x.has_value() && y.has_value()) {
+                    buffer_.push(it->second(*y, *x));
+                } else {
+                    is_correct = false;
+                    return;
+                }
+            }
+        }, token);
+
+        if (!is_correct) {
+            return std::nullopt;
+        }
+    }
+
+    if (buffer_.size() > 1) {
+        return std::nullopt;
+    }
+
+    return *GetNum();
+}

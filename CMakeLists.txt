@@ -28,7 +28,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         resources/resources.qrc
         src/controller/calc/controller_calc.hpp
-        src/model/calc/model_calc.cc src/model/calc/model_calc.hpp
+        src/model/calc/model_calc.hpp
+        src/model/calc/model_calc.cc
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET SmartCalc APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
