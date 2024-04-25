@@ -1,14 +1,16 @@
+#include <cmath>
+
 #include "model_calc.hpp"
 
 const std::unordered_map<char, CalcModel::Token> CalcModel::operators_{
     {'^', Token{"Pow"}},
-    {'(', Token{"", OPEN_BR, NO_PRIORITY}},
-    {')', Token{"", CLOSE_BR, NO_PRIORITY}},
-    {'%', Token{"Mod", OPERATOR, HIGH_PRIORITY}},
-    {'*', Token{"Mul", OPERATOR, HIGH_PRIORITY}},
-    {'/', Token{"Div", OPERATOR, HIGH_PRIORITY}},
-    {'+', Token{"Plus", OPERATOR, LOW_PRIORITY,}},
-    {'-', Token{"Minus", OPERATOR, LOW_PRIORITY}}
+    {'(', Token{"OpenBr",  Type::kOpenBr,   Priority::kNo}},
+    {')', Token{"CloseBr", Type::kCloseBr,  Priority::kNo}},
+    {'+', Token{"Plus",    Type::kOperator, Priority::kLow}},
+    {'-', Token{"Minus",   Type::kOperator, Priority::kLow}},
+    {'%', Token{"Mod",     Type::kOperator, Priority::kHigh}},
+    {'*', Token{"Mul",     Type::kOperator, Priority::kHigh}},
+    {'/', Token{"Div",     Type::kOperator, Priority::kHigh}}
 };
 
 const std::unordered_map<std::string, CalcModel::Token> CalcModel::functions_{
@@ -47,7 +49,7 @@ std::optional<double> CalcModel::Calculate(std::string_view input) {
     std::vector<Token> tokens{Tokenize(input)};
 
     for (const auto& token : tokens) {
-        if (token.type == NO_TYPE) {
+        if (token.type == Type::kNo) {
             return std::nullopt;
         } else if (!HandleTokens(token)) {
             return std::nullopt;
@@ -73,18 +75,23 @@ void CalcModel::Clear() {
     output_.clear();
 }
 
-std::vector<CalcModel::Token> CalcModel::Tokenize(std::string_view input) {
-    std::string tmp_str;
+std::string CalcModel::Trim(std::string_view input) {
+    std::string tmp;
 
     for (auto ch : input) {
         auto symbol{static_cast<unsigned char>(ch)};
 
         if (!std::isspace(symbol)) {
-            tmp_str.push_back(ch);
+            tmp.push_back(ch);
         }
     }
 
+    return tmp;
+}
+
+std::vector<CalcModel::Token> CalcModel::Tokenize(std::string_view input) {
     std::vector<Token> tokens;
+    std::string tmp_str{Trim(input)};
     const std::size_t size{tmp_str.size()};
 
     for (std::size_t pos{}; pos < size; ) {
@@ -101,13 +108,13 @@ std::vector<CalcModel::Token> CalcModel::Tokenize(std::string_view input) {
         } else if (is_alpha) {
             tokens.emplace_back(ParseName(tmp_str, pos));
         } else if (is_negative) {
-            tokens.emplace_back(Token{"Neg", OPERATOR});
+            tokens.emplace_back(Token{"Neg", Type::kOperator});
             ++pos;
         } else if (auto it{operators_.find(symbol)}; it != operators_.end()) {
             tokens.emplace_back(it->second);
             ++pos;
         } else {
-            tokens.emplace_back(Token{"", NO_TYPE});
+            tokens.emplace_back(Token{"", Type::kNo});
             return tokens;
         }
     }
@@ -127,7 +134,7 @@ CalcModel::Token CalcModel::ParseNumber(std::string_view input, std::size_t& pos
             is_dot = true;
         } else if (is_dot && symbol == '.') {
             ++pos;
-            return Token{"", NO_TYPE};
+            return Token{"", Type::kNo};
         }
     }
 
@@ -135,7 +142,7 @@ CalcModel::Token CalcModel::ParseNumber(std::string_view input, std::size_t& pos
 
     double res{std::stod(num)};
 
-    return Token{"", NUMBER, NO_PRIORITY, res};
+    return Token{"", Type::kNumber, Priority::kNo, res};
 }
 
 CalcModel::Token CalcModel::ParseName(std::string_view input, std::size_t& pos) {
@@ -151,14 +158,14 @@ CalcModel::Token CalcModel::ParseName(std::string_view input, std::size_t& pos) 
         return functions_.at(name);
     }
 
-    return Token{"", NO_TYPE};
+    return Token{"", Type::kNo};
 }
 
 void CalcModel::HandleOperator(const Token& data) {
     while (!stack_.empty()) {
         auto stack_top{stack_.top()};
 
-        if (stack_top.type == OPERATOR && stack_top.priority >= data.priority) {
+        if (stack_top.type == Type::kOperator && stack_top.priority >= data.priority) {
             output_.push_back(stack_.top());
             stack_.pop();
         } else {
@@ -178,7 +185,7 @@ bool CalcModel::HandleClosingBracket() {
     while (!stack_.empty() && !is_open_br) {
         auto stack_top{stack_.top()};
 
-        if (stack_top.type != OPEN_BR) {
+        if (stack_top.type != Type::kOpenBr) {
             output_.push_back(stack_.top());
         } else {
             is_open_br = true;
@@ -194,7 +201,7 @@ bool CalcModel::HandleClosingBracket() {
     while (!stack_.empty()) {
         auto stack_top{stack_.top()};
 
-        if (stack_top.type == FUNCTION) {
+        if (stack_top.type == Type::kFunction) {
             output_.push_back(stack_.top());
             stack_.pop();
         } else {
@@ -208,13 +215,13 @@ bool CalcModel::HandleClosingBracket() {
 bool CalcModel::HandleTokens(const Token& token) {
     bool is_correct{true};
 
-    if (token.type == NUMBER) {
+    if (token.type == Type::kNumber) {
         output_.push_back(token);
-    } else if (token.type == FUNCTION || token.type == OPEN_BR) {
+    } else if (token.type == Type::kFunction || token.type == Type::kOpenBr) {
         stack_.push(token);
-    } else if (token.type == OPERATOR) {
+    } else if (token.type == Type::kOperator) {
         HandleOperator(token);
-    } else if (token.type == CLOSE_BR) {
+    } else if (token.type == Type::kCloseBr) {
         is_correct = HandleClosingBracket();
     }
 
@@ -225,9 +232,9 @@ bool CalcModel::HandleTail() {
     while (!stack_.empty()) {
         auto stack_top{stack_.top()};
 
-        if (stack_top.type == OPEN_BR || stack_top.type == CLOSE_BR) {
+        if (stack_top.type == Type::kOpenBr || stack_top.type == Type::kCloseBr) {
             return false;
-        } else if (stack_top.type == OPERATOR || stack_top.type == FUNCTION) {
+        } else if (stack_top.type == Type::kOperator || stack_top.type == Type::kFunction) {
             output_.push_back(stack_.top());
             stack_.pop();
         }
@@ -248,7 +255,7 @@ std::optional<double> CalcModel::GetNum() {
 
 std::optional<double> CalcModel::CalculateOperation() {
     for (const auto& token : output_) {
-        if (token.type == NUMBER) {
+        if (token.type == Type::kNumber) {
             buffer_.push(token.value);
         }
 

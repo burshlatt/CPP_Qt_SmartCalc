@@ -1,7 +1,6 @@
 #ifndef SMARTCALC_MODEL_CALC_MODEL_CALC_HPP
 #define SMARTCALC_MODEL_CALC_MODEL_CALC_HPP
 
-#include <cmath>
 #include <stack>
 #include <string>
 #include <vector>
@@ -10,26 +9,31 @@
 #include <string_view>
 #include <unordered_map>
 
-#define LOW_PRIORITY 0
-#define HIGH_PRIORITY 1
-#define NO_PRIORITY 3
-
-#define NO_TYPE 0
-#define NUMBER 1
-#define OPERATOR 2
-#define FUNCTION 3
-#define OPEN_BR 4
-#define CLOSE_BR 5
-
 class CalcModel {
 private:
     using UOperation = std::function<double(double)>;
     using BOperation = std::function<double(double, double)>;
 
+private:
+    enum class Priority : int {
+        kLow,
+        kHigh,
+        kNo
+    };
+
+    enum class Type {
+        kNo,
+        kNumber,
+        kOperator,
+        kFunction,
+        kOpenBr,
+        kCloseBr
+    };
+
     struct Token {
         std::string name{};
-        int type{FUNCTION};
-        int priority{NO_PRIORITY};
+        Type type{Type::kFunction};
+        Priority priority{Priority::kNo};
         double value{};
     };
 
@@ -47,6 +51,8 @@ private:
     bool HandleTail();
     bool HandleClosingBracket();
     bool HandleTokens(const Token& token);
+
+    std::string Trim(std::string_view input);
 
     std::optional<double> GetNum();
     std::optional<double> CalculateOperation();

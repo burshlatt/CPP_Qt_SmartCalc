@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 
-#include <memory>
 #include <stack>
+#include <memory>
 
 #include "controller_calc.hpp"
 
@@ -22,19 +22,20 @@ public:
     ~CalcView();
 
 private:
-    void NumsClicked();
-    void btnRadClicked();
-    void btnDegClicked();
-    void btnDelClicked();
-    void btnDelAllClicked();
-    void btnResultClicked();
-    void btnShowGraphClicked();
+    void PrintGraph();
+    void BtnRadClicked();
+    void BtnDegClicked();
+    void BtnDelClicked();
+    void BtnGraphClicked();
+    void BtnDelAllClicked();
+    void BtnResultClicked();
+    void BtnShowGraphClicked();
+    void NumsAndFuncsClicked();
 
 private:
-    std::stack<std::uint8_t> token_sizes_;
-
-    std::unique_ptr<Ui::CalcView> ui_;
     CalcController* controller_;
+    std::unique_ptr<Ui::CalcView> ui_;
+    std::stack<std::uint8_t> token_sizes_;
 };
 
 #endif // SMARTCALC_VIEW_CALC_CALC_HPP

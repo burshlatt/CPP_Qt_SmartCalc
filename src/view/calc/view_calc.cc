@@ -5,13 +5,13 @@
 
 CalcView::CalcView(CalcController* controller, QWidget *parent) :
     QMainWindow(parent),
-    ui_(std::make_unique<Ui::CalcView>()),
-    controller_(controller)
+    controller_(controller),
+    ui_(std::make_unique<Ui::CalcView>())
 {
     ui_->setupUi(this);
     this->setFixedSize(480, 380);
 
-    QList<QPushButton*> buttons = {
+    QVector<QPushButton*> buttons({
         ui_->btnZero, ui_->btnOne,  ui_->btnTwo,   ui_->btnThree, ui_->btnFour,
         ui_->btnFive, ui_->btnSix,  ui_->btnSeven, ui_->btnEight, ui_->btnNine,
         ui_->btnX,    ui_->btnPi,   ui_->btnDot,   ui_->btnLB,    ui_->btnRB,
@@ -19,24 +19,25 @@ CalcView::CalcView(CalcController* controller, QWidget *parent) :
         ui_->btnAtan, ui_->btnAbs,  ui_->btnSqrt,  ui_->btnLog,   ui_->btnLn,
         ui_->btnPow,  ui_->btnMod,  ui_->btnMinus, ui_->btnPlus,  ui_->btnMul,
         ui_->btnDiv
-    };
+    });
 
     for (auto button : buttons)
-        connect(button, &QPushButton::clicked, this, &CalcView::NumsClicked);
+        connect(button, &QPushButton::clicked, this, &CalcView::NumsAndFuncsClicked);
 
-    connect(ui_->btnRad, &QPushButton::clicked, this, &CalcView::btnRadClicked);
-    connect(ui_->btnDeg, &QPushButton::clicked, this, &CalcView::btnDegClicked);
-    connect(ui_->btnDel, &QPushButton::clicked, this, &CalcView::btnDelClicked);
-    connect(ui_->btnDelAll, &QPushButton::clicked, this, &CalcView::btnDelAllClicked);
-    connect(ui_->btnResult, &QPushButton::clicked, this, &CalcView::btnResultClicked);
-    connect(ui_->btnShowGraph, &QPushButton::clicked, this, &CalcView::btnShowGraphClicked);
+    connect(ui_->btnRad, &QPushButton::clicked, this, &CalcView::BtnRadClicked);
+    connect(ui_->btnDeg, &QPushButton::clicked, this, &CalcView::BtnDegClicked);
+    connect(ui_->btnDel, &QPushButton::clicked, this, &CalcView::BtnDelClicked);
+    connect(ui_->btnGraph, &QPushButton::clicked, this, &CalcView::BtnGraphClicked);
+    connect(ui_->btnDelAll, &QPushButton::clicked, this, &CalcView::BtnDelAllClicked);
+    connect(ui_->btnResult, &QPushButton::clicked, this, &CalcView::BtnResultClicked);
+    connect(ui_->btnShowGraph, &QPushButton::clicked, this, &CalcView::BtnShowGraphClicked);
 }
 
 CalcView::~CalcView() {}
 
-void CalcView::btnResultClicked() {
-    std::string notation{ui_->leInput->text().toStdString()};
-    std::optional<double> result{controller_->Calculate(notation)};
+void CalcView::BtnResultClicked() {
+    std::string input{ui_->leInput->text().toStdString()};
+    std::optional<double> result{controller_->Calculate(input)};
 
     if (result.has_value()) {
         ui_->leOutput->setText(QString::number(*result));
@@ -45,7 +46,7 @@ void CalcView::btnResultClicked() {
     }
 }
 
-void CalcView::NumsClicked() {
+void CalcView::NumsAndFuncsClicked() {
     QPushButton* button{static_cast<QPushButton*>(sender())};
     QString button_text{button->text()};
     QString current_text{ui_->leInput->text()};
@@ -54,7 +55,7 @@ void CalcView::NumsClicked() {
     token_sizes_.push(static_cast<std::uint8_t>(button_text.size()));
 }
 
-void CalcView::btnDelClicked() {
+void CalcView::BtnDelClicked() {
     if (!token_sizes_.empty()) {
         QString text{ui_->leInput->text()};
 
@@ -64,7 +65,7 @@ void CalcView::btnDelClicked() {
     }
 }
 
-void CalcView::btnDelAllClicked() {
+void CalcView::BtnDelAllClicked() {
     ui_->leInput->clear();
     ui_->leOutput->clear();
 
@@ -72,7 +73,7 @@ void CalcView::btnDelAllClicked() {
         token_sizes_.pop();
 }
 
-void CalcView::btnRadClicked() {
+void CalcView::BtnRadClicked() {
     ui_->btnRad->setStyleSheet(
         "background-color: rgb(255, 160, 122); "
         "color: black; "
@@ -86,7 +87,7 @@ void CalcView::btnRadClicked() {
         );
 }
 
-void CalcView::btnDegClicked() {
+void CalcView::BtnDegClicked() {
     ui_->btnDeg->setStyleSheet(
         "background-color: rgb(255, 160, 122); "
         "color: black; "
@@ -100,7 +101,7 @@ void CalcView::btnDegClicked() {
     );
 }
 
-void CalcView::btnShowGraphClicked() {
+void CalcView::BtnShowGraphClicked() {
     bool graph_is_open{ui_->btnShowGraph->text() != ">"};
 
     if (!graph_is_open) {
@@ -112,29 +113,40 @@ void CalcView::btnShowGraphClicked() {
     }
 }
 
-// void ViewCalculator::PrintGraph() noexcept {
-//     OpenGraph();
-//     if (!IsCorrectGraph()) {
-//         QMessageBox msg_box_;
-//         msg_box_.setText("Значения полей графика должны быть от -1000000 до 1000000");
-//         msg_box_.exec();
-//     } else {
-//         ui_->output->setText("GRAPH");
-//         ui_->Graph->clearGraphs();
-//         ui_->Graph->xAxis->setRange(ui_->xMinCord->text().toDouble(), ui_->xMaxCord->text().toDouble());
-//         ui_->Graph->yAxis->setRange(ui_->yMinCord->text().toDouble(), ui_->yMaxCord->text().toDouble());
-//         QVector<double> x_cord_, y_cord_;
-//         double x_ = ui_->xStart->text().toDouble();
-//         const double x_end_ = ui_->xEnd->text().toDouble() + 0.1;
-//         calc_.GraphStart(str_ + "=");
-//         while (x_ <= x_end_) {
-//             x_cord_.push_back(x_);
-//             y_cord_.push_back(calc_.Graph(x_));
-//             x_ += 0.1;
-//         }
-//         calc_.GraphEnd();
-//         ui_->Graph->addGraph();
-//         ui_->Graph->graph(0)->addData(x_cord_, y_cord_);
-//         ui_->Graph->replot();
-//     }
-// }
+void CalcView::BtnGraphClicked() {
+    if (ui_->btnShowGraph->text() == ">") {
+        BtnShowGraphClicked();
+    }
+
+    PrintGraph();
+}
+
+void CalcView::PrintGraph() {
+    ui_->qcpGraph->clearGraphs();
+
+    ui_->qcpGraph->xAxis->setRange(
+        ui_->leMinX->text().toDouble(),
+        ui_->leMaxX->text().toDouble()
+    );
+
+    ui_->qcpGraph->yAxis->setRange(
+        ui_->leMinY->text().toDouble(),
+        ui_->leMaxY->text().toDouble()
+    );
+
+    QVector<double> x_cords;
+    QVector<double> y_cords;
+
+    double x{ui_->leStartX->text().toDouble()};
+    double x_end{ui_->leEndX->text().toDouble() + 0.1};
+
+    while (x <= x_end) {
+        x_cords.push_back(x);
+//        y_cords.push_back(*controller_->Calculate(input));
+        x += 0.1;
+    }
+
+    ui_->qcpGraph->addGraph();
+    ui_->qcpGraph->graph(0)->addData(x_cords, y_cords);
+    ui_->qcpGraph->replot();
+}

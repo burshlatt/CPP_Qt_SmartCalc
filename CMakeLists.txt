@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -O3")
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets PrintSupport)
 
 set(PROJECT_SOURCES
         src/main.cpp
@@ -20,6 +20,9 @@ set(PROJECT_SOURCES
         src/view/calc/view_calc.cc
         src/view/calc/view_calc.hpp
         src/view/calc/view_calc.ui
+
+        src/third_party/qcustomplot/qcustomplot.cc
+        src/third_party/qcustomplot/qcustomplot.hpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -27,9 +30,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         resources/resources.qrc
-        src/controller/calc/controller_calc.hpp
-        src/model/calc/model_calc.hpp
         src/model/calc/model_calc.cc
+        src/model/calc/model_calc.hpp
+        src/controller/calc/controller_calc.hpp
+        src/third_party/qcustomplot/qcustomplot.cc
+        src/third_party/qcustomplot/qcustomplot.hpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET SmartCalc APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -49,12 +54,14 @@ else()
     endif()
 endif()
 
-target_link_libraries(SmartCalc PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+#target_link_libraries(SmartCalc PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(SmartCalc PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::PrintSupport)
 
 include_directories(
     src/view/calc
-    src/controller/calc
     src/model/calc
+    src/controller/calc
+    src/third_party/qcustomplot
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
