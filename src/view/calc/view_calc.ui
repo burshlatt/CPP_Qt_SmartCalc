@@ -441,7 +441,7 @@ QPushButton:pressed {
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <pointsize>15</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -457,7 +457,7 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>mod</string>
+     <string>%</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnSeven">
@@ -1104,6 +1104,11 @@ QPushButton:pressed {
       <height>365</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
   background-color: rgb(255, 160, 122);
@@ -1261,6 +1266,11 @@ QPushButton:pressed {
       <height>20</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
   background-color: rgb(255, 160, 122);
@@ -1274,7 +1284,7 @@ QPushButton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string/>
+     <string>?</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnPi">
@@ -1376,7 +1386,7 @@ QPushButton:pressed {
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>810</x>
+      <x>805</x>
       <y>325</y>
       <width>40</width>
       <height>25</height>
@@ -1399,7 +1409,7 @@ color: black;
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>807</x>
+      <x>805</x>
       <y>350</y>
       <width>45</width>
       <height>25</height>
@@ -1422,7 +1432,7 @@ color: black;
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>650</x>
+      <x>645</x>
       <y>325</y>
       <width>40</width>
       <height>25</height>
@@ -1445,7 +1455,7 @@ color: black;
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>647</x>
+      <x>645</x>
       <y>350</y>
       <width>45</width>
       <height>25</height>
@@ -1491,7 +1501,7 @@ color: black;
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>495</x>
+      <x>490</x>
       <y>350</y>
       <width>40</width>
       <height>25</height>

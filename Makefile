@@ -1,6 +1,13 @@
 CC = g++
 FLAGS = -Wall -Wextra -Werror -std=c++17
-TEST_FLAGS = -lgtest -lstdc++ -lgmock -pthread
+TEST_FLAGS = -lgtest -pthread
+
+OS := $(shell uname)
+ifeq ($(OS), Linux)
+    TEST_FLAGS += -lgtest_main
+else ifeq ($(OS), Darwin) 
+    TEST_FLAGS += -lgmock
+endif
 
 .PHONY: all install open uninstall clean dist test
 
@@ -36,6 +43,6 @@ dist:
 
 test:
 	@echo --------------------- START ---------------------
-	cd ./tests/ && $(CC) $(FLAGS) unit_tests.cc ../model/model_calculator.cc -o unit_tests $(TEST_FLAGS)
+	cd ./tests/ && $(CC) $(FLAGS) unit_tests.cc ../src/model/calc/model_calc.cc -o unit_tests $(TEST_FLAGS)
 	cd ./tests/ && ./unit_tests
 	@echo -------------------- SUCCESS --------------------
