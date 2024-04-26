@@ -2,7 +2,7 @@
 
 #include "model_calc.hpp"
 
-const std::unordered_map<char, CalcModel::Token> CalcModel::operators_{
+const std::unordered_map<char, CalcModel::Token> CalcModel::short_tokens_{
     {'^', Token{"Pow"}},
     {'(', Token{"OpenBr",  Type::kOpenBr,   Priority::kNo}},
     {')', Token{"CloseBr", Type::kCloseBr,  Priority::kNo}},
@@ -13,7 +13,7 @@ const std::unordered_map<char, CalcModel::Token> CalcModel::operators_{
     {'/', Token{"Div",     Type::kOperator, Priority::kHigh}}
 };
 
-const std::unordered_map<std::string, CalcModel::Token> CalcModel::functions_{
+const std::unordered_map<std::string, CalcModel::Token> CalcModel::long_tokens_{
     {"ln",   Token{"Ln"}},   {"log",  Token{"Log"}},  {"abs",  Token{"Abs"}},
     {"cos",  Token{"Cos"}},  {"sin",  Token{"Sin"}},  {"tan",  Token{"Tan"}},
     {"acos", Token{"Acos"}}, {"asin", Token{"Asin"}}, {"atan", Token{"Atan"}},
@@ -43,15 +43,36 @@ const std::unordered_map<std::string, CalcModel::BOperation> CalcModel::binary_o
     {"Mod",   [](double x, double y) { return std::fmod(x, y); }}
 };
 
-std::optional<double> CalcModel::Calculate(std::string_view input) {
+CalcModel::Coords CalcModel::CalculateGraph(std::string_view input, double x_start, double x_end) {
+    std::vector<double> x_coords;
+    std::vector<double> y_coords;
+
+    auto result{Calculate(input)};
+
+    if (result.has_value()) {
+        x_coords.push_back(x_start);
+        y_coords.push_back(*result);
+
+        x_start += 0.1;
+
+        while (x_start <= x_end) {
+            ClearBuffer();
+            x_coords.push_back(x_start);
+            y_coords.push_back(*CalculateOperation(x_start));
+            x_start += 0.1;
+        }
+    }
+
+    return std::make_pair(x_coords, y_coords);
+}
+
+std::optional<double> CalcModel::Calculate(std::string_view input, double x) {
     Clear();
 
     std::vector<Token> tokens{Tokenize(input)};
 
     for (const auto& token : tokens) {
-        if (token.type == Type::kNo) {
-            return std::nullopt;
-        } else if (!HandleTokens(token)) {
+        if (!HandleTokens(token)) {
             return std::nullopt;
         }
     }
@@ -60,7 +81,13 @@ std::optional<double> CalcModel::Calculate(std::string_view input) {
         return std::nullopt;
     }
 
-    return CalculateOperation();
+    return CalculateOperation(x);
+}
+
+void CalcModel::ClearBuffer() {
+    while (!buffer_.empty()) {
+        buffer_.pop();
+    }
 }
 
 void CalcModel::Clear() {
@@ -68,10 +95,7 @@ void CalcModel::Clear() {
         stack_.pop();
     }
 
-    while (!buffer_.empty()) {
-        buffer_.pop();
-    }
-
+    ClearBuffer();
     output_.clear();
 }
 
@@ -110,7 +134,7 @@ std::vector<CalcModel::Token> CalcModel::Tokenize(std::string_view input) {
         } else if (is_negative) {
             tokens.emplace_back(Token{"Neg", Type::kOperator});
             ++pos;
-        } else if (auto it{operators_.find(symbol)}; it != operators_.end()) {
+        } else if (auto it{short_tokens_.find(symbol)}; it != short_tokens_.end()) {
             tokens.emplace_back(it->second);
             ++pos;
         } else {
@@ -154,8 +178,8 @@ CalcModel::Token CalcModel::ParseName(std::string_view input, std::size_t& pos) 
         symbol = static_cast<unsigned char>(input[++pos]);
     }
 
-    if (functions_.find(name) != functions_.end()) {
-        return functions_.at(name);
+    if (long_tokens_.find(name) != long_tokens_.end()) {
+        return long_tokens_.at(name);
     }
 
     return Token{"", Type::kNo};
@@ -215,7 +239,9 @@ bool CalcModel::HandleClosingBracket() {
 bool CalcModel::HandleTokens(const Token& token) {
     bool is_correct{true};
 
-    if (token.type == Type::kNumber) {
+    if (token.type == Type::kNo) {
+        return false;
+    } else if (token.type == Type::kNumber) {
         output_.push_back(token);
     } else if (token.type == Type::kFunction || token.type == Type::kOpenBr) {
         stack_.push(token);
@@ -253,7 +279,7 @@ std::optional<double> CalcModel::GetNum() {
     return std::nullopt;
 }
 
-std::optional<double> CalcModel::CalculateOperation() {
+std::optional<double> CalcModel::CalculateOperation(double x) {
     for (const auto& token : output_) {
         if (token.type == Type::kNumber) {
             buffer_.push(token.value);

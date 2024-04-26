@@ -134,19 +134,16 @@ void CalcView::PrintGraph() {
         ui_->leMaxY->text().toDouble()
     );
 
-    QVector<double> x_cords;
-    QVector<double> y_cords;
-
     double x{ui_->leStartX->text().toDouble()};
     double x_end{ui_->leEndX->text().toDouble() + 0.1};
+    std::string input{ui_->leInput->text().toStdString()};
 
-    while (x <= x_end) {
-        x_cords.push_back(x);
-//        y_cords.push_back(*controller_->Calculate(input));
-        x += 0.1;
-    }
+    const auto& [x_vec, y_vec]{controller_->CalculateGraph(input, x, x_end)};
+
+    QVector<double> x_coords(x_vec.begin(), x_vec.end());
+    QVector<double> y_coords(y_vec.begin(), y_vec.end());
 
     ui_->qcpGraph->addGraph();
-    ui_->qcpGraph->graph(0)->addData(x_cords, y_cords);
+    ui_->qcpGraph->graph(0)->addData(x_coords, y_coords);
     ui_->qcpGraph->replot();
 }

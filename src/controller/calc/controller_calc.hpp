@@ -12,8 +12,12 @@ public:
         model_(model)
     {}
 
-    std::optional<double> Calculate(std::string_view notation) {
-        return model_->Calculate(notation);
+    std::optional<double> Calculate(std::string_view notation, double x = 0.0) {
+        return model_->Calculate(notation, x);
+    }
+
+    CalcModel::Coords CalculateGraph(std::string_view input, double x_start, double x_end) {
+        return model_->CalculateGraph(input, x_start, x_end);
     }
 
 private:
