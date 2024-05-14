@@ -1,5 +1,5 @@
-CC = g++
-FLAGS = -Wall -Wextra -Werror -std=c++17
+CXX = g++
+FLAGS = -Wall -Wextra -Werror
 TEST_FLAGS = -lgtest -pthread
 
 OS := $(shell uname)
@@ -9,40 +9,39 @@ else ifeq ($(OS), Darwin)
     TEST_FLAGS += -lgmock
 endif
 
-.PHONY: all install open uninstall clean dist test
+.PHONY: install run uninstall clean test
 
-all: clean uninstall dist install test
-
-install:
+install: uninstall
 	@echo -------------------- INSTALL --------------------
 	make uninstall --quiet
 	mkdir build
 	cd build && cmake ../CMakeLists.txt && make && rm -rf CMakeFiles cmake_install.cmake CMakeCache.txt Makefile
 	@echo -------------------- SUCCESS --------------------
 
-open:
-	@echo --------------------- OPEN ----------------------
+ifeq ($(OS), Linux)
+run:
+	@echo ---------------------- RUN ----------------------
+	cd build && ./SmartCalc
+	@echo -------------------- SUCCESS --------------------
+else ifeq ($(OS), Darwin) 
+run:
+	@echo ---------------------- RUN ----------------------
 	cd build && open SmartCalc.app
 	@echo -------------------- SUCCESS --------------------
+endif
 	
 uninstall:
 	@echo ------------------- UNINSTALL -------------------
 	rm -rf build
 	@echo -------------------- SUCCESS --------------------
 
-clean:
+clean: uninstall
 	@echo --------------------- START ---------------------
-	rm -rf SmartCalc.tar.gz
 	cd ./tests && rm -rf unit_tests
 	@echo -------------------- SUCCESS --------------------
 	
-dist:
-	@echo --------------------- START ---------------------
-	tar czvf SmartCalc.tar.gz .
-	@echo -------------------- SUCCESS --------------------
-
 test:
 	@echo --------------------- START ---------------------
-	cd ./tests/ && $(CC) $(FLAGS) unit_tests.cc ../src/model/calc/model_calc.cc -o unit_tests $(TEST_FLAGS)
+	cd ./tests/ && $(CXX) $(FLAGS) unit_tests.cc ../src/model/calc/model_calc.cc -o unit_tests $(TEST_FLAGS)
 	cd ./tests/ && ./unit_tests
 	@echo -------------------- SUCCESS --------------------
