@@ -15,7 +15,7 @@ private:
     using BOperation = std::function<double(double, double)>;
 
 public:
-    using Coords     = std::pair<std::vector<double>, std::vector<double>>;
+    using Coords = std::pair<std::vector<double>, std::vector<double>>;
 
 private:
     enum class Priority : int {
@@ -26,6 +26,7 @@ private:
 
     enum class Type {
         kNo,
+        kX,
         kNumber,
         kOperator,
         kFunction,

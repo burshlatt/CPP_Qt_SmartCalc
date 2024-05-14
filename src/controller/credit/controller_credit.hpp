@@ -1,26 +1,25 @@
-#ifndef SRC_CONTROLLER_CONTROLLER_CREDIT_H_
-#define SRC_CONTROLLER_CONTROLLER_CREDIT_H_
-
-#include <QtGui>
+#ifndef SMARTCALC_CONTROLLER_CREDIT_CONTROLLER_CREDIT_HPP
+#define SMARTCALC_CONTROLLER_CREDIT_CONTROLLER_CREDIT_HPP
 
 #include "model_credit.hpp"
 
-namespace s21 {
-class ControllerCredit {
- public:
-  ControllerCredit() {}
-  ~ControllerCredit() {}
+class CreditController {
+public:
+    CreditController(CreditModel* model) :
+        model_(model)
+    {}
 
-  void set_sum(const double &sum) noexcept;
-  void set_term(const double &term) noexcept;
-  void set_percent(const QString &percent) noexcept;
+public:
+    CreditModel::Info CalculateAnnuityCredit(double loan_amount, double term, double percent) {
+        return model_->CalculateAnnuityCredit(loan_amount, term, percent);
+    }
 
-  QVector<QString> AnnuCred() noexcept;
-  QVector<QString> DifferCred() noexcept;
+    CreditModel::Info CalculateDifferentiatedCredit(double loan_amount, double term, double percent) {
+        return model_->CalculateDifferentiatedCredit(loan_amount, term, percent);
+    }
 
- private:
-  s21::ModelCredit model_;
+private:
+    CreditModel* model_;
 };
-}  // namespace s21
 
-#endif  // SRC_CONTROLLER_CONTROLLER_CREDIT_H_
+#endif  // SMARTCALC_CONTROLLER_CREDIT_CONTROLLER_CREDIT_HPP

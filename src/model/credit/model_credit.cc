@@ -1,51 +1,38 @@
-#include "model_credit.h"
+#include <cmath>
 
-namespace s21 {
-/*
-  ================================= ACCESSORS =================================
-*/
-std::vector<double> ModelCredit::get_cred() const noexcept { return cred_arr_; }
-/*
-  ================================= ACCESSORS =================================
-*/
+#include "model_credit.hpp"
 
-/*
-  ================================= MUTATORS ==================================
-*/
-void ModelCredit::set_sum(const double &sum) noexcept { sum_ = sum; }
-void ModelCredit::set_term(const double &term) noexcept { term_ = term; }
-void ModelCredit::set_percent(const double &percent) noexcept { percent_ = percent; }
-/*
-  ================================= MUTATORS ==================================
-*/
+CreditModel::Info CreditModel::CalculateAnnuityCredit(double loan_amount, double term, double percent) {
+    Info cred_info;
 
-/*
-  ===================== C R E D I T - C A L C U L A T O R =====================
-*/
+    cred_info.monthly_payment = std::round(loan_amount * (((percent / (term * 100)) *
+        std::pow(1 + (percent / (term * 100)), term)) /
+        (std::pow(1 + (percent / (term * 100)), term) - 1)) * 100) / 100;
 
-void ModelCredit::AnnuCred() noexcept {
-  cred_arr_.clear();
-  cred_arr_.push_back(std::round(sum_ * (((percent_ / (term_ * 100)) * pow(1 + (percent_ / (term_ * 100)), term_))
-                      / (pow(1 + (percent_ / (term_ * 100)), term_) - 1)) * 100) / 100);  // MONTH PAY
-  cred_arr_.push_back(cred_arr_.back() * term_ - sum_);  // OVERPAY
-  cred_arr_.push_back(sum_ + cred_arr_.back());          // RESULT SUM
+    cred_info.overpayment = cred_info.monthly_payment * term - loan_amount;
+    cred_info.total_payment = loan_amount + cred_info.overpayment;
+
+    return cred_info;
 }
 
-void ModelCredit::DifferCred() noexcept {
-  cred_arr_.clear();
-  double sum_copy_ = sum_;
-  double term_copy_ = term_;
-  cred_arr_.push_back(0);  // RESULT SUM
-  while (term_copy_ != 0) {
-    cred_arr_.push_back((sum_ / term_) + (sum_copy_ * percent_ / (term_ * 100)));  // PAYMENTS
-    cred_arr_[0] += cred_arr_.back();
-    sum_copy_ -= (sum_ / term_);
-    term_copy_--;
-  }
-  cred_arr_.push_back(cred_arr_[0] - sum_);  // OVERPAY
-}
+CreditModel::Info CreditModel::CalculateDifferentiatedCredit(double loan_amount, double term, double percent) {
+    Info cred_info;
 
-/*
-  ===================== C R E D I T - C A L C U L A T O R =====================
-*/
-}  // namespace s21
+    double remaining_loan_amount{loan_amount};
+    double remaining_loan_term{term};
+
+    while (remaining_loan_term != 0) {
+        double monthly_payment{(loan_amount / term) + (remaining_loan_amount * percent / (term * 100))};
+
+        cred_info.monthly_payments.push_back(monthly_payment);
+
+        cred_info.total_payment += monthly_payment;
+        remaining_loan_amount -= loan_amount / term;
+
+        --remaining_loan_term;
+    }
+
+    cred_info.overpayment = cred_info.total_payment - loan_amount;
+
+    return cred_info;
+}

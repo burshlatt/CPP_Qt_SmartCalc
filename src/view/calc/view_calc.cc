@@ -1,16 +1,36 @@
+#include <QUrl>
+#include <QDesktopServices>
+
 #include <optional>
 
 #include "view_calc.hpp"
 #include "./ui_view_calc.h"
 
-CalcView::CalcView(CalcController* controller, QWidget *parent) :
+CalcView::CalcView(CalcController* controller, CreditView* credit, QWidget *parent) :
     QMainWindow(parent),
     controller_(controller),
-    ui_(std::make_unique<Ui::CalcView>())
+    ui_(std::make_unique<Ui::CalcView>()),
+    credit_view_(credit)
 {
     ui_->setupUi(this);
     this->setFixedSize(480, 380);
 
+    SetCenter();
+    ConnectButtons();
+}
+
+CalcView::~CalcView() {}
+
+void CalcView::SetCenter() {
+    QScreen* screen{QGuiApplication::primaryScreen()};
+    QRect screenGeometry{screen->geometry()};
+    const int x{(screenGeometry.width() - 480) / 2};
+    const int y{(screenGeometry.height() - 380) / 2};
+
+    move(x, y);
+}
+
+void CalcView::ConnectButtons() {
     QVector<QPushButton*> buttons({
         ui_->btnZero, ui_->btnOne,  ui_->btnTwo,   ui_->btnThree, ui_->btnFour,
         ui_->btnFive, ui_->btnSix,  ui_->btnSeven, ui_->btnEight, ui_->btnNine,
@@ -21,8 +41,9 @@ CalcView::CalcView(CalcController* controller, QWidget *parent) :
         ui_->btnDiv
     });
 
-    for (auto button : buttons)
+    for (auto button : buttons) {
         connect(button, &QPushButton::clicked, this, &CalcView::NumsAndFuncsClicked);
+    }
 
     connect(ui_->btnRad, &QPushButton::clicked, this, &CalcView::BtnRadClicked);
     connect(ui_->btnDeg, &QPushButton::clicked, this, &CalcView::BtnDegClicked);
@@ -30,14 +51,23 @@ CalcView::CalcView(CalcController* controller, QWidget *parent) :
     connect(ui_->btnGraph, &QPushButton::clicked, this, &CalcView::BtnGraphClicked);
     connect(ui_->btnDelAll, &QPushButton::clicked, this, &CalcView::BtnDelAllClicked);
     connect(ui_->btnResult, &QPushButton::clicked, this, &CalcView::BtnResultClicked);
+    connect(ui_->btnOpenInfo, &QPushButton::clicked, this, &CalcView::BtnOpenInfoClicked);
     connect(ui_->btnShowGraph, &QPushButton::clicked, this, &CalcView::BtnShowGraphClicked);
+    connect(ui_->btnShowCredit, &QPushButton::clicked, this, &CalcView::BtnShowCreditClicked);
 }
 
-CalcView::~CalcView() {}
+void CalcView::BtnShowCreditClicked() {
+    credit_view_->show();
+    // this->close();
+}
+
+void CalcView::BtnOpenInfoClicked() {
+    QDesktopServices::openUrl(QUrl("https://github.com/burshlatt/CPP_Qt_SmartCalc"));
+}
 
 void CalcView::BtnResultClicked() {
     std::string input{ui_->leInput->text().toStdString()};
-    std::optional<double> result{controller_->Calculate(input)};
+    std::optional<double> result{controller_->Calculate(input, 1.0)};
 
     if (result.has_value()) {
         ui_->leOutput->setText(QString::number(*result));

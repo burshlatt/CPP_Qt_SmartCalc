@@ -126,8 +126,12 @@ std::vector<CalcModel::Token> CalcModel::Tokenize(std::string_view input) {
         auto is_alpha{std::isalpha(symbol)};
         auto is_negative{symbol == '-' && tmp_str[pos - 1] == '('};
         is_negative &= (tmp_str[pos + 1] == '(' || std::isdigit(next_symbol));
+        auto is_x{tmp_str[pos] == 'x'/* && tmp_str[pos + 1] != 'x' && tmp_str[pos - 1] != 'x'*/};
 
-        if (is_digit) {
+        if (is_x) {
+            tokens.emplace_back(Token{"", Type::kX});
+            ++pos;
+        } else if (is_digit) {
             tokens.emplace_back(ParseNumber(tmp_str, pos));
         } else if (is_alpha) {
             tokens.emplace_back(ParseName(tmp_str, pos));
@@ -241,7 +245,7 @@ bool CalcModel::HandleTokens(const Token& token) {
 
     if (token.type == Type::kNo) {
         return false;
-    } else if (token.type == Type::kNumber) {
+    } else if (token.type == Type::kNumber || token.type == Type::kX) {
         output_.push_back(token);
     } else if (token.type == Type::kFunction || token.type == Type::kOpenBr) {
         stack_.push(token);
@@ -283,6 +287,8 @@ std::optional<double> CalcModel::CalculateOperation(double x) {
     for (const auto& token : output_) {
         if (token.type == Type::kNumber) {
             buffer_.push(token.value);
+        } else if (token.type == Type::kX) {
+            buffer_.push(x);
         }
 
         if (auto it{unary_op_.find(token.name)}; it != unary_op_.end()) {

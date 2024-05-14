@@ -1,29 +1,20 @@
-#ifndef SRC_MODEL_MODEL_CREDIT_H_
-#define SRC_MODEL_MODEL_CREDIT_H_
+#ifndef SMARTCALC_MODEL_CREDIT_MODEL_CREDIT_HPP
+#define SMARTCALC_MODEL_CREDIT_MODEL_CREDIT_HPP
 
 #include <vector>
 
-namespace s21 {
-class ModelCredit {
- public:
-  ModelCredit() {}
-  ~ModelCredit() {}
+class CreditModel {
+public:
+    struct Info {
+        double monthly_payment;
+        double total_payment;
+        double overpayment;
+        std::vector<double> monthly_payments;
+    };
 
-  std::vector<double> get_cred() const noexcept;
-
-  void set_sum(const double &sum) noexcept;
-  void set_term(const double &term) noexcept;
-  void set_percent(const double &percent) noexcept;
-
-  void AnnuCred() noexcept;
-  void DifferCred() noexcept;
-
- private:
-  double sum_ = 0.0;
-  double term_ = 0.0;
-  double percent_ = 0.0;
-  std::vector<double> cred_arr_;
+public:
+    Info CalculateAnnuityCredit(double loan_amount, double term, double percent);
+    Info CalculateDifferentiatedCredit(double loan_amount, double term, double percent);
 };
-}  // namespace s21
 
-#endif  // SRC_MODEL_MODEL_CREDIT_H_
+#endif  // SMARTCALC_MODEL_CREDIT_MODEL_CREDIT_HPP

@@ -15,52 +15,44 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets PrintSupport)
 
 set(PROJECT_SOURCES
-        src/main.cpp
-        
-        src/view/calc/view_calc.cc
-        src/view/calc/view_calc.hpp
-        src/view/calc/view_calc.ui
+    src/main.cpp
 
-        src/third_party/qcustomplot/qcustomplot.cc
-        src/third_party/qcustomplot/qcustomplot.hpp
+    src/view/calc/view_calc.cc
+    src/view/calc/view_calc.hpp
+    src/view/calc/view_calc.ui
+
+    src/third_party/qcustomplot/qcustomplot.cc
+    src/third_party/qcustomplot/qcustomplot.hpp
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(SmartCalc
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-        resources/resources.qrc
-        src/model/calc/model_calc.cc
-        src/model/calc/model_calc.hpp
-        src/controller/calc/controller_calc.hpp
-        src/third_party/qcustomplot/qcustomplot.cc
-        src/third_party/qcustomplot/qcustomplot.hpp
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET SmartCalc APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else()
-    if(ANDROID)
-        add_library(SmartCalc SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(SmartCalc
-            ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+qt_add_executable(SmartCalc
+    MANUAL_FINALIZATION
+    ${PROJECT_SOURCES}
+    resources/resources.qrc
+    src/model/calc/model_calc.cc
+    src/model/calc/model_calc.hpp
+    src/controller/calc/controller_calc.hpp
+    src/third_party/qcustomplot/qcustomplot.cc
+    src/third_party/qcustomplot/qcustomplot.hpp
+    src/model/credit/model_credit.cc src/model/credit/model_credit.hpp
+    src/controller/credit/controller_credit.hpp
 
-#target_link_libraries(SmartCalc PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+    src/view/credit/view_credit.hpp src/view/credit/view_credit.cc
+    src/view/credit/view_credit.ui
+)
+
 target_link_libraries(SmartCalc PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::PrintSupport)
 
 include_directories(
     src/view/calc
+    src/view/credit
+
     src/model/calc
+    src/model/credit
+
     src/controller/calc
+    src/controller/credit
+
     src/third_party/qcustomplot
 )
 

@@ -12,6 +12,7 @@ public:
         model_(model)
     {}
 
+public:
     std::optional<double> Calculate(std::string_view notation, double x = 0.0) {
         return model_->Calculate(notation, x);
     }
