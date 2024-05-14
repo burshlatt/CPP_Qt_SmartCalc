@@ -23,6 +23,9 @@ public:
     ~CalcView();
 
 private:
+    void SetCenter();
+    void ConnectButtons();
+
     void PrintGraph();
     void BtnRadClicked();
     void BtnDegClicked();
@@ -34,9 +37,6 @@ private:
     void BtnShowGraphClicked();
     void NumsAndFuncsClicked();
     void BtnShowCreditClicked();
-
-    void SetCenter();
-    void ConnectButtons();
 
 private:
     CalcController* controller_;
