@@ -17,7 +17,7 @@ install:
 	@echo -------------------- INSTALL --------------------
 	make uninstall --quiet
 	mkdir build
-	cp Makefile build && qmake && make && make clean && rm -rf Makefile .qmake.stash && mv build/Makefile . && mv SmartCalc.app build
+	cd build && cmake ../CMakeLists.txt && make && rm -rf CMakeFiles cmake_install.cmake CMakeCache.txt Makefile
 	@echo -------------------- SUCCESS --------------------
 
 open:
