@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include <stack>
+#include <mutex>
 #include <memory>
 
 #include "controller_calc.hpp"
@@ -44,6 +45,7 @@ private:
     std::stack<std::uint8_t> token_sizes_;
 
     CreditView* credit_view_;
+    std::mutex mutex_;
 };
 
 #endif // SMARTCALC_VIEW_CALC_VIEW_CALC_HPP

@@ -2,7 +2,7 @@
 
 #include "model_credit.hpp"
 
-CreditModel::Info CreditModel::CalculateAnnuityCredit(double loan_amount, double term, double percent) {
+CreditModel::Info CreditModel::CalculateAnnuityCredit(double loan_amount, int term, double percent) {
     Info cred_info;
 
     cred_info.monthly_payment = std::round(loan_amount * (((percent / (term * 100)) *
@@ -15,13 +15,13 @@ CreditModel::Info CreditModel::CalculateAnnuityCredit(double loan_amount, double
     return cred_info;
 }
 
-CreditModel::Info CreditModel::CalculateDifferentiatedCredit(double loan_amount, double term, double percent) {
+CreditModel::Info CreditModel::CalculateDifferentiatedCredit(double loan_amount, int term, double percent) {
     Info cred_info;
 
+    int remaining_loan_term{term};
     double remaining_loan_amount{loan_amount};
-    double remaining_loan_term{term};
 
-    while (remaining_loan_term != 0) {
+    while (remaining_loan_term != 0.0) {
         double monthly_payment{(loan_amount / term) + (remaining_loan_amount * percent / (term * 100))};
 
         cred_info.monthly_payments.push_back(monthly_payment);

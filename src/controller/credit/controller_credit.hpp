@@ -5,16 +5,19 @@
 
 class CreditController {
 public:
+    using Info = CreditModel::Info;
+
+public:
     CreditController(CreditModel* model) :
         model_(model)
     {}
 
 public:
-    CreditModel::Info CalculateAnnuityCredit(double loan_amount, double term, double percent) {
+    Info CalculateAnnuityCredit(double loan_amount, double term, double percent) {
         return model_->CalculateAnnuityCredit(loan_amount, term, percent);
     }
 
-    CreditModel::Info CalculateDifferentiatedCredit(double loan_amount, double term, double percent) {
+    Info CalculateDifferentiatedCredit(double loan_amount, double term, double percent) {
         return model_->CalculateDifferentiatedCredit(loan_amount, term, percent);
     }
 

@@ -1,10 +1,12 @@
 #ifndef SMARTCALC_VIEW_CREDIT_VIEW_CREDIT_HPP
 #define SMARTCALC_VIEW_CREDIT_VIEW_CREDIT_HPP
 
+#include <QLabel>
+#include <QGridLayout>
 #include <QMainWindow>
-#include <QScreen>
 
 #include <memory>
+#include <vector>
 
 #include "controller_credit.hpp"
 
@@ -23,10 +25,14 @@ public:
 
 private:
     void BtnResultClicked();
+    void FillPaymentsField(const CreditController::Info& info, int term);
 
 private:
     CreditController* controller_;
     std::unique_ptr<Ui::CreditView> ui_;
+    std::unique_ptr<QWidget> scroll_widget_;
+    std::unique_ptr<QGridLayout> grid_layout_;
+    std::vector<std::unique_ptr<QLabel>> labels_vec_;
 };
 
 #endif // SMARTCALC_VIEW_CREDIT_VIEW_CREDIT_HPP
