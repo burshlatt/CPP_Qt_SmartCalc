@@ -8,17 +8,20 @@
 
 class CalcController {
 public:
+    using MeasurementType = CalcModel::MeasurementType;
+
+public:
     CalcController(CalcModel* model) :
         model_(model)
     {}
 
 public:
-    std::optional<double> Calculate(std::string_view notation, double x = 0.0) {
-        return model_->Calculate(notation, x);
-    }
-
     CalcModel::Coords CalculateGraph(std::string_view input, double x_start, double x_end) {
         return model_->CalculateGraph(input, x_start, x_end);
+    }
+
+    std::optional<double> Calculate(std::string_view notation, double x = 0.0, MeasurementType meas_type = MeasurementType::kDeg) {
+        return model_->Calculate(notation, x, meas_type);
     }
 
 private:

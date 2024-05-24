@@ -1622,9 +1622,9 @@ color: black;
    <widget class="QLineEdit" name="leOutput">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>120</x>
       <y>30</y>
-      <width>460</width>
+      <width>340</width>
       <height>30</height>
      </rect>
     </property>
@@ -1695,13 +1695,70 @@ QPushButton:pressed {
      <string>Graph</string>
     </property>
    </widget>
+   <widget class="QLineEdit" name="leXLabel">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>30</y>
+      <width>40</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit{
+	qproperty-alignment: 'AlignVCenter | AlignRight';
+	border: 1px solid gray;
+	background-color : #464746;
+	color: white;
+}
+</string>
+    </property>
+    <property name="text">
+     <string>X:</string>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="leXValue">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>30</y>
+      <width>80</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit{
+	qproperty-alignment: 'AlignVCenter | AlignRight';
+	border: 1px solid gray;
+	background-color : #464746;
+	color: white;
+}
+</string>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+   </widget>
   </widget>
  </widget>
  <customwidgets>
   <customwidget>
    <class>QCustomPlot</class>
    <extends>QWidget</extends>
-   <header>qcustomplot.hpp</header>
+   <header>qcustomplot.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

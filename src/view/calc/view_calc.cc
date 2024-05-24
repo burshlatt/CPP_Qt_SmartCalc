@@ -59,7 +59,6 @@ void CalcView::ConnectButtons() {
 
 void CalcView::BtnShowCreditClicked() {
     credit_view_->show();
-    // this->close();
 }
 
 void CalcView::BtnOpenInfoClicked() {
@@ -67,8 +66,9 @@ void CalcView::BtnOpenInfoClicked() {
 }
 
 void CalcView::BtnResultClicked() {
+    double x{ui_->leXValue->text().toDouble()};
     std::string input{ui_->leInput->text().toStdString()};
-    std::optional<double> result{controller_->Calculate(input, 1.0)};
+    std::optional<double> result{controller_->Calculate(input, x, CalcController::MeasurementType::kDeg)};
 
     if (result.has_value()) {
         ui_->leOutput->setText(QString::number(*result));
@@ -100,8 +100,9 @@ void CalcView::BtnDelAllClicked() {
     ui_->leInput->clear();
     ui_->leOutput->clear();
 
-    while(!token_sizes_.empty())
+    while(!token_sizes_.empty()) {
         token_sizes_.pop();
+    }
 }
 
 void CalcView::BtnRadClicked() {
@@ -109,13 +110,13 @@ void CalcView::BtnRadClicked() {
         "background-color: rgb(255, 160, 122); "
         "color: black; "
         "border: 1px solid gray;"
-        );
+    );
 
     ui_->btnDeg->setStyleSheet(
         "background-color: rgb(255, 219, 139); "
         "color: black; "
         "border: 1px solid gray;"
-        );
+    );
 }
 
 void CalcView::BtnDegClicked() {
@@ -141,34 +142,28 @@ void CalcView::BtnShowGraphClicked() {
 
             while (w != 960) {
                 ++w;
-                mutex_.lock();
                 this->setFixedSize(w, 380);
-                mutex_.unlock();
-                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                std::this_thread::sleep_for(std::chrono::microseconds(700));
+                // std::this_thread::sleep_for(std::chrono::milliseconds(1));
             }
         // });
 
         // thr.detach();
 
         ui_->btnShowGraph->setText("<");
-
-        // int w{480};
-
-        // while (w != 960) {
-        //     ++w;
-        //     this->setFixedSize(w, 380);
-        //     std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        // }
-
-        // ui_->btnShowGraph->setText("<");
     } else {
-        int w{960};
+        // std::thread thr([this]() {
+            int w{960};
 
-        while (w != 480) {
-            --w;
-            this->setFixedSize(w, 380);
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        }
+            while (w != 480) {
+                --w;
+                this->setFixedSize(w, 380);
+                std::this_thread::sleep_for(std::chrono::microseconds(700));
+                // std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
+        // });
+
+        // thr.detach();
 
         ui_->btnShowGraph->setText(">");
     }

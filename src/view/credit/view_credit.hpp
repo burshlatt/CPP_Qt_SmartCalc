@@ -25,7 +25,7 @@ public:
 
 private:
     void BtnResultClicked();
-    void FillPaymentsField(const CreditController::Info& info, int term);
+    void FillPaymentsField(const CreditController::Info& info);
 
 private:
     CreditController* controller_;

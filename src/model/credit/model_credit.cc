@@ -5,12 +5,16 @@
 CreditModel::Info CreditModel::CalculateAnnuityCredit(double loan_amount, int term, double percent) {
     Info cred_info;
 
-    cred_info.monthly_payment = std::round(loan_amount * (((percent / (term * 100)) *
+    cred_info.monthly_payments.push_back(std::round(loan_amount * (((percent / (term * 100)) *
         std::pow(1 + (percent / (term * 100)), term)) /
-        (std::pow(1 + (percent / (term * 100)), term) - 1)) * 100) / 100;
+        (std::pow(1 + (percent / (term * 100)), term) - 1)) * 100) / 100);
 
-    cred_info.overpayment = cred_info.monthly_payment * term - loan_amount;
+    cred_info.overpayment = cred_info.monthly_payments[0] * term - loan_amount;
     cred_info.total_payment = loan_amount + cred_info.overpayment;
+
+    while (cred_info.monthly_payments.size() != static_cast<std::size_t>(term)) {
+        cred_info.monthly_payments.push_back(cred_info.monthly_payments[0]);
+    }
 
     return cred_info;
 }

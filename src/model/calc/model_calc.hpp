@@ -17,6 +17,11 @@ private:
 public:
     using Coords = std::pair<std::vector<double>, std::vector<double>>;
 
+    enum class MeasurementType : bool {
+        kDeg,
+        kRad
+    };
+
 private:
     enum class Priority : int {
         kLow,
@@ -42,8 +47,12 @@ private:
     };
 
 public:
-    std::optional<double> Calculate(std::string_view input, double x = 0.0);
+    CalcModel();
+    ~CalcModel() = default;
+
+public:
     Coords CalculateGraph(std::string_view input, double x_start, double x_end);
+    std::optional<double> Calculate(std::string_view input, double x = 0.0, MeasurementType meas_type = MeasurementType::kDeg);
 
 private:
     void Clear();
@@ -67,6 +76,8 @@ private:
     std::stack<Token> stack_;
     std::stack<double> buffer_;
     std::vector<Token> output_;
+
+    MeasurementType meas_type_;
 
     static const std::unordered_map<char, Token> short_tokens_;
     static const std::unordered_map<std::string, Token> long_tokens_;

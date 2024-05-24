@@ -31,8 +31,10 @@ CreditView::CreditView(CreditController* controller, QWidget *parent) :
 
 CreditView::~CreditView() {}
 
-void CreditView::FillPaymentsField(const CreditController::Info& info, int term) {
+void CreditView::FillPaymentsField(const CreditController::Info& info) {
     labels_vec_.clear();
+
+    int term{static_cast<int>(info.monthly_payments.size())};
 
     for (int i{}; i < term; ++i) {
         labels_vec_.push_back(std::make_unique<QLabel>());
@@ -57,7 +59,7 @@ void CreditView::FillPaymentsField(const CreditController::Info& info, int term)
 
         id->setText(QString::number(i + 1));
         date->setText(QDate::currentDate().addMonths(i).toString("dd.MM.yyyy"));
-        sum->setText(QString::number(info.monthly_payment, 'f', 2));
+        sum->setText(QString::number(info.monthly_payments[i], 'f', 2));
     }
 }
 
@@ -80,9 +82,17 @@ void CreditView::BtnResultClicked() {
         info = controller_->CalculateDifferentiatedCredit(sum, term, percent);
     }
 
-    ui_->leMonthResult->setText(QString::number(info.monthly_payment, 'f', 2));
+    QString first_payment{QString::number(info.monthly_payments.front(), 'f', 2)};
+    QString last_payment{QString::number(info.monthly_payments.back(), 'f', 2)};
+
+    if (ui_->rbAnnu->isChecked()) {
+        ui_->leMonthResult->setText(first_payment);
+    } else {
+        ui_->leMonthResult->setText(first_payment + "..." + last_payment);
+    }
+
     ui_->leOverpay->setText(QString::number(info.overpayment, 'f', 2));
     ui_->leSumResult->setText(QString::number(info.total_payment, 'f', 2));
 
-    FillPaymentsField(info, term);
+    FillPaymentsField(info);
 }

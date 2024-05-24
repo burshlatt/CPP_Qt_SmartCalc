@@ -21,24 +21,29 @@ set(PROJECT_SOURCES
     src/view/calc/view_calc.hpp
     src/view/calc/view_calc.ui
 
-    src/third_party/qcustomplot/qcustomplot.cc
-    src/third_party/qcustomplot/qcustomplot.hpp
+    src/third_party/qcustomplot/qcustomplot.h
+    src/third_party/qcustomplot/qcustomplot.cpp
 )
 
 qt_add_executable(SmartCalc
     MANUAL_FINALIZATION
     ${PROJECT_SOURCES}
     resources/resources.qrc
+
     src/model/calc/model_calc.cc
     src/model/calc/model_calc.hpp
+    src/model/credit/model_credit.cc
+    src/model/credit/model_credit.hpp
+
+    src/view/credit/view_credit.ui
+    src/view/credit/view_credit.cc
+    src/view/credit/view_credit.hpp
+
     src/controller/calc/controller_calc.hpp
-    src/third_party/qcustomplot/qcustomplot.cc
-    src/third_party/qcustomplot/qcustomplot.hpp
-    src/model/credit/model_credit.cc src/model/credit/model_credit.hpp
     src/controller/credit/controller_credit.hpp
 
-    src/view/credit/view_credit.hpp src/view/credit/view_credit.cc
-    src/view/credit/view_credit.ui
+    src/third_party/qcustomplot/qcustomplot.h
+    src/third_party/qcustomplot/qcustomplot.cpp
 )
 
 target_link_libraries(SmartCalc PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::PrintSupport)

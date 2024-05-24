@@ -1,4 +1,5 @@
 #include <cmath>
+#include <locale>
 
 #include "model_calc.hpp"
 
@@ -17,7 +18,7 @@ const std::unordered_map<std::string, CalcModel::Token> CalcModel::long_tokens_{
     {"ln",   Token{"Ln"}},   {"log",  Token{"Log"}},  {"abs",  Token{"Abs"}},
     {"cos",  Token{"Cos"}},  {"sin",  Token{"Sin"}},  {"tan",  Token{"Tan"}},
     {"acos", Token{"Acos"}}, {"asin", Token{"Asin"}}, {"atan", Token{"Atan"}},
-    {"sqrt", Token{"Sqrt"}}
+    {"sqrt", Token{"Sqrt"}}, {"Pi", Token{"Pi", Type::kNumber, Priority::kNo, M_PI}}
 };
 
 const std::unordered_map<std::string, CalcModel::UOperation> CalcModel::unary_op_{
@@ -43,6 +44,10 @@ const std::unordered_map<std::string, CalcModel::BOperation> CalcModel::binary_o
     {"Mod",   [](double x, double y) { return std::fmod(x, y); }}
 };
 
+CalcModel::CalcModel() {
+    std::locale::global(std::locale("C"));
+}
+
 CalcModel::Coords CalcModel::CalculateGraph(std::string_view input, double x_start, double x_end) {
     std::vector<double> x_coords;
     std::vector<double> y_coords;
@@ -66,8 +71,10 @@ CalcModel::Coords CalcModel::CalculateGraph(std::string_view input, double x_sta
     return std::make_pair(x_coords, y_coords);
 }
 
-std::optional<double> CalcModel::Calculate(std::string_view input, double x) {
+std::optional<double> CalcModel::Calculate(std::string_view input, double x, MeasurementType meas_type) {
     Clear();
+
+    meas_type_ = meas_type;
 
     std::vector<Token> tokens{Tokenize(input)};
 

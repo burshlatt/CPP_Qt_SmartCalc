@@ -8,7 +8,6 @@ public:
     struct Info {
         double overpayment;
         double total_payment;
-        double monthly_payment;
         std::vector<double> monthly_payments;
     };
 
