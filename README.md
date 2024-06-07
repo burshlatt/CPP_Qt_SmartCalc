@@ -23,7 +23,7 @@
 - Installation via CMake
    ```bash
    mkdir build
-	 cd build
+   cd build
    cmake ..
    make
    ./SmartCalc # or "open SmartCalc.app" (If you are running the MacOS operating system)
