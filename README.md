@@ -1,12 +1,12 @@
-## SmartCalc
+# SmartCalc
 
-### Dependencies
+## Dependencies
 
 - CMake
 - g++
 - Google Test
 
-### Installation
+## Installation
 
 - Clone the repository
    ```bash
