@@ -21,6 +21,7 @@ build: uninstall
 install:
 	@echo -------------------- INSTALL --------------------
 	cd build && make
+	cd build && rm -rf CMakeFiles SmartCalc_autogen cmake_install.cmake CMakeCache.txt Makefile
 	@echo -------------------- SUCCESS --------------------
 
 ifeq ($(OS), Linux)
