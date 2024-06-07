@@ -12,7 +12,7 @@
 
 - Clone the repository
    ```bash
-   git clone git@github.com:burshlatt/CPP_Qt_SmartCalc.git
+   git clone https://github.com/burshlatt/CPP_Qt_SmartCalc.git
    ```
 
 - Go to the project folder
