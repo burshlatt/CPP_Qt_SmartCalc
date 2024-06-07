@@ -2,7 +2,9 @@
 
 ## Dependencies
 
+- Make
 - CMake
+- Qt6
 - g++
 - Google Test
 
