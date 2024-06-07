@@ -33,24 +33,11 @@
 
 #### Make
 
-1. **Build**: Compiles the SmartCalc application.
+- Installation via Make
    ```bash
    make
-   # or make build
-   ```
-
-2. **Install**: Installs the SmartCalc application.
-   ```bash
    make install
-   ```
-
-3. **Test**: Runs the unit tests.
-   ```bash
-   make test
-   ```
-
-4. **Run**: Executes the SmartCalc application.
-   ```bash
+   make test # optional
    make run
    ```
 
