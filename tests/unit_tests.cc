@@ -1,4 +1,6 @@
 #include <gtest/gtest.h>
+#include <cmath>
+
 #include "../src/model/calc/model_calc.hpp"
 
 TEST(SmartCalc, pow_test) {

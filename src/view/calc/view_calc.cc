@@ -1,7 +1,6 @@
 #include <QUrl>
 #include <QDesktopServices>
 
-#include <thread>
 #include <optional>
 
 #include "view_calc.hpp"
@@ -137,33 +136,11 @@ void CalcView::BtnShowGraphClicked() {
     bool graph_is_open{ui_->btnShowGraph->text() != ">"};
 
     if (!graph_is_open) {
-        // std::thread thr([this]() {
-            int w{480};
-
-            while (w != 960) {
-                ++w;
-                this->setFixedSize(w, 380);
-                std::this_thread::sleep_for(std::chrono::microseconds(700));
-                // std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            }
-        // });
-
-        // thr.detach();
+        this->setFixedSize(960, 380);
 
         ui_->btnShowGraph->setText("<");
     } else {
-        // std::thread thr([this]() {
-            int w{960};
-
-            while (w != 480) {
-                --w;
-                this->setFixedSize(w, 380);
-                std::this_thread::sleep_for(std::chrono::microseconds(700));
-                // std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            }
-        // });
-
-        // thr.detach();
+        this->setFixedSize(480, 380);
 
         ui_->btnShowGraph->setText(">");
     }

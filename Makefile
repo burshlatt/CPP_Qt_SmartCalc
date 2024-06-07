@@ -9,13 +9,18 @@ else ifeq ($(OS), Darwin)
     TEST_FLAGS += -lgmock
 endif
 
-.PHONY: install run uninstall clean test
+.PHONY: build install run uninstall clean test
 
-install: uninstall
-	@echo -------------------- INSTALL --------------------
+build: uninstall
+	@echo --------------------- BUILD ---------------------
 	make uninstall --quiet
 	mkdir build
-	cd build && cmake ../CMakeLists.txt && make && rm -rf CMakeFiles cmake_install.cmake CMakeCache.txt Makefile
+	cd build && cmake ..
+	@echo -------------------- SUCCESS --------------------
+
+install:
+	@echo -------------------- INSTALL --------------------
+	cd build && make
 	@echo -------------------- SUCCESS --------------------
 
 ifeq ($(OS), Linux)
