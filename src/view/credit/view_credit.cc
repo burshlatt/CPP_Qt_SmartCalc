@@ -64,6 +64,16 @@ void CreditView::FillPaymentsField(const CreditController::Info& info) {
 }
 
 void CreditView::BtnResultClicked() {
+    bool is_fill{
+        !ui_->leTerm->text().isEmpty() &&
+        !ui_->leSum->text().isEmpty() &&
+        !ui_->lePercent->text().isEmpty()
+    };
+
+    if (!is_fill) {
+        return;
+    }
+
     this->setFixedSize(960, 480);
 
     int term{ui_->leTerm->text().toInt()};
