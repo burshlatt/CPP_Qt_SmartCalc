@@ -3,6 +3,7 @@ FLAGS = -Wall -Wextra -Werror
 TEST_FLAGS = -lgtest -pthread
 
 OS := $(shell uname)
+
 ifeq ($(OS), Linux)
     TEST_FLAGS += -lgtest_main
 else ifeq ($(OS), Darwin) 
