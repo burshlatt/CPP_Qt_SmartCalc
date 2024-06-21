@@ -13,7 +13,6 @@ endif
 
 build: uninstall
 	@echo --------------------- BUILD ---------------------
-	make uninstall --quiet
 	mkdir build
 	cd build && cmake ..
 	@echo -------------------- SUCCESS --------------------
