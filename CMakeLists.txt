@@ -39,7 +39,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/view/credit/view_credit.ui
         src/view/credit/view_credit.cc
         src/view/credit/view_credit.hpp
-        src/controller/ccalc/controller_calc.hpp
+        src/controller/calc/controller_calc.hpp
         src/controller/credit/controller_credit.hpp
         src/third_party/qcustomplot/qcustomplot.h
         src/third_party/qcustomplot/qcustomplot.cpp
