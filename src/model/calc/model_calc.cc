@@ -1,5 +1,6 @@
 #include <cmath>
 #include <locale>
+#include <unordered_set>
 
 #include "model_calc.hpp"
 
@@ -55,10 +56,10 @@ CalcModel::Coords CalcModel::CalculateGraph(std::string_view input, double x_sta
     auto y_first{Calculate(input, x_start, meas_type)};
 
     if (y_first.has_value()) {
-        x_start += 0.1;
-        
         x_coords.push_back(x_start);
         y_coords.push_back(*y_first);
+
+        x_start += 0.1;
 
         while (x_start <= x_end) {
             ClearBuffer();
@@ -131,11 +132,11 @@ std::vector<CalcModel::Token> CalcModel::Tokenize(std::string_view input) {
         auto symbol{static_cast<unsigned char>(tmp_str[pos])};
         auto next_symbol{static_cast<unsigned char>(tmp_str[pos + 1])};
 
+        auto is_x{tmp_str[pos] == 'x'};
         auto is_digit{std::isdigit(symbol)};
         auto is_alpha{std::isalpha(symbol)};
         auto is_negative{symbol == '-' && tmp_str[pos - 1] == '('};
         is_negative &= (tmp_str[pos + 1] == '(' || std::isdigit(next_symbol));
-        auto is_x{tmp_str[pos] == 'x'/* && tmp_str[pos + 1] != 'x' && tmp_str[pos - 1] != 'x'*/};
 
         if (is_x) {
             tokens.emplace_back(Token{"", Type::kX});
@@ -285,7 +286,9 @@ bool CalcModel::HandleTail() {
 std::optional<double> CalcModel::GetNum() {
     if (!buffer_.empty()) {
         double num{buffer_.top()};
+
         buffer_.pop();
+
         return num;
     }
 
@@ -293,15 +296,15 @@ std::optional<double> CalcModel::GetNum() {
 }
 
 bool CalcModel::IsBasicTrigFunction(const Token& token) {
-    std::string pattern{"CosSinTan"};
+    static const std::unordered_set<std::string> basic_trig{"Cos", "Sin", "Tan"};
 
-    return pattern.find(token.name) != std::string::npos;
+    return basic_trig.find(token.name) != basic_trig.end();
 }
 
 bool CalcModel::IsInverseTrigFunction(const Token& token) {
-    std::string pattern{"AcosAsinAtan"};
+    static const std::unordered_set<std::string> inverse_trig{"Acos", "Asin", "Atan"};
 
-    return pattern.find(token.name) != std::string::npos;
+    return inverse_trig.find(token.name) != inverse_trig.end();
 }
 
 std::optional<double> CalcModel::CalculateOperation(double x) {
