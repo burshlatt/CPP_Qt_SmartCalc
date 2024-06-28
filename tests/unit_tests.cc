@@ -3,6 +3,8 @@
 
 #include "../src/model/calc/model_calc.hpp"
 
+using mt = CalcModel::MeasurementType;
+
 TEST(SmartCalc, pow_test) {
   CalcModel calc;
   EXPECT_EQ(*calc.Calculate("((4-9)/(7+9)*3)^6"), pow(((4.0 - 9.0) / (7.0 + 9.0) * 3.0), 6.0));
@@ -10,32 +12,32 @@ TEST(SmartCalc, pow_test) {
 
 TEST(SmartCalc, cos_rad) {
   CalcModel calc;
-  EXPECT_EQ(*calc.Calculate("4^cos(2/4)"), pow(4.0, cos(2.0 / 4.0)));
+  EXPECT_EQ(*calc.Calculate("4^cos(2/4)", 0.0, mt::kRad), pow(4.0, cos(2.0 / 4.0)));
 }
 
 TEST(SmartCalc, sin_rad) {
   CalcModel calc;
-  EXPECT_EQ(*calc.Calculate("4^sin(2/4)"), pow(4.0, sin(2.0 / 4.0)));
+  EXPECT_EQ(*calc.Calculate("4^sin(2/4)", 0.0, mt::kRad), pow(4.0, sin(2.0 / 4.0)));
 }
 
 TEST(SmartCalc, tan_rad) {
   CalcModel calc;
-  EXPECT_EQ(*calc.Calculate("4^tan(2/4)"), pow(4.0, tan(2.0 / 4.0)));
+  EXPECT_EQ(*calc.Calculate("4^tan(2/4)", 0.0, mt::kRad), pow(4.0, tan(2.0 / 4.0)));
 }
 
 TEST(SmartCalc, acos_rad) {
   CalcModel calc;
-  EXPECT_EQ(*calc.Calculate("4^acos(2/4)"), std::pow(4.0, acos(2.0 / 4.0)));
+  EXPECT_EQ(*calc.Calculate("4^acos(2/4)", 0.0, mt::kRad), std::pow(4.0, acos(2.0 / 4.0)));
 }
 
 TEST(SmartCalc, asin_rad) {
   CalcModel calc;
-  EXPECT_EQ(*calc.Calculate("4^asin(2/4)"), std::pow(4.0, asin(2.0 / 4.0)));
+  EXPECT_EQ(*calc.Calculate("4^asin(2/4)", 0.0, mt::kRad), std::pow(4.0, asin(2.0 / 4.0)));
 }
 
 TEST(SmartCalc, atan_rad) {
   CalcModel calc;
-  EXPECT_EQ(*calc.Calculate("4^atan(2/4)"), std::pow(4.0, atan(2.0 / 4.0)));
+  EXPECT_EQ(*calc.Calculate("4^atan(2/4)", 0.0, mt::kRad), std::pow(4.0, atan(2.0 / 4.0)));
 }
 
 TEST(SmartCalc, abs_test) {

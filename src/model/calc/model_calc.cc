@@ -48,22 +48,24 @@ CalcModel::CalcModel() {
     std::locale::global(std::locale("C"));
 }
 
-CalcModel::Coords CalcModel::CalculateGraph(std::string_view input, double x_start, double x_end) {
+CalcModel::Coords CalcModel::CalculateGraph(std::string_view input, double x_start, double x_end, MeasurementType meas_type) {
     std::vector<double> x_coords;
     std::vector<double> y_coords;
 
-    auto result{Calculate(input)};
+    auto y_first{Calculate(input, x_start, meas_type)};
 
-    if (result.has_value()) {
-        x_coords.push_back(x_start);
-        y_coords.push_back(*result);
-
+    if (y_first.has_value()) {
         x_start += 0.1;
+        
+        x_coords.push_back(x_start);
+        y_coords.push_back(*y_first);
 
         while (x_start <= x_end) {
             ClearBuffer();
+
             x_coords.push_back(x_start);
             y_coords.push_back(*CalculateOperation(x_start));
+
             x_start += 0.1;
         }
     }
@@ -290,6 +292,18 @@ std::optional<double> CalcModel::GetNum() {
     return std::nullopt;
 }
 
+bool CalcModel::IsBasicTrigFunction(const Token& token) {
+    std::string pattern{"CosSinTan"};
+
+    return pattern.find(token.name) != std::string::npos;
+}
+
+bool CalcModel::IsInverseTrigFunction(const Token& token) {
+    std::string pattern{"AcosAsinAtan"};
+
+    return pattern.find(token.name) != std::string::npos;
+}
+
 std::optional<double> CalcModel::CalculateOperation(double x) {
     for (const auto& token : output_) {
         if (token.type == Type::kNumber) {
@@ -302,7 +316,21 @@ std::optional<double> CalcModel::CalculateOperation(double x) {
             auto x{GetNum()};
 
             if (x.has_value()) {
-                buffer_.push(it->second(*x));
+                std::optional<double> result{};
+
+                if (meas_type_ == MeasurementType::kDeg) {
+                    if (IsBasicTrigFunction(token)) {
+                        result = it->second(*x * M_PI / 180);
+                    } else if (IsInverseTrigFunction(token)) {
+                        result = it->second(*x) * 180 / M_PI;
+                    }
+                }
+
+                if (!result.has_value()) {
+                    result = it->second(*x);
+                }
+
+                buffer_.push(*result);
             } else {
                 return std::nullopt;
             }

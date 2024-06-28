@@ -67,7 +67,7 @@ void CalcView::BtnOpenInfoClicked() {
 void CalcView::BtnResultClicked() {
     double x{ui_->leXValue->text().toDouble()};
     std::string input{ui_->leInput->text().toStdString()};
-    std::optional<double> result{controller_->Calculate(input, x, CalcController::MeasurementType::kDeg)};
+    std::optional<double> result{controller_->Calculate(input, x, meas_type_)};
 
     if (result.has_value()) {
         ui_->leOutput->setText(QString::number(*result));
@@ -116,6 +116,8 @@ void CalcView::BtnRadClicked() {
         "color: black; "
         "border: 1px solid gray;"
     );
+
+    meas_type_ = CalcController::MeasurementType::kRad;
 }
 
 void CalcView::BtnDegClicked() {
@@ -130,6 +132,8 @@ void CalcView::BtnDegClicked() {
         "color: black; "
         "border: 1px solid gray;"
     );
+
+    meas_type_ = CalcController::MeasurementType::kDeg;
 }
 
 void CalcView::BtnShowGraphClicked() {
@@ -171,7 +175,7 @@ void CalcView::PrintGraph() {
     double x_end{ui_->leEndX->text().toDouble() + 0.1};
     std::string input{ui_->leInput->text().toStdString()};
 
-    const auto& [x_vec, y_vec]{controller_->CalculateGraph(input, x, x_end)};
+    const auto& [x_vec, y_vec]{controller_->CalculateGraph(input, x, x_end, meas_type_)};
 
     QVector<double> x_coords(x_vec.begin(), x_vec.end());
     QVector<double> y_coords(y_vec.begin(), y_vec.end());

@@ -51,7 +51,7 @@ public:
     ~CalcModel() = default;
 
 public:
-    Coords CalculateGraph(std::string_view input, double x_start, double x_end);
+    Coords CalculateGraph(std::string_view input, double x_start, double x_end, MeasurementType meas_type = MeasurementType::kDeg);
     std::optional<double> Calculate(std::string_view input, double x = 0.0, MeasurementType meas_type = MeasurementType::kDeg);
 
 private:
@@ -62,6 +62,8 @@ private:
     bool HandleTail();
     bool HandleClosingBracket();
     bool HandleTokens(const Token& token);
+    bool IsBasicTrigFunction(const Token& token);
+    bool IsInverseTrigFunction(const Token& token);
 
     std::string Trim(std::string_view input);
 

@@ -44,6 +44,8 @@ private:
     std::stack<std::uint8_t> token_sizes_;
 
     CreditView* credit_view_;
+
+    CalcController::MeasurementType meas_type_{CalcController::MeasurementType::kDeg};
 };
 
 #endif // SMARTCALC_VIEW_CALC_VIEW_CALC_HPP
