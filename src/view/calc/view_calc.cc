@@ -98,6 +98,7 @@ void CalcView::BtnDelClicked() {
 void CalcView::BtnDelAllClicked() {
     ui_->leInput->clear();
     ui_->leOutput->clear();
+    ui_->leXValue->setText("0");
 
     while(!token_sizes_.empty()) {
         token_sizes_.pop();

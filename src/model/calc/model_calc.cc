@@ -319,21 +319,15 @@ std::optional<double> CalcModel::CalculateOperation(double x) {
             auto x{GetNum()};
 
             if (x.has_value()) {
-                std::optional<double> result{};
+                bool is_deg{meas_type_ == MeasurementType::kDeg};
 
-                if (meas_type_ == MeasurementType::kDeg) {
-                    if (IsBasicTrigFunction(token)) {
-                        result = it->second(*x * M_PI / 180);
-                    } else if (IsInverseTrigFunction(token)) {
-                        result = it->second(*x) * 180 / M_PI;
-                    }
+                if (is_deg && IsBasicTrigFunction(token)) {
+                    buffer_.push(it->second(*x * M_PI / 180));
+                } else if (is_deg && IsInverseTrigFunction(token)) {
+                    buffer_.push(it->second(*x) * 180 / M_PI);
+                } else {
+                    buffer_.push(it->second(*x));
                 }
-
-                if (!result.has_value()) {
-                    result = it->second(*x);
-                }
-
-                buffer_.push(*result);
             } else {
                 return std::nullopt;
             }

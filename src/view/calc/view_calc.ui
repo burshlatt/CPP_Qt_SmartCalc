@@ -1748,6 +1748,9 @@ QPushButton:pressed {
 }
 </string>
     </property>
+    <property name="text">
+     <string>0</string>
+    </property>
     <property name="readOnly">
      <bool>false</bool>
     </property>
